@@ -1,3 +1,42 @@
-.bg-color {
+.bg-gray-600 {
     background-color: rgb(22, 31, 68);
+}
+
+.navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center; /* Thêm align-items để căn giữa theo chiều dọc */
+}
+
+.logo {
+    width: 50%;
+    /* Thêm margin-top để điều chỉnh khoảng cách từ trên xuống */
+    margin-left: 25%;
+    margin-top: 10px;
+}
+
+
+
+.item-menu {
+    display: flex;
+    align-items: center; /* Thêm align-items để căn giữa theo chiều dọc */
+}
+
+.item-menu li {
+    margin-right: 50px; /* Khoảng cách giữa các mục menu */
+    list-style: none; /* Loại bỏ chấm đen mặc định của danh sách */
+}
+
+.item-menu a {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    text-decoration: none; /* Loại bỏ gạch chân dưới link */
+    color: white; /* Màu chữ trắng */
+}
+
+.item-menu img {
+    width: 70px; /* Điều chỉnh kích thước của hình ảnh */
+    border-radius: 50%; /* Bo góc hình ảnh để làm tròn */
+    margin-right: 20px; /* Khoảng cách giữa hình ảnh và văn bản */
 }
