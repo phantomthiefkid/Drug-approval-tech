@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './commponents/Home/Home';
 import ViewProfile from './commponents/Account/ViewProfile';
 import EditProfile from './commponents/Account/EditProfile';
+import CreateUser from './commponents/Admin/Usermanagement/CreateUser';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path='/' element={<Home></Home>}></Route>
         <Route path='/viewprofile' element={<ViewProfile></ViewProfile>}></Route>
         <Route path='/editprofile' element={<EditProfile></EditProfile>}></Route>
+        <Route path='/createuser' element={<CreateUser></CreateUser>}></Route>
       </Routes>
     </BrowserRouter>
   );

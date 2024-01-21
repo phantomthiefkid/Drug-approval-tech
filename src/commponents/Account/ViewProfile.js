@@ -8,7 +8,7 @@ const ViewProfile = () => {
         <>
             <Navigation />
             <div className='bd mt-48 text-center font-semibold w-2/6'>
-                <h2 className='bg text-center text-white'>Hồ sơ</h2>
+                <h2 className='bg text-center text-white text-xl'>Hồ sơ</h2>
                 <div>
                     <ul className='item-menu flex justify-center'>
                         <li>
@@ -30,10 +30,10 @@ const ViewProfile = () => {
                         <ul className='flex justify-center mt-5 mb-7'>
                             <li><span className='mr-20'>Giới tính</span></li>
                             <li class="gender-radio">
-                                <input type="radio" id="nam" name="gioiTinh" value="Nam" className='drop-shadow-md' />
+                                <input type="radio" id="nam" name="gioiTinh" value="Nam" className='drop-shadow-md mr-1' />
                                 <label for="nam" className='mr-10'>Nam</label>
 
-                                <input type="radio" id="nu" name="gioiTinh" value="Nữ" className='drop-shadow-md' />
+                                <input type="radio" id="nu" name="gioiTinh" value="Nữ" className='drop-shadow-md mr-1' />
                                 <label for="nu">Nữ</label>
                             </li>
                         </ul>
