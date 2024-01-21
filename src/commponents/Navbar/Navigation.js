@@ -1,19 +1,34 @@
-import React from 'react'
 import '../../css/Navbar.css'
+import React, { useState, useEffect } from 'react';
 const Navigation = () => {
+    const [navbarBackground, setNavbarBackground] = useState('bg-gray-800');
+
+    const handleScroll = () => {
+        if (window.scrollY > 50) {
+            setNavbarBackground('bg-gray-600');
+        } else {
+            setNavbarBackground('bg-gray-800');
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
-        <div class="fixed h-24 top-0 left-0 right-0 bg-color p-4">
-            <div class="container mx-auto">
-
-                <ul class="flex space-x-4 text-white">
-                    <li><a href="#">Trang chủ</a></li>
-                    <li><a href="#">Danh mục 1</a></li>
-                    <li><a href="#">Danh mục 2</a></li>
-                </ul>
+        <>
+            <div className={`navbar ${navbarBackground} text-white p-4 fixed w-full top-0 transition-all ease-in-out duration-300`}>
+                <div className="container mx-auto">
+                    {/* Nội dung thanh navbar */}
+                    Navbar Content
+                </div>
             </div>
-        </div>
+        </>
+    );
+};
 
-    )
-}
 
 export default Navigation
