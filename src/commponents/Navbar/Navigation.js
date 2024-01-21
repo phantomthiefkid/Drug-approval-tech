@@ -38,7 +38,6 @@ const Navigation = () => {
                             <Link><Capsule size={20}></Capsule>
                                 <span className='ml-2'>Thuốc  </span></Link>
                         </li>
-                        <li></li>
                     </ul>
                 </div>
                 <div className="container w-full pl-22 ml-10">
