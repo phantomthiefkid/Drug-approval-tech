@@ -34,7 +34,7 @@ const Navigation = () => {
                         </li>
                         <li className='text-lg flex items-center'> {/* Thêm lớp items-center để căn chỉnh theo chiều ngang */}
                             <Link><Capsule size={20}></Capsule>
-                            <span className='ml-2'>Thuốc  </span></Link>
+                                <span className='ml-2'>Thuốc  </span></Link>
                         </li>
                         <li></li>
                     </ul>
@@ -51,18 +51,17 @@ const Navigation = () => {
 
                 <div className="container pl-4">
                     <ul className='item-menu'>
-                        <li className='text-lg'>Đăng nhập</li>
+                        <li className=' flex items-center'>
+                            <li className='text-lg'>Đăng nhập</li>
+                            <Link to={`/viewprofile`}>  <img className='logo' src='./nguyentan.png' alt='profile'></img></Link>
+                        </li>
                         <li className='text-lg flex items-center'>
                             <span><button><i>Ngôn ngữ</i></button></span>
                             <img className='logo' src='./vietnam.png' alt='Drug bank' />
                         </li>
-
                     </ul>
                 </div>
-
             </div>
-           
-
         </>
     );
 };
