@@ -6,7 +6,7 @@ const CreateUser = () => {
     return (
         <>
             <Navigation />
-            <h1 className='mt-48 ml-72 italic text-3xl font-extrabold'>User Management</h1>
+            <h1 className='mt-48 ml-72 italic text-3xl font-extrabold'>Quản lý nhân viên</h1>
             <div className='bd mt-14 text-center font-semibold w-2/6'>
                 <h2 className='bg text-center text-white text-xl'>Thêm mới nhân viên</h2>
                 <div>

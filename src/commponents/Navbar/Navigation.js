@@ -2,8 +2,12 @@ import '../../css/Navbar.css'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Capsule } from 'react-bootstrap-icons';
+import ModalLogin from '../Account/ModalLogin';
 const Navigation = () => {
     const [navbarBackground, setNavbarBackground] = useState('bg-indigo-950');
+    const [showModalLogin, setShowModalLogin] = useState(false);
+
+    const handleOnClose = () => setShowModalLogin(false)
 
     const handleScroll = () => {
         if (window.scrollY > 50) {
@@ -21,8 +25,10 @@ const Navigation = () => {
     }, []);
 
 
+
     return (
         <>
+            <ModalLogin onClose={handleOnClose} visible={showModalLogin} />
             <div className={`navbar ${navbarBackground} text-white h-32 p-4 fixed w-full top-0 transition-all ease-in-out duration-300 navigation`}>
                 <div id='logo' className='pl-32'>
 
@@ -52,7 +58,7 @@ const Navigation = () => {
                 <div className="container pl-4">
                     <ul className='item-menu'>
                         <li className=' flex items-center'>
-                            <li className='text-lg'>Đăng nhập</li>
+                            <li className='text-lg' onClick={() => setShowModalLogin(true)}>Đăng nhập</li>
                             <Link to={`/viewprofile`}>  <img className='logo' src='./nguyentan.png' alt='profile'></img></Link>
                         </li>
                         <li className='text-lg flex items-center'>
