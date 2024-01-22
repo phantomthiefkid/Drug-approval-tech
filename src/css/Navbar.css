@@ -37,6 +37,15 @@
 
 .item-menu img {
     width: 70px; /* Điều chỉnh kích thước của hình ảnh */
-    border-radius: 50%; /* Bo góc hình ảnh để làm tròn */
+    border-radius: 100%; /* Bo góc hình ảnh để làm tròn */
     margin-right: 20px; /* Khoảng cách giữa hình ảnh và văn bản */
 }
+
+/* ... (your other styles) */
+
+.navbar-transparent {
+    background-color: transparent;
+    backdrop-filter: blur(10px); /* Optional: Add a blur effect for a frosted glass look */
+}
+
+/* ... (your other styles) */

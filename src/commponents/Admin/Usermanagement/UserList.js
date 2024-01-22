@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Navigation from '../../Navbar/Navigation'
+import Footer from '../../Footer/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers } from '../../../redux/userlistManagement/userSlice'
 import '../../../css/UserManagement/userlist.css'
-import { ThreeDots } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 const UserList = () => {
     const usersAPI = useSelector((user) => user.userlist.data)
@@ -38,25 +38,40 @@ const UserList = () => {
     }
 
     return (
-        <>
+        <div className=''>
             <div className="fixed top-0 w-full z-50">
                 <Navigation />
             </div>
-            <div className='mt-32 mb-32'>
-                <div className='py-8 flex justify-center'>
+            <div className='mt-28 mb-32'>
+                <div className='py-8 flex px-48'>
                     <h1 className='text-5xl font-serif font-thin text-emerald-500 flex'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor" class="bi bi-people mt-1" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-people mt-1" viewBox="0 0 16 16">
                             <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
                         </svg>
-                        <span className='ml-2'>User Management</span>
+                        <span className='ml-2'>Quản lí người dùng</span>
                     </h1>
                 </div>
+                <div className='flex'>
+                    <div className='w-2/3 mt-8 mb-8 px-48'>
+                        <form>
+                            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                </div>
+                                <input type="search" id="default-search" class="block w-1/2 p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tìm kiếm..." required />
+
+                            </div>
+                        </form>
+                    </div>
+                    <div><button type="button" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></div>
+                </div>
                 <div>
-
-
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-3/4 shadow-2xl mb-20 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-300">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
                                         No
@@ -85,7 +100,7 @@ const UserList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {usersAPI && usersAPI.map((user) => (<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                {usersAPI && usersAPI.map((user) => (<tr class="bg-white border-b hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {count++}
                                     </th>
@@ -112,7 +127,9 @@ const UserList = () => {
                                         <button type="button"
                                             onClick={() => toggleDropdown(user)}
                                             className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-700 border border-transparent rounded-md focus:outline-none focus:border-gray-800 focus:ring focus:ring-gray-300 active:bg-gray-800">
-                                            <ThreeDots color='white'></ThreeDots>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
+                                            </svg>
                                         </button>
                                         {isOpen && selectedUser && selectedUser.id === user.id && (
                                             <div className="absolute right-10 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -129,12 +146,7 @@ const UserList = () => {
                                                     >
                                                         Vô hiệu hóa người dùng
                                                     </a>
-                                                    <a
-                                                        href="#"
-                                                        className="block text-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        Xóa người dùng
-                                                    </a>
+                                                    
                                                 </div>
                                             </div>
                                         )}
@@ -151,7 +163,8 @@ const UserList = () => {
 
 
             </div>
-        </>
+            <Footer></Footer>
+        </div>
     )
 }
 
