@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PenFill } from 'react-bootstrap-icons'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import Navigation from '../../Navbar/Navigation'
+import Footer from '../../Footer/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers, updateUsers } from '../../../redux/userlistManagement/userSlice'
 
@@ -111,10 +112,10 @@ const EditUser = () => {
 
   return (
     <>
-      <div className="fixed top-0 w-full z-50">
+      
         <Navigation />
-      </div>
-      <div className='mt-32 mb-48 bg-slate-50 w-2/3 mx-auto shadow-xl'>
+    
+      <div className='mt-32 bg-slate-50 w-2/3 mx-auto shadow-xl'>
         <div className='py-8 flex justify-start ml-20'>
           <h3 className='text-5xl font-serif font-thin text-emerald-500 flex'>
             <PenFill></PenFill>
@@ -206,6 +207,7 @@ const EditUser = () => {
           </form>
         </div>
       </div>
+      <Footer></Footer>
     </>
   )
 }

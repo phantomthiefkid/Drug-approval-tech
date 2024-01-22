@@ -39,10 +39,10 @@ const UserList = () => {
 
     return (
         <div className=''>
-            <div className="fixed top-0 w-full z-50">
-                <Navigation />
-            </div>
-            <div className='mt-28 mb-32'>
+
+            <Navigation />
+
+            <div className='mt-28'>
                 <div className='py-8 flex px-48'>
                     <h1 className='text-5xl font-serif font-thin text-emerald-500 flex'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-people mt-1" viewBox="0 0 16 16">
@@ -146,7 +146,7 @@ const UserList = () => {
                                                     >
                                                         Vô hiệu hóa người dùng
                                                     </a>
-                                                    
+
                                                 </div>
                                             </div>
                                         )}
