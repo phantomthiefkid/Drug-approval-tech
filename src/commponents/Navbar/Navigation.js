@@ -1,12 +1,21 @@
 import '../../css/Navbar.css'
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Search, Capsule } from 'react-bootstrap-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import ModalLogin from '../Account/ModalLogin';
+
+import { getUserDataFromToken } from '../../redux/auth/loginSlice';
+
 const Navigation = () => {
     const [navbarBackground, setNavbarBackground] = useState('bg-blue-950');
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
+
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const data = getUserDataFromToken();
+    const dispatch = useDispatch();
 
     const handleScroll = () => {
         if (window.scrollY > 50) {
@@ -22,6 +31,8 @@ const Navigation = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+    console.log(data);
+    console.log(data.RoleName);
 
     return (
         <>
@@ -39,6 +50,9 @@ const Navigation = () => {
                             <Link><Capsule size={20}></Capsule>
                                 <span className='ml-2 hover:text-yellow-300'>Thuốc  </span></Link>
                         </li>
+                        {data && data === 'SUPERADMIN' && (
+                            <li className='text-lg flex items-center hover:text-yellow-300'>Quản lý</li>
+                        )}
                     </ul>
                 </div>
                 <div className="container w-2/3 pl-22 ml-10">

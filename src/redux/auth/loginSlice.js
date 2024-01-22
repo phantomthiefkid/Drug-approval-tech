@@ -1,41 +1,31 @@
-import axios from "axios"
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const URL = 'https://fams-management.tech/auth/login'
+const URL_LOGIN = `https://fams-management.tech/auth/login`
 
-export const loginAccount = createAsyncThunk('login', async ({email, password}) => {
+export const loginApi = (email, password) => {
+    return axios.post(URL_LOGIN, {
+        email: email,
+        password: password,
+    });
+};
+
+export const getUserDataFromToken = () => {
+    const token = localStorage.getItem('token');
+
     try {
-        const response = await axios.post(URL, {
-            email, password
-        });
-        const token = response.data
-        localStorage.setItem('token', token)
-        return token;
+        if (token) {
+            const payload = token.split('.')[1];
+            console.log(payload)
+            const decodedPayload = atob(payload);
+            const data = JSON.parse(decodedPayload);
+
+            if (data && data.RoleName) {
+                return data.RoleName;
+            }
+        }
     } catch (error) {
-        throw error;
+        console.error('Error decoding or parsing token:', error.message);
     }
-}, []);
 
-export const loginAPI = createSlice({
-    name: 'loginAPI',
-    initialState: {
-        isLoading: false,
-        data: {},
-        isError: false,
-    },
-    extraReducers: (builder) => {
-        builder.addCase(loginAccount.fulfilled, (state, action) => {
-            state.data = action.payload;
-            state.isLoading = false;
-            state.isError = false
-        })
-        builder.addCase(loginAccount.pending, (state, action) => {
-            state.isLoading = true;
-        })
-        builder.addCase(loginAccount.rejected, (state, action) => {
-            state.isError = true;
-        })
-    }
-})
-
-export default loginAPI.reducer;
+    return null;
+};

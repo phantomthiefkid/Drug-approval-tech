@@ -1,28 +1,55 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { XCircle } from 'react-bootstrap-icons';
-import { useDispatch, useSelector } from 'react-redux'
-import { loginAccount } from '../../redux/auth/loginSlice';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { loginApi } from '../../redux/auth/loginSlice'
 
 export default function ModalLogin({ visible, onClose }) {
-  const [login, setLogin] = useState({ email: '', password: '' })
-  const dispatch = useDispatch();
-  const token = useSelector((token) => token.login.data)
-  if (!visible) {
-    return null;
-  }
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setLogin((prevLogin) => ({ ...prevLogin, [name]: value }));
-    
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (login) {
-      await dispatch(loginAccount({email: login.email, password: login.password})).then(() => {console.log(token)})
+
+    try {
+      if (!handleValidationEmail()) {
+        return;
+      }
+      if (!password) {
+        toast.error('The password is required');
+        return;
+      }
+      const response = await loginApi(email, password);
+      const token = response.data;
+      localStorage.setItem('token', JSON.stringify(token));
+      const storedToken = localStorage.getItem('token');
+      const parsedToken = JSON.parse(storedToken);
+      onClose();
+      navigate('/');
+    } catch (error) {
+      console.error('Đăng nhập thất bại', error);
+      toast.error('Login Failed: Your email or password is incorrect');
     }
-  }
+  };
+
+
+  const handleValidationEmail = () => {
+    const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com)$/;
+
+    if (!email) {
+      toast.error('An email is required!');
+      return false;
+    } else if (!emailPattern.test(email)) {
+      toast.error('An invalid email format! (must be @gmail.com)');
+      return false;
+    }
+    return true;
+  };
+
+  if (!visible) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center">
       <div className="bg-white p-2 rounded w-96 " style={{ padding: '25px' }}>
@@ -37,23 +64,21 @@ export default function ModalLogin({ visible, onClose }) {
           Đăng nhập
         </h1>
         <div className="flex flex-col">
-          <span className='mb-2'>Tên tài khoản</span>
+          <span className='mb-2'>Email</span>
           <input
-            type="text"
+            type="email"
             className="border p-2 rounded mb-5 drop-shadow-md"
-            placeholder="Nhập tên tài khoản"
-            name='email'
-            value={login.email}
-            onChange={handleOnChange}
+            placeholder="Nhập email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <span className='mb-2'>Mật khẩu</span>
           <input
-            type="text"
+            type="password"
             className="border p-2 rounded mb-5 drop-shadow-md"
             placeholder="Nhập mật khẩu"
-            name='password'
-            value={login.password}
-            onChange={handleOnChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <div className="flex mb-5">
 
@@ -65,7 +90,7 @@ export default function ModalLogin({ visible, onClose }) {
           </div>
         </div>
         <div className="text-center">
-          <button onClick={handleLogin} className="px-2 py-2 bg-gray-700 text-white rounded">
+          <button className="px-5 py-2 bg-gray-700 text-white rounded" onClick={handleLogin}>
             Đăng nhập
           </button>
         </div>
