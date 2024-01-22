@@ -1,60 +1,49 @@
-import React, { useState } from 'react';
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../../css/Footer/Footer.css'
 const Footer = () => {
- 
-    const [isOpen, setIsOpen] = useState(false);
 
-    const toggleDropdown = () => {
-      setIsOpen(!isOpen);
-    };
-  
-    return (
-      <div className="relative inline-block text-left">
-        <button
-          type="button"
-          onClick={toggleDropdown}
-          className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-700 border border-transparent rounded-md focus:outline-none focus:border-gray-800 focus:ring focus:ring-gray-300 active:bg-gray-800"
-        >
-          Dropdown
-          <svg
-            className="w-4 h-4 ml-2 -mr-1 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-  
-        {isOpen && (
-          <div className="absolute right-0 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="py-1">
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              >
-                Item 1
-              </a>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              >
-                Item 2
-              </a>
-              {/* Add more items as needed */}
-            </div>
+  return (
+    <div className='h-72 text-center w-full footer'>
+      <div className='grid grid-cols-3'>
+        <div className='justify-center mx-auto'>
+          <Link to={`/`}><div><img className='w-24 ml-10 mt-10' src='./logo.png'/><span className='text-blue-950 text-xl font-bold'>DRUG APPROVAL</span><br></br><span className='font-medium text-gray-700'>Technology</span></div></Link>
+          
+        </div>
+        <div>
+          <div className='py-6'>
+            <h3 className='text-xl'><b>Products</b></h3>
+            <ul>
+              <li>Clinical API</li>
+              <li>Clinical Drug Datasets</li>
+              <li>Academic Drug Datasets</li>
+            </ul>
           </div>
-        )}
+          <div>
+          <h3 className='text-xl'><b>Products</b></h3>
+            <ul>
+              <li>Clinical API</li>
+              <li>Clinical Drug Datasets</li>
+              <li>Academic Drug Datasets</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+        <div className='py-6'>
+            <h3 className='text-xl'><b>Products</b></h3>
+            <ul>
+              <li>Clinical API</li>
+              <li>Clinical Drug Datasets</li>
+              <li>Academic Drug Datasets</li>
+            </ul>
+          </div>
+        </div>
       </div>
-    );
-  };
-  
+      <div className='py-2'><p>© OMx Personal Health Analytics, Inc. 2023 </p></div>
+    </div>
+  );
+};
+
 
 
 export default Footer
