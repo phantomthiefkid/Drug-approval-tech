@@ -5,14 +5,14 @@ import Footer from '../Footer/Footer';
 
 const Home = () => {
   return (
-    <div className='bg-cover'>
+    <div>
       <Navigation />
-      <div className="mt-32 mb-28 h-screen">
+      <div className="mt-28 h-screen">
         <span>This is homepage</span>
       </div>
-      
-        <Footer></Footer>
-      
+
+      <Footer></Footer>
+
     </div>
   );
 }

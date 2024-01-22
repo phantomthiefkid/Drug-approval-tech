@@ -37,7 +37,7 @@ const Navigation = () => {
     return (
         <>
             <ModalLogin onClose={handleOnClose} visible={showModalLogin} />
-            <div className={`navbar ${navbarBackground} text-white h-24 fixed w-full top-0 transition-all ease-in-out duration-300 navigation`}>
+            <div className={`navbar ${navbarBackground} text-white h-24 fixed z-50 w-full top-0 transition-all ease-in-out duration-300 navigation`}>
                 <div id='logo' className='pl-24'>
                     <ul className='item-menu flex items-center'>
                         <li> <Link to={`/`}><div>
