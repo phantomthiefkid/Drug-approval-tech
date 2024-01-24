@@ -1,11 +1,59 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const USERS_URL = "https://649e9aef245f077f3e9ca295.mockapi.io/users";
+const USERSLIST_URL = "https://fams-management.tech/user/get-pageable-users";
+const UPDATE_USER_URL = "https://fams-management.tech/user/update-user";
+const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/user/find-by-email";
+const ACTIVE_USER_URL = "https://fams-management.tech/user/active-user";
+const DEACTIVATE_USER_URL = "https://fams-management.tech/user/deactivate-user";
 
-export const fetchUsers = createAsyncThunk('fetchUsers', async () => {
+export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender }) => {
     try {
-        const response = await axios.get(USERS_URL);
+        console.log(pageSize, pageNo, sortField, sortOrder, roleName, status, gender)
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Missing token');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            params: {
+                pageSize,
+                pageNo,
+                sortField,
+                sortOrder,
+                roleName,
+                status,
+                gender
+            }
+        };
+        const response = await axios.get(USERSLIST_URL, config);
+        // console.log(response.data)
+        return response.data;
+    } catch (error) {
+        console.log("here")
+        throw error;
+    }
+}, []);
+
+export const findUserByEmail = createAsyncThunk('findUserByEmail', async (email) => {
+    try {
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Missing token');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+
+        const response = await axios.get(FIND_USER_BY_EMAIL_URL + `?email=${email}`, config);
+        console.log(response.data)
         return response.data;
     } catch (error) {
         throw error;
@@ -14,12 +62,69 @@ export const fetchUsers = createAsyncThunk('fetchUsers', async () => {
 
 export const updateUsers = createAsyncThunk('updateUsers', async (userUpdate) => {
     try {
-        const response = await axios.put(USERS_URL + `/${userUpdate.id}`, userUpdate);
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            return console.log("Request failed!!!")
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Missing token');
         }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+
+        const response = await axios.post(UPDATE_USER_URL + `?email=${userUpdate.email}`, {
+            fullName: userUpdate.fullname,
+            dayOfBirth: userUpdate.dayOfBirth,
+            gender: userUpdate.gender
+        }, config);
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}, []);
+
+export const deactivateUser = createAsyncThunk('deactivateUser', async ({ email }) => {
+    try {
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Missing token');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+
+        const response = await axios.post(DEACTIVATE_USER_URL + `?email=${email}`, null, config);
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}, []);
+
+export const activeUser = createAsyncThunk('activeUser', async ({ email }) => {
+    try {
+        console.log(email)
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Missing token');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+
+        const response = await axios.post(ACTIVE_USER_URL + `?email=${email}`, null, config);
+
+        return response.data;
     } catch (error) {
         throw error;
     }
@@ -31,12 +136,15 @@ export const UsersData = createSlice({
         isLoading: false,
         data: [],
         isError: false,
+        totalPages: 0,
+        user: {}
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
             state.data = action.payload;
             state.isLoading = false;
             state.isError = false
+            state.totalPages = action.payload.totalPages
         })
         builder.addCase(fetchUsers.pending, (state, action) => {
             state.isLoading = true;
@@ -44,17 +152,34 @@ export const UsersData = createSlice({
         builder.addCase(fetchUsers.rejected, (state, action) => {
             state.isError = true;
         })
-        builder.addCase(updateUsers.fulfilled, (state, action) => {
-            state.data = action.payload;
-            state.isLoading = false;
-            state.isError = false
+        builder.addCase(findUserByEmail.fulfilled, (state, action) => {
+            state.user = action.payload
         })
-        builder.addCase(updateUsers.pending, (state, action) => {
+        builder.addCase(findUserByEmail.pending, (state, action) => {
             state.isLoading = true;
         })
-        builder.addCase(updateUsers.rejected, (state, action) => {
+        builder.addCase(findUserByEmail.rejected, (state, action) => {
             state.isError = true;
         })
+        builder.addCase(deactivateUser.fulfilled, (state, action) => {
+            state.user = action.payload
+        })
+        builder.addCase(deactivateUser.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(deactivateUser.rejected, (state, action) => {
+            state.isError = true;
+        })
+        builder.addCase(activeUser.fulfilled, (state, action) => {
+            state.user = action.payload
+        })
+        builder.addCase(activeUser.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(activeUser.rejected, (state, action) => {
+            state.isError = true;
+        })
+
     }
 })
 

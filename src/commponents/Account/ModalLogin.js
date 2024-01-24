@@ -24,9 +24,9 @@ export default function ModalLogin({ visible, onClose }) {
       }
       const response = await loginApi(email, password);
       const token = response.data;
-      localStorage.setItem('token', JSON.stringify(token));
+      
+      localStorage.setItem('token', token.accessToken);
       const storedToken = localStorage.getItem('token');
-      const parsedToken = JSON.parse(storedToken);
       onClose();
       navigate('/');
     } catch (error) {
