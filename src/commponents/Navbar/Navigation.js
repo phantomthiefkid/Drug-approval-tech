@@ -11,6 +11,8 @@ const Navigation = () => {
     const [navbarBackground, setNavbarBackground] = useState('bg-blue-950');
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
+
+    const data = getUserDataFromToken();
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -41,7 +43,6 @@ const Navigation = () => {
         };
     }, []);
 
-
     return (
         <>
             <ModalLogin onClose={handleOnClose} visible={showModalLogin} />
@@ -55,7 +56,7 @@ const Navigation = () => {
                         </div></Link>
                         </li>
                         <li className='text-lg flex items-center'>
-                            <Link><Capsule size={20}></Capsule>
+                            <Link to={'/'}><Capsule size={20}></Capsule>
                                 <span className='ml-2 hover:text-yellow-300'>Thuốc  </span></Link>
                         </li>
                         {roleName && roleName === 'SUPERADMIN' && (

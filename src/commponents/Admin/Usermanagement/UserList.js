@@ -50,10 +50,10 @@ const UserList = () => {
                 setApiData(response.payload.content);
             }
         })
-        .catch((error) => {
-            // Xử lý lỗi nếu có
-            console.error('Error fetching users:', error);
-        });
+            .catch((error) => {
+                // Xử lý lỗi nếu có
+                console.error('Error fetching users:', error);
+            });
     }, [dispatch, currentPage, sortField, sortOrder, roleName, status, genderFilter]);
 
 
@@ -205,7 +205,7 @@ const UserList = () => {
                                         <div className="mb-4">
                                             <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
                                             <select value={status} onChange={handleStatusChange} id="status" className="mt-1 p-2 w-full border rounded-md bg-gray-100 focus:outline-none focus:ring focus:border-blue-300">
-                                            <option value="">Choose</option>
+                                                <option value="">Choose</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Deactivate">Deactivate</option>
                                             </select>
@@ -236,7 +236,7 @@ const UserList = () => {
 
                         </div>
                     </div>
-                    <div><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></div>
+                    <div><Link to={'/createuser'}><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></Link></div>
                 </div>
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
