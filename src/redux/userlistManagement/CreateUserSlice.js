@@ -27,7 +27,7 @@ export const createUser = createAsyncThunk("createUser", async (userData, { reje
     }
 });
 
-export const UsersData = createSlice({
+export const UserData = createSlice({
     name: 'userData',
     initialState: {
         isLoading: false,
@@ -53,4 +53,4 @@ export const UsersData = createSlice({
         });
     }
 })
-export default UsersData.reducer;
+export default UserData.reducer;

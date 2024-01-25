@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import { XCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { loginApi } from '../../redux/auth/loginSlice'
 
 export default function ModalLogin({ visible, onClose }) {
@@ -22,6 +25,9 @@ export default function ModalLogin({ visible, onClose }) {
       const response = await loginApi(email, password);
       const token = response.data;
       localStorage.setItem('token', JSON.stringify(token));
+      
+      localStorage.setItem('token', token.accessToken);
+      const storedToken = localStorage.getItem('token');
       onClose();
       navigate('/');
     } catch (error) {
@@ -46,10 +52,16 @@ export default function ModalLogin({ visible, onClose }) {
 
   if (!visible) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm flex items-center justify-center">
-      <div className="bg-white p-2 rounded w-80 " style={{ padding: '25px' }}>
-        <button className='ml-60' onClick={onClose}>X</button>
-        <h1 className="font-semibold text-center text-xl text-gray-700 mb-5">
+    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center">
+      <div className="bg-white p-2 rounded w-96 " style={{ padding: '25px' }}>
+        <div className='flex justify-end'>
+          <button onClick={onClose} className='p-0'>
+            <XCircle className='text-gray-500' size={20} />
+          </button>
+        </div>
+
+
+        <h1 className="font-semibold text-center text-2xl text-gray-700 mb-5">
           Đăng nhập
         </h1>
         <div className="flex flex-col">
@@ -70,9 +82,9 @@ export default function ModalLogin({ visible, onClose }) {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="flex mb-5">
-            <div className="flex-grow">
-              <input type="checkbox" className="mr-2" />
-            </div>
+
+            <input type="checkbox" className="mr-2" />
+
             <div className="">
               <span className="mb-5 mr-32">Nhớ tài khoản</span>
             </div>
