@@ -44,7 +44,7 @@ const EditProfile = () => {
                                     Trở về
                                 </button>
                             </Link>
-                            <Link to='/createuser'>
+                            <Link to=''>
                                 <button className='buttonSave' type='submit'>
                                     Lưu
                                 </button>

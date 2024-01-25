@@ -15,10 +15,8 @@ export const getUserDataFromToken = () => {
     try {
         if (token) {
             const payload = token.split('.')[1];
-            console.log(payload)
             const decodedPayload = atob(payload);
             const data = JSON.parse(decodedPayload);
-
             if (data && data.RoleName) {
                 return data.RoleName;
             }

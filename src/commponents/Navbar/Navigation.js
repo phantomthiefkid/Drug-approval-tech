@@ -12,10 +12,7 @@ const Navigation = () => {
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
 
-    const navigate = useNavigate();
-    const token = localStorage.getItem('token');
     const data = getUserDataFromToken();
-    const dispatch = useDispatch();
 
     const handleScroll = () => {
         if (window.scrollY > 50) {
@@ -31,8 +28,6 @@ const Navigation = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-    console.log(data);
-    console.log(data.RoleName);
 
     return (
         <>
@@ -47,7 +42,7 @@ const Navigation = () => {
                         </div></Link>
                         </li>
                         <li className='text-lg flex items-center'>
-                            <Link><Capsule size={20}></Capsule>
+                            <Link to={'/createuser'}><Capsule size={20}></Capsule>
                                 <span className='ml-2 hover:text-yellow-300'>Thuốc  </span></Link>
                         </li>
                         {data && data === 'SUPERADMIN' && (
