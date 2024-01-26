@@ -8,11 +8,8 @@ import { viewProfile } from '../../redux/profile/ProfileSlice'
 const ViewProfile = () => {
     const token = localStorage.getItem('token');
     const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
-    console.log(email)
     const dispatch = useDispatch();
-    const profileView = useSelector((state) => state.viewProfile);
-
-    console.log(profileView)
+    const profileView = useSelector((state) => state.viewProfile.data);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,10 +28,6 @@ const ViewProfile = () => {
         return <div>Loading...</div>;
     }
 
-    // if (profileView.isError || !profileView.data) {
-    //     return <div>Error loading profile.</div>;
-    // }
-
     return (
         <>
             <div className='bd mt-32 text-center font-semibold w-2/6'>
@@ -46,25 +39,25 @@ const ViewProfile = () => {
                         </li>
                     </ul>
                     <ul>
+                        <li className='form-item '><span>Role</span></li>
+                        <li className="custom-input"><input type="text" name='roleName' value={profileView.roleName} disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
+
                         <li className='form-item '><span>Họ và tên</span></li>
                         <li className="custom-input"><input type="text" name='fullname' value={profileView.fullname} disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
 
                         <li className='form-item '><span>Email</span></li>
                         <li className="custom-input"><input type="email" name='email' value={profileView.email} disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
 
-                        <li className='form-item '><span>Số điện thoại</span></li>
-                        <li className="custom-input"><input type="text" placeholder='0987391600' disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
-
                         <li className='form-item '><span>Ngày sinh</span></li>
-                        <li className="custom-input"><input type="data" id='datepicker' name='dayOfBirth' value={profileView.dayOfBirth} disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
+                        <li className="custom-input"><input type="date" id='datepicker' name='dayOfBirth' value={profileView.dayOfBirth} disabled className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
 
                         <ul className='flex justify-center mt-5 mb-7'>
                             <li><span className='mr-20'>Giới tính</span></li>
                             <li class="gender-radio">
-                                <input type="radio" id="male" name="gender" disabled checked={profileView.gender === 'male' || profileView.gender === 'Male'} className='drop-shadow-md mr-1' />
+                                <input type="radio" id="male" name="gender" disabled checked={profileView.gender === 1} className='drop-shadow-md mr-1 form-check-input custom-radio' />
                                 <label for="male" className='mr-10'>Nam</label>
 
-                                <input type="radio" id="female" name="gender" disabled checked={profileView.gender === 'female' || profileView.gender === 'Female'} className='drop-shadow-md mr-1' />
+                                <input type="radio" id="female" name="gender" disabled checked={profileView.gender === 2} className='drop-shadow-md mr-1 form-check-input custom-radio' />
                                 <label for="female">Nữ</label>
                             </li>
                         </ul>
@@ -76,7 +69,7 @@ const ViewProfile = () => {
                                 </button>
                             </Link>
                             <Link to='/editprofile'>
-                                <button className='btnSave' type='submit'>
+                                <button className='btnSave'>
                                     Chỉnh sửa
                                 </button>
                             </Link>
