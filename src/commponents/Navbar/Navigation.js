@@ -1,7 +1,7 @@
 import '../../css/Navbar.css'
 import React, { useState, useEffect } from 'react';
 import { Search, Capsule } from 'react-bootstrap-icons';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import ModalLogin from '../Account/ModalLogin';
 
@@ -46,7 +46,7 @@ const Navigation = () => {
     return (
         <>
             <ModalLogin onClose={handleOnClose} visible={showModalLogin} />
-            <div className={`navbar ${navbarBackground} text-white h-24 fixed z-50 w-full top-0 transition-all ease-in-out duration-300 navigation`}>
+            <div className={`navbar ${navbarBackground} text-white h-20 fixed z-50 w-full top-0 transition-all ease-in-out duration-300 navigation`}>
                 <div id='logo' className='pl-28'>
                     <ul className='item-menu flex items-center'>
                         <li> <Link to={`/`}><div>
