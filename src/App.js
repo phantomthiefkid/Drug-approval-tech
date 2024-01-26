@@ -6,10 +6,12 @@ import EditUser from './commponents/Admin/Usermanagement/EditUser';
 import ViewProfile from './commponents/Account/ViewProfile';
 import EditProfile from './commponents/Account/EditProfile';
 import CreateUser from './commponents/Admin/Usermanagement/CreateUser';
-
+import Navigation from './commponents/Navbar/Navigation';
+import Footer from './commponents/Footer/Footer';
 function App() {
   return (
     <BrowserRouter>
+      <Navigation></Navigation>
       <Routes>
         <Route path='/' element={<Home></Home>}></Route>
         <Route path='/viewprofile' element={<ViewProfile></ViewProfile>}></Route>
@@ -18,6 +20,7 @@ function App() {
         <Route path='/userlist' element={<UserList></UserList>}></Route>
         <Route path='/edituser/:id' element={<EditUser></EditUser>}></Route>
       </Routes>
+      <Footer></Footer>
     </BrowserRouter>
   );
 }

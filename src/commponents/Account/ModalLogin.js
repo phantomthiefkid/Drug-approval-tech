@@ -25,7 +25,7 @@ export default function ModalLogin({ visible, onClose }) {
       const response = await loginApi(email, password);
       const token = response.data;
       localStorage.setItem('token', JSON.stringify(token));
-      
+
       localStorage.setItem('token', token.accessToken);
       const storedToken = localStorage.getItem('token');
       onClose();
@@ -52,7 +52,7 @@ export default function ModalLogin({ visible, onClose }) {
 
   if (!visible) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center">
+    <div className="fixed inset-0 bg-black z-10 bg-opacity-20 backdrop-blur-sm flex items-center justify-center">
       <div className="bg-white p-2 rounded w-96 " style={{ padding: '25px' }}>
         <div className='flex justify-end'>
           <button onClick={onClose} className='p-0'>

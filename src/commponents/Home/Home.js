@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Navigation from '../Navbar/Navigation';
 import '../../css/Homepage/Home.css';
-import Footer from '../Footer/Footer';
 
 const Home = () => {
   const [currentImage, setCurrentImage] = useState(1);
@@ -16,7 +14,6 @@ const Home = () => {
 
   return (
     <div>
-      <Navigation />
       <div className="mt-32 mb-28 h-screen">
         <div className="slider">
           <div className="slides">
@@ -46,7 +43,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="navigation-manual">
+          <div className="navigation-manual z-0">
             {Array.from({ length: 4 }).map((_, index) => (
               <label key={index} htmlFor={`radio${index + 1}`} className="manual-btn"></label>
             ))}
@@ -75,7 +72,6 @@ const Home = () => {
 
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -70,9 +70,7 @@ const Navigation = () => {
                                     </div>
                                 )}
                             </li>
-
                         )}
-
                     </ul>
                 </div>
                 <div className="container w-64 pl-22">
@@ -84,8 +82,6 @@ const Navigation = () => {
                 <div className="container pl-2">
                     <ul className='item-menu flex'>
                         {token ? (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>{roleName}</button></li>) : (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>Đăng nhập</button></li>)}
-
-
                         <li><Link to={`/viewprofile`}>  <img className='logo rounded-full' src='./langtu.jpg' alt='profile'></img></Link></li>
                         <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
                             <div className='w-32'>
@@ -93,7 +89,6 @@ const Navigation = () => {
                             </div>
                             <li><img className='logo' src='./vietnam.png' alt='Drug bank' /></li>
                         </li>
-
                     </ul>
                 </div>
             </div>

@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
 import '../../css/Profile.css'
-import Navigation from '../Navbar/Navigation';
-import Footer from '../Footer/Footer'
 import { viewProfile } from '../../redux/profile/ProfileSlice'
 
 const ViewProfile = () => {
@@ -39,7 +37,6 @@ const ViewProfile = () => {
 
     return (
         <>
-            <Navigation />
             <div className='bd mt-32 text-center font-semibold w-2/6'>
                 <h2 className='bg text-center text-white text-xl'>Hồ sơ</h2>
                 <div>
@@ -87,7 +84,6 @@ const ViewProfile = () => {
                     </ul>
                 </div>
             </div>
-            <Footer />
         </>
     )
 }
