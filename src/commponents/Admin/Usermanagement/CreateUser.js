@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Navigation from '../../Navbar/Navigation';
-import Footer from '../../Footer/Footer';
 import Swal from 'sweetalert2';
 
 import { createUser } from '../../../redux/userlistManagement/userSlice'
@@ -130,7 +128,6 @@ const CreateUser = () => {
 
     return (
         <>
-            <Navigation />
             <h1 className='mt-36 ml-72 italic text-3xl font-extrabold'>Quản lý nhân viên</h1>
             <div className='bd mt-14 text-center font-semibold w-2/6'>
                 <h2 className='bg text-center text-white text-xl'>Thêm mới nhân viên</h2>
@@ -140,7 +137,7 @@ const CreateUser = () => {
                             <img className='logo mb-8 w-20 h-20 border' src='./langtu.jpg' alt='profile'></img>
                         </li>
                     </ul>
-                    {/* <form onSubmit={handleSubmit}> */}
+                    {/* <form onSubmit={handleSub9mit}> */}
                     <ul>
                         {errors.empty && <div className="text-red-500 mb-3">{errors.empty}</div>}
                         <li className='form-item '><span>Role</span></li>
@@ -210,7 +207,6 @@ const CreateUser = () => {
                     {/* </form> */}
                 </div>
             </div>
-            <Footer />
         </>
     )
 

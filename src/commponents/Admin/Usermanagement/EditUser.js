@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PenFill } from 'react-bootstrap-icons'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import Navigation from '../../Navbar/Navigation'
-import Footer from '../../Footer/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { findUserByEmail, updateUsers } from '../../../redux/userlistManagement/userSlice'
 import { toast, ToastContainer } from 'react-toastify';
@@ -20,9 +18,6 @@ const EditUser = () => {
   const [inforUser, setInforUser] = useState(initialUser);
   const [errorUser, setErrorUser] = useState(initialUser)
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +33,6 @@ const EditUser = () => {
     fetchData();
   }, [email, dispatch]);
 
-
   const handleOnChange = (event) => {
     const { name, value, type, checked } = event.target;
     let newValue;
@@ -47,11 +41,9 @@ const EditUser = () => {
       // Nếu là radio button và có name là 'gender'
       newValue = parseInt(value, 10); // Chuyển đổi giá trị thành số nguyên
     }
-
     if (name === 'fullname' || name === 'dayOfBirth') {
       newValue = value
     }
-
     setInforUser((prevInfo) => ({
       ...prevInfo,
       [name]: newValue,
@@ -75,7 +67,6 @@ const EditUser = () => {
       error.fullname = 'Họ và tên không được có ký tự đặc biệt'
       isValid = true;
     }
-
     setErrorUser(error);
     return isValid
   }
@@ -85,25 +76,17 @@ const EditUser = () => {
     try {
       if (!validationUserUpdate(inforUser)) {
         await dispatch(updateUsers(inforUser));
-        
-          toast.success('Cập nhật thành công', { autoClose: 200 });
-        
+        toast.success('Cập nhật thành công', { autoClose: 200 });
       }
     } catch (error) {
-      
+
       console.error('Error updating user:', error);
       toast.error('Cập nhật thất bại', { autoClose: 200 });
     }
   };
-  
-
-
 
   return (
     <>
-
-      <Navigation />
-
       <div className='mt-32 bg-slate-50 w-2/3 mx-auto shadow-xl'>
         <div className='py-8 flex justify-start ml-20'>
           <h3 className='text-5xl font-serif font-thin text-emerald-500 flex'>
@@ -191,7 +174,6 @@ const EditUser = () => {
           </form>
         </div>
       </div>
-      <Footer></Footer>
     </>
   )
 }

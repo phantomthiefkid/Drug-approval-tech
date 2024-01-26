@@ -1,15 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import '../../css/Profile.css'
-import Footer from '../Footer/Footer';
-import Navigation from '../Navbar/Navigation';
 
 const EditProfile = () => {
     return (
         <div>
-
-            <Navigation />
-
             <div className='bd mt-48 text-center font-semibold w-2/6'>
                 <h2 className='bg text-center text-white text-xl'>Hồ sơ</h2>
                 <div>
@@ -57,7 +52,6 @@ const EditProfile = () => {
                 </div>
 
             </div>
-            <Footer />
         </div>
     )
 }
