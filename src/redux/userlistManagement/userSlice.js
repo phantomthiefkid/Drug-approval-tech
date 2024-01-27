@@ -6,6 +6,7 @@ const UPDATE_USER_URL = "https://fams-management.tech/user/update-user";
 const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/user/find-by-email";
 const ACTIVE_USER_URL = "https://fams-management.tech/user/active-user";
 const DEACTIVATE_USER_URL = "https://fams-management.tech/user/deactivate-user";
+const URL_CREATE_USER = "https://fams-management.tech/auth/register";
 
 export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender }) => {
     try {
@@ -130,6 +131,40 @@ export const activeUser = createAsyncThunk('activeUser', async ({ email }) => {
     }
 }, []);
 
+export const createUser = createAsyncThunk('createUser', async (userData, { rejectWithValue }) => {
+    try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error('No authentication token found');
+            return rejectWithValue('No authentication token found');
+        }
+
+        console.log('Attempting to create user with token:', token);
+
+        const response = await axios.post(URL_CREATE_USER, userData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        console.log('Response:', response);
+
+        if (response.status === 200) {
+            console.log('User created successfully');
+            return response.data;
+        } else {
+            console.error('Request failed with status code', response.status);
+            return rejectWithValue('Request failed with status code ' + response.status);
+        }
+    } catch (error) {
+        console.error('Request failed with an error:', error.message);
+        return rejectWithValue('Request failed with an error: ' + error.message);
+    }
+});
+
+
 export const UsersData = createSlice({
     name: 'userData',
     initialState: {
@@ -179,6 +214,22 @@ export const UsersData = createSlice({
         builder.addCase(activeUser.rejected, (state, action) => {
             state.isError = true;
         })
+        builder.addCase(createUser.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data = action.payload;
+            state.isError = false;
+        });
+
+        builder.addCase(createUser.pending, (state) => {
+            state.isLoading = true;
+            state.isError = false;
+        });
+
+        builder.addCase(createUser.rejected, (state) => {
+            state.isLoading = false;
+            state.isError = true;
+
+        });
 
     }
 })

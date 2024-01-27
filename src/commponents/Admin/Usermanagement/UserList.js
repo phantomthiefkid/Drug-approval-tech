@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Navigation from '../../Navbar/Navigation'
-import Footer from '../../Footer/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { activeUser, deactivateUser, fetchUsers } from '../../../redux/userlistManagement/userSlice'
 import '../../../css/UserManagement/userlist.css'
@@ -50,10 +48,10 @@ const UserList = () => {
                 setApiData(response.payload.content);
             }
         })
-        .catch((error) => {
-            // Xử lý lỗi nếu có
-            console.error('Error fetching users:', error);
-        });
+            .catch((error) => {
+                // Xử lý lỗi nếu có
+                console.error('Error fetching users:', error);
+            });
     }, [dispatch, currentPage, sortField, sortOrder, roleName, status, genderFilter]);
 
 
@@ -128,7 +126,6 @@ const UserList = () => {
 
         return (
             <div className='flex items-center justify-center h-screen'>
-                <Navigation />
                 <div className='animate-spin rounded-full border-t-4 border-blue-500 border-solid h-12 w-12'></div>
                 <div className='ml-4 text-gray-600'>Loading...</div>
             </div>
@@ -136,8 +133,6 @@ const UserList = () => {
     }
     return (
         <div className=''>
-
-            <Navigation />
             <ToastContainer></ToastContainer>
             <div className='mt-28'>
                 <div className='py-8 flex px-48'>
@@ -159,7 +154,6 @@ const UserList = () => {
                                     </svg>
                                 </div>
                                 <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tìm kiếm..." required />
-
                             </div>
                         </form>
                         <div className='w-1/4 ml-2 flex'><button onClick={toggleFilter} className='text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'><Filter size={30}></Filter>
@@ -206,7 +200,7 @@ const UserList = () => {
                                         <div className="mb-4">
                                             <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
                                             <select value={status} onChange={handleStatusChange} id="status" className="mt-1 p-2 w-full border rounded-md bg-gray-100 focus:outline-none focus:ring focus:border-blue-300">
-                                            <option value="">Choose</option>
+                                                <option value="">Choose</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Deactivate">Deactivate</option>
                                             </select>
@@ -237,7 +231,7 @@ const UserList = () => {
 
                         </div>
                     </div>
-                    <div><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></div>
+                    <div><Link to={'/createuser'}><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></Link></div>
                 </div>
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -337,7 +331,6 @@ const UserList = () => {
                                         )}
                                     </td>
                                 </tr>))}
-
                             </tbody>
                         </table>
                         <div className='mb-6 flex justify-center'>
@@ -368,14 +361,8 @@ const UserList = () => {
                             </nav>
                         </div>
                     </div>
-
-
                 </div>
-
-
-
             </div>
-            <Footer></Footer>
         </div>
     )
 }

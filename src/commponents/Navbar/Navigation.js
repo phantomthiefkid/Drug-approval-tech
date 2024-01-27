@@ -1,7 +1,7 @@
 import '../../css/Navbar.css'
 import React, { useState, useEffect } from 'react';
 import { Search, Capsule } from 'react-bootstrap-icons';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import ModalLogin from '../Account/ModalLogin';
 
@@ -11,6 +11,8 @@ const Navigation = () => {
     const [navbarBackground, setNavbarBackground] = useState('bg-blue-950');
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
+
+    const data = getUserDataFromToken();
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -41,11 +43,10 @@ const Navigation = () => {
         };
     }, []);
 
-
     return (
         <>
             <ModalLogin onClose={handleOnClose} visible={showModalLogin} />
-            <div className={`navbar ${navbarBackground} text-white h-24 fixed z-50 w-full top-0 transition-all ease-in-out duration-300 navigation`}>
+            <div className={`navbar ${navbarBackground} text-white h-20 fixed z-50 w-full top-0 transition-all ease-in-out duration-300 navigation`}>
                 <div id='logo' className='pl-28'>
                     <ul className='item-menu flex items-center'>
                         <li> <Link to={`/`}><div>
@@ -55,7 +56,7 @@ const Navigation = () => {
                         </div></Link>
                         </li>
                         <li className='text-lg flex items-center'>
-                            <Link><Capsule size={20}></Capsule>
+                            <Link to={'/'}><Capsule size={20}></Capsule>
                                 <span className='ml-2 hover:text-yellow-300'>Thuốc  </span></Link>
                         </li>
                         {roleName && roleName === 'SUPERADMIN' && (
@@ -69,9 +70,7 @@ const Navigation = () => {
                                     </div>
                                 )}
                             </li>
-
                         )}
-
                     </ul>
                 </div>
                 <div className="container w-64 pl-22">
@@ -83,8 +82,6 @@ const Navigation = () => {
                 <div className="container pl-2">
                     <ul className='item-menu flex'>
                         {token ? (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>{roleName}</button></li>) : (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>Đăng nhập</button></li>)}
-
-
                         <li><Link to={`/viewprofile`}>  <img className='logo rounded-full' src='./langtu.jpg' alt='profile'></img></Link></li>
                         <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
                             <div className='w-32'>
@@ -92,7 +89,6 @@ const Navigation = () => {
                             </div>
                             <li><img className='logo' src='./vietnam.png' alt='Drug bank' /></li>
                         </li>
-
                     </ul>
                 </div>
             </div>
