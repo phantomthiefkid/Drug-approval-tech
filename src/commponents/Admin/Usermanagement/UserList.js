@@ -92,6 +92,7 @@ const UserList = () => {
         setGenderFilter('')
         setRoleName('')
         setStatus('')
+        setSortOrder('asc')
         dispatch(fetchUsers({ pageSize: 8, pageNo: 0 }));
     };
 
