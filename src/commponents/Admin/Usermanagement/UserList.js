@@ -22,8 +22,26 @@ const UserList = () => {
     const [roleName, setRoleName] = useState('');
     const [status, setStatus] = useState('');
     const [genderFilter, setGenderFilter] = useState('');
-
+    const [searchKeyword, setSearchKeyword] = useState('');
     let count = 1
+    
+
+    const handleSearchChange = (e) => {
+        setSearchKeyword(e.target.value);
+        handleSearch(e.target.value);
+    };
+
+    const handleSearch = (keyword) => {
+        if (keyword.trim() !== '') {
+            const filteredUsers = apiData.filter(user =>
+                user.fullname.toLowerCase().startsWith(keyword.toLowerCase())
+            );
+            setUserList([...filteredUsers]);
+        } else {
+            setUserList([...apiData]);
+        }
+    };
+    
 
     useEffect(() => {
         if (Array.isArray(usersAPI)) {
@@ -54,11 +72,10 @@ const UserList = () => {
             });
     }, [dispatch, currentPage, sortField, sortOrder, roleName, status, genderFilter]);
 
-
     useEffect(() => {
         setUserList([...apiData]);
     }, [apiData]);
-
+    
 
     const handleIncreasePage = () => {
         setCurrentPage((prev) => prev + 1);
@@ -90,6 +107,7 @@ const UserList = () => {
         setGenderFilter('')
         setRoleName('')
         setStatus('')
+        setSortOrder('asc')
         dispatch(fetchUsers({ pageSize: 8, pageNo: 0 }));
     };
 
@@ -152,9 +170,11 @@ const UserList = () => {
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
-                                <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tìm kiếm..." required />
+                                <input  value={searchKeyword}
+                        onChange={handleSearchChange}  type="search" name='search' id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tìm kiếm..." required />
                             </div>
                         </form>
+                       
                         <div className='w-1/4 ml-2 flex'><button onClick={toggleFilter} className='text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'><Filter size={30}></Filter>
 
                         </button>
@@ -232,6 +252,7 @@ const UserList = () => {
                     </div>
                     <div><Link to={'/createuser'}><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></Link></div>
                 </div>
+
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

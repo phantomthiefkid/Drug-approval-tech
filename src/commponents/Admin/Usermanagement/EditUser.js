@@ -18,7 +18,7 @@ const EditUser = () => {
   const [inforUser, setInforUser] = useState(initialUser);
   const [errorUser, setErrorUser] = useState(initialUser)
   const dispatch = useDispatch();
-
+console.log(email, "heiufh")
   useEffect(() => {
     const fetchData = async () => {
       const response = await dispatch(findUserByEmail(email));

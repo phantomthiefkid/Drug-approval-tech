@@ -41,7 +41,7 @@ export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, page
 
 export const findUserByEmail = createAsyncThunk('findUserByEmail', async (email) => {
     try {
-
+console.log(email)
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Missing token');
@@ -57,6 +57,7 @@ export const findUserByEmail = createAsyncThunk('findUserByEmail', async (email)
         console.log(response.data)
         return response.data;
     } catch (error) {
+        console.log('Loi')
         throw error;
     }
 }, []);
