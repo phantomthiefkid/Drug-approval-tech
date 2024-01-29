@@ -31,11 +31,11 @@ const ViewProfile = () => {
     return (
         <>
             <div className='bd mt-32 text-center font-semibold w-2/6'>
-                <h2 className='bg text-center text-white text-xl'>Hồ sơ</h2>
+            <div className='bg-blue-950 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
                 <div>
                     <ul className='item-menu flex justify-center'>
                         <li>
-                            <img className='logo mb-8 w-20 h-20 border' src='./langtu.jpg' alt='profile'></img>
+                            <img className='logo mb-8 w-32 h-20 border' src='./langtu.jpg' alt='profile'></img>
                         </li>
                     </ul>
                     <ul>
@@ -62,14 +62,14 @@ const ViewProfile = () => {
                             </li>
                         </ul>
 
-                        <div className='flex justify-center row mt-3 mb-5'>
+                        <div className='flex justify-center gap-14 row mt-3 mb-5'>
                             <Link to={'/'}>
-                                <button className='btnCancel mr-10'>
+                            <button className="text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-bold px-5 py-2.5 hover:text-white focus:z-10">
                                     Thoát
                                 </button>
                             </Link>
                             <Link to='/editprofile'>
-                                <button className='btnSave'>
+                                <button className='text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center ml-auto'>
                                     Chỉnh sửa
                                 </button>
                             </Link>
