@@ -42,7 +42,6 @@ const UserList = () => {
         }
     };
     
-
     useEffect(() => {
         if (Array.isArray(usersAPI)) {
             setUserList([...usersAPI]);
