@@ -114,12 +114,12 @@ const EditProfile = () => {
 
     return (
         <div>
-            <div className='bd mt-48 text-center font-semibold w-2/6'>
-                <h2 className='bg text-center text-white text-xl'>Hồ sơ</h2>
+            <div className='bd mt-32 text-center font-semibold w-2/6'>
+                <div className='bg-blue-900 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
                 <div>
                     <ul className='item-menu flex justify-center'>
                         <li>
-                            <img className='logo mb-8 w-20 h-20 border' src='./langtu.jpg' alt='profile'></img>
+                            <img className='logo mb-8 w-32 h-20 border' src='./langtu.jpg' alt='profile'></img>
                         </li>
                     </ul>
                     <ul>
@@ -146,18 +146,18 @@ const EditProfile = () => {
                             </li>
                         </ul>
 
-                        <div className='flex justify-center row mt-3 mb-3'>
+                        <div className='flex justify-center gap-14 row mt-3 mb-3'>
                             <Link to={'/viewprofile'}
                                 onClick={(e) => {
                                     e.preventDefault();
                                     handleClick();
                                 }}>
-                                <button className='btnCancel mr-10'>
+                                <button className="text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
                                     Trở về
                                 </button>
                             </Link>
                             <Link to=''>
-                                <button className='buttonSave' type='submit' onClick={handleSubmit}>
+                                <button className='text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center ml-auto' type='submit' onClick={handleSubmit}>
                                     Lưu
                                 </button>
                             </Link>

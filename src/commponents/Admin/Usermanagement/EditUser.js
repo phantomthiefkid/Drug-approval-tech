@@ -18,7 +18,7 @@ const EditUser = () => {
   const [inforUser, setInforUser] = useState(initialUser);
   const [errorUser, setErrorUser] = useState(initialUser)
   const dispatch = useDispatch();
-
+console.log(email, "heiufh")
   useEffect(() => {
     const fetchData = async () => {
       const response = await dispatch(findUserByEmail(email));
@@ -87,18 +87,13 @@ const EditUser = () => {
 
   return (
     <>
-      <div className='mt-32 bg-slate-50 w-2/3 mx-auto shadow-xl'>
-        <div className='py-8 flex justify-start ml-20'>
-          <h3 className='text-5xl font-serif font-thin text-emerald-500 flex'>
-            <PenFill></PenFill>
-            <span className='ml-2'>Chỉnh sửa</span>
-          </h3>
-          <ToastContainer />
-        </div>
-        <div className='mb-8'>
-          <form className='w-2/3 mx-auto'>
-            <div className='flex justify-end mr-4'><img className='w-28 rounded-full border-4 border-green-400' src='https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/405341235_1774049269674530_8472061970839104134_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=XnQAKh7iRzMAX-EtLOi&_nc_oc=AQlaDyIHKn1Tey3KBNwNptBCXWwan0-UVt348gZmZXpTAlI1FUG2_y6T1MEHA_B__jg&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDH_wybaZi6KgKWYmlcG0Po4vv6b0Ve60J0V3fzdzz1sg&oe=65B13530' /></div>
-            <div className='flex mb-3 gap-6'>
+      <div className='mt-32 bg-slate-50 w-1/3 mx-auto shadow-2xl border-separate'>
+      <ToastContainer />
+        <div className='mb-8 mt-12'>
+        <div className='bg-blue-950 mt-11 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
+          <form className='w-2/3 mx-auto mt-6'>
+            <div className='flex justify-center mr-4'><img className='w-32 rounded-full border-2 border-blue-400' src='https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/405341235_1774049269674530_8472061970839104134_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=XnQAKh7iRzMAX-EtLOi&_nc_oc=AQlaDyIHKn1Tey3KBNwNptBCXWwan0-UVt348gZmZXpTAlI1FUG2_y6T1MEHA_B__jg&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDH_wybaZi6KgKWYmlcG0Po4vv6b0Ve60J0V3fzdzz1sg&oe=65B13530' /></div>
+            <div className='flex mb-3 gap-6 mt-4'>
               <div class=" w-1/2">
                 <label for="base-input" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Họ và tên</label>
                 <input type="text" name='fullname' onChange={handleOnChange} value={inforUser?.fullname} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
@@ -126,7 +121,7 @@ const EditUser = () => {
 
             </div>
             <div className='mb-3'>
-              <label htmlFor="gender" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Gender</label>
+              <label htmlFor="gender" className="block mb-2 text-lg font-medium text-gray-900">Giới tính</label>
               <div className="flex items-center mb-4">
                 <input
 
@@ -136,7 +131,7 @@ const EditUser = () => {
                   name="gender"
                   checked={inforUser?.gender === 1} // Kiểm tra nếu giới tính là male
                   onChange={handleOnChange}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
                 <label htmlFor="male-radio" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nam</label>
               </div>
@@ -148,17 +143,17 @@ const EditUser = () => {
                   name="gender"
                   checked={inforUser?.gender === 0} // Kiểm tra nếu giới tính là female
                   onChange={handleOnChange}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
-                <label htmlFor="female-radio" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nữ</label>
+                <label htmlFor="female-radio" className="ms-2 text-sm font-medium text-gray-900">Nữ</label>
               </div>
             </div>
-            <div class="flex justify-end gap-8 mt-6 ml-6 mb-16 space-x-3 rtl:space-x-reverse">
+            <div class="flex justify-center gap-8 mt-6 ml-6 mb-16 space-x-3 rtl:space-x-reverse">
 
               <Link to="/userlist">
                 <button
                   type="button"
-                  className="text-gray-500 mb-8 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  className="text-red-600 mb-8 hover:scale-x-110 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10"
                 >
                   <u>
                     <b>Trở lại</b>
@@ -166,7 +161,7 @@ const EditUser = () => {
                 </button>
               </Link>
 
-              <button onClick={handleUpdate} className="text-white mb-8 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">
+              <button onClick={handleUpdate} className="text-white mb-8 hover:scale-x-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-auto" type="submit">
                 Lưu
               </button>
 
