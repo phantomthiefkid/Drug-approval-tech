@@ -8,7 +8,7 @@ import ModalLogin from '../Account/ModalLogin';
 import { getUserDataFromToken } from '../../redux/auth/loginSlice';
 
 const Navigation = () => {
-    const [navbarBackground, setNavbarBackground] = useState('bg-blue-950');
+    const [navbarBackground, setNavbarBackground] = useState('bg-blue-800');
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
 
@@ -22,9 +22,9 @@ const Navigation = () => {
 
     const handleScroll = () => {
         if (window.scrollY > 50) {
-            setNavbarBackground('bg-blue-950');
+            setNavbarBackground('bg-indigo-700');
         } else {
-            setNavbarBackground('bg-blue-950');
+            setNavbarBackground('bg-blue-800');
         }
     };
 

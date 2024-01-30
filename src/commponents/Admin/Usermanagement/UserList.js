@@ -24,7 +24,7 @@ const UserList = () => {
     const [genderFilter, setGenderFilter] = useState('');
     const [searchKeyword, setSearchKeyword] = useState('');
     let count = 1
-    
+
 
     const handleSearchChange = (e) => {
         setSearchKeyword(e.target.value);
@@ -41,7 +41,7 @@ const UserList = () => {
             setUserList([...apiData]);
         }
     };
-    
+
     useEffect(() => {
         if (Array.isArray(usersAPI)) {
             setUserList([...usersAPI]);
@@ -74,7 +74,7 @@ const UserList = () => {
     useEffect(() => {
         setUserList([...apiData]);
     }, [apiData]);
-    
+
 
     const handleIncreasePage = () => {
         setCurrentPage((prev) => prev + 1);
@@ -152,7 +152,7 @@ const UserList = () => {
             <ToastContainer></ToastContainer>
             <div className='mt-28'>
                 <div className='py-8 flex px-48'>
-                    <h1 className='text-5xl font-serif font-thin text-emerald-500 flex'>
+                    <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-people mt-1" viewBox="0 0 16 16">
                             <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
                         </svg>
@@ -169,11 +169,11 @@ const UserList = () => {
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
-                                <input  value={searchKeyword}
-                        onChange={handleSearchChange}  type="search" name='search' id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Tìm kiếm..." required />
+                                <input value={searchKeyword}
+                                    onChange={handleSearchChange} type="search" name='search' id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg " placeholder="Tìm kiếm..." required />
                             </div>
                         </form>
-                       
+
                         <div className='w-1/4 ml-2 flex'><button onClick={toggleFilter} className='text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'><Filter size={30}></Filter>
 
                         </button>
@@ -254,8 +254,8 @@ const UserList = () => {
 
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-300">
+                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 ">
+                            <thead class="text-xs text-white uppercase bg-blue-900">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
                                         STT
@@ -288,8 +288,8 @@ const UserList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(userList) && userList.map((user) => (<tr class="bg-white border-b hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {Array.isArray(userList) && userList.map((user) => (<tr class="bg-white border-b hover:bg-gray-100">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                         {count++}
                                     </th>
                                     <td class="px-6 py-4">
@@ -317,7 +317,7 @@ const UserList = () => {
                                         {/* <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> */}
                                         <button type="button"
                                             onClick={() => toggleDropdown(user)}
-                                            className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-700 border border-transparent rounded-md focus:outline-none focus:border-gray-800 focus:ring focus:ring-gray-300 active:bg-gray-800">
+                                            className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-md focus:outline-none  ">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
                                                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
                                             </svg>
@@ -356,7 +356,7 @@ const UserList = () => {
                             <nav aria-label="">
                                 <ul class="flex items-center -space-x-px h-10 text-base">
                                     <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
-                                        <button onClick={handleDecreasePage} class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <button onClick={handleDecreasePage} class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
                                             <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
                                             </svg>
@@ -365,11 +365,11 @@ const UserList = () => {
                                     {totalPages ? [...Array(totalPages).keys()].map((page) => (
                                         <li className={`page-item ${currentPage === page ? 'active' : ''}`}
                                             key={page}>
-                                            <button onClick={() => handlePageChange(page)} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{page + 1}</button>
+                                            <button onClick={() => handlePageChange(page)} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{page + 1}</button>
                                         </li>
                                     )) : <div></div>}
                                     <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
-                                        <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
 
                                             <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />

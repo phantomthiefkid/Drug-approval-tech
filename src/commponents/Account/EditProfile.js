@@ -115,7 +115,7 @@ const EditProfile = () => {
     return (
         <div>
             <div className='bd mt-32 text-center font-semibold w-2/6'>
-            <div className='bg-blue-950 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
+                <div className='bg-blue-900 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
                 <div>
                     <ul className='item-menu flex justify-center'>
                         <li>
@@ -152,7 +152,7 @@ const EditProfile = () => {
                                     e.preventDefault();
                                     handleClick();
                                 }}>
-                                <button className="text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-bold px-5 py-2.5 hover:text-white focus:z-10">
+                                <button className="text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
                                     Trở về
                                 </button>
                             </Link>
