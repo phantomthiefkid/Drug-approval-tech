@@ -22,25 +22,9 @@ const UserList = () => {
     const [roleName, setRoleName] = useState('');
     const [status, setStatus] = useState('');
     const [genderFilter, setGenderFilter] = useState('');
-    const [searchKeyword, setSearchKeyword] = useState('');
+    const [search, setSearch] = useState('');
+
     let count = 1
-
-
-    const handleSearchChange = (e) => {
-        setSearchKeyword(e.target.value);
-        handleSearch(e.target.value);
-    };
-
-    const handleSearch = (keyword) => {
-        if (keyword.trim() !== '') {
-            const filteredUsers = apiData.filter(user =>
-                user.fullname.toLowerCase().startsWith(keyword.toLowerCase())
-            );
-            setUserList([...filteredUsers]);
-        } else {
-            setUserList([...apiData]);
-        }
-    };
 
     useEffect(() => {
         if (Array.isArray(usersAPI)) {
@@ -57,6 +41,7 @@ const UserList = () => {
             roleName,
             status,
             gender: genderFilter === 'Nam' ? 1 : genderFilter === 'Nữ' ? 0 : null,
+            search: search
         })).then((response) => {
             if (response.payload.content.length === 0) {
                 // Nếu không có dữ liệu, set lại currentPage về 0
@@ -69,12 +54,11 @@ const UserList = () => {
                 // Xử lý lỗi nếu có
                 console.error('Error fetching users:', error);
             });
-    }, [dispatch, currentPage, sortField, sortOrder, roleName, status, genderFilter]);
+    }, [dispatch, currentPage, sortField, sortOrder, roleName, status, genderFilter, search]);
 
     useEffect(() => {
         setUserList([...apiData]);
     }, [apiData]);
-
 
     const handleIncreasePage = () => {
         setCurrentPage((prev) => prev + 1);
@@ -107,6 +91,7 @@ const UserList = () => {
         setRoleName('')
         setStatus('')
         setSortOrder('asc')
+        setSearch('')
         dispatch(fetchUsers({ pageSize: 8, pageNo: 0 }));
     };
 
@@ -137,6 +122,7 @@ const UserList = () => {
     const handleRoleNameChange = (e) => setRoleName(e.target.value);
     const handleStatusChange = (e) => setStatus(e.target.value);
     const handleGenderChange = (e) => setGenderFilter(e.target.value);
+    const handleSearchChange = (e) => setSearch(e.target.value);
 
     if (!usersAPI) {
 
@@ -148,7 +134,7 @@ const UserList = () => {
         );
     }
     return (
-        <div className=''>
+        <>
             <ToastContainer></ToastContainer>
             <div className='mt-28'>
                 <div className='py-8 flex px-48'>
@@ -169,8 +155,7 @@ const UserList = () => {
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
-                                <input value={searchKeyword}
-                                    onChange={handleSearchChange} type="search" name='search' id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg " placeholder="Tìm kiếm..." required />
+                                <input type="search" name='search' onChange={handleSearchChange} value={search} id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg " placeholder="Tìm kiếm..." required />
                             </div>
                         </form>
 
@@ -382,7 +367,7 @@ const UserList = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

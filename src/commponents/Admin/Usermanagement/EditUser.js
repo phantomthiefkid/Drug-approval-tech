@@ -90,7 +90,7 @@ console.log(email, "heiufh")
       <div className='mt-32 bg-slate-50 w-1/3 mx-auto shadow-2xl border-separate'>
       <ToastContainer />
         <div className='mb-8 mt-12'>
-        <div className='bg-blue-950 mt-11 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
+        <div className='bg-blue-900 mt-11 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
           <form className='w-2/3 mx-auto mt-6'>
             <div className='flex justify-center mr-4'><img className='w-32 rounded-full border-2 border-blue-400' src='https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/405341235_1774049269674530_8472061970839104134_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=XnQAKh7iRzMAX-EtLOi&_nc_oc=AQlaDyIHKn1Tey3KBNwNptBCXWwan0-UVt348gZmZXpTAlI1FUG2_y6T1MEHA_B__jg&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDH_wybaZi6KgKWYmlcG0Po4vv6b0Ve60J0V3fzdzz1sg&oe=65B13530' /></div>
             <div className='flex mb-3 gap-6 mt-4'>
