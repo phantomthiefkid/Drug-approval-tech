@@ -6,8 +6,10 @@ import EditUser from './commponents/Admin/Usermanagement/EditUser';
 import ViewProfile from './commponents/Account/ViewProfile';
 import EditProfile from './commponents/Account/EditProfile';
 import CreateUser from './commponents/Admin/Usermanagement/CreateUser';
+import DrugList from './commponents/Admin/DrugManagement/DrugList';
 import Navigation from './commponents/Navbar/Navigation';
 import Footer from './commponents/Footer/Footer';
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +21,7 @@ function App() {
         <Route path='/createuser' element={<CreateUser></CreateUser>}></Route>
         <Route path='/userlist' element={<UserList></UserList>}></Route>
         <Route path='/edituser/:email' element={<EditUser></EditUser>}></Route>
+        <Route path='druglist' element={<DrugList></DrugList>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

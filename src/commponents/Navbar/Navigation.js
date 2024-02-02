@@ -1,6 +1,6 @@
 import '../../css/Navbar.css'
 import React, { useState, useEffect } from 'react';
-import { Search, Capsule } from 'react-bootstrap-icons';
+import { Search, Capsule, Sliders, Boxes } from 'react-bootstrap-icons';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import ModalLogin from '../Account/ModalLogin';
@@ -59,8 +59,16 @@ const Navigation = () => {
                             <Link to={'/'}><Capsule size={20}></Capsule>
                                 <span className='ml-2 hover:text-yellow-300'>Thuốc  </span></Link>
                         </li>
+                        {(roleName === 'SUPERADMIN' || roleName === 'ADMIN') && (
+                            <li className='text-lg flex items-center'>
+                                <Link to={'/druglist'}>
+                                    <Boxes className='mr-2' size={30}></Boxes>
+                                    <span className=' hover:text-yellow-300'>Hoạt chất</span>
+                                </Link>
+                            </li>
+                        )}
                         {roleName && roleName === 'SUPERADMIN' && (
-                            <li onClick={toggleDropdown} className='text-lg w-full flex items-center hover:text-yellow-300'><button>Quản lí</button>
+                            <li onClick={toggleDropdown} className='text-lg w-full flex items-center hover:text-yellow-300'><Sliders className='mr-2' size={20} /><button>Quản lí</button>
                                 {isOpen && (
                                     <div className="absolute w-44 top-20 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                         <div className="py-2 w-full">
@@ -73,7 +81,7 @@ const Navigation = () => {
                         )}
                     </ul>
                 </div>
-                <div className="container w-64 pl-22">
+                <div className="container w-64">
                     <form className='flex rounded-lg w-full overflow-hidden ring-indigo-500/50 ring-offset-[3px]'>
                         <button className='p-2 w-12 bg-indigo-500 hover:bg-indigo-500/80 transition-all cursor-pointer text-indigo-100'><Search></Search></button>
                         <input type="text" className='bg-indigo-100 text-black dark:placeholder-gray-400 !outline-none pl-3 py-2 rounded-r-lg w-96' /> {/* Thêm lớp rounded-xl ở đây */}
