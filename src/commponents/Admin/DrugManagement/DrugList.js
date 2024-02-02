@@ -123,7 +123,6 @@ const DrugList = () => {
                                             <div className="mb-4 ml-4 w-full">
                                                 <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700">Sort Order</label>
                                                 <select value={sortOrder} onChange={handleSortOrderChange} id="sortOrder" className="mt-1 p-2 w-full border rounded-md bg-gray-100 focus:outline-none focus:ring focus:border-blue-300">
-                                                    <option value=''>Chọn</option>
                                                     <option value="asc">Tăng dần</option>
                                                     <option value="desc">Giảm dần</option>
                                                 </select>

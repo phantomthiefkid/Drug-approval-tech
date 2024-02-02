@@ -88,7 +88,15 @@ const Navigation = () => {
                     </form>
                 </div>
                 <div className="container pl-2">
+
                     <ul className='item-menu flex'>
+                        <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
+                            <div className='w-32'>
+                                <span><button><i> Ngôn ngữ </i></button></span>
+                            </div>
+                            <li><img className='logo' src='./vietnam.png' alt='Drug bank' /></li>
+                        </li>
+
                         {token ? (
                             <>
                                 <li className='items-center text-lg w-36 hover:text-yellow-300'>
@@ -105,12 +113,7 @@ const Navigation = () => {
                                 <button onClick={() => setShowModalLogin(true)}>Đăng nhập</button>
                             </li>
                         )}
-                        <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
-                            <div className='w-32'>
-                                <span><button><i> Ngôn ngữ </i></button></span>
-                            </div>
-                            <li><img className='logo' src='./vietnam.png' alt='Drug bank' /></li>
-                        </li>
+
                     </ul>
                 </div>
             </div>
