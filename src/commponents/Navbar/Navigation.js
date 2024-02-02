@@ -89,8 +89,22 @@ const Navigation = () => {
                 </div>
                 <div className="container pl-2">
                     <ul className='item-menu flex'>
-                        {token ? (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>{roleName}</button></li>) : (<li className='items-center text-lg w-36 hover:text-yellow-300'><button onClick={() => setShowModalLogin(true)}>Đăng nhập</button></li>)}
-                        <li><Link to={`/viewprofile`}>  <img className='logo rounded-full' src='./langtu.jpg' alt='profile'></img></Link></li>
+                        {token ? (
+                            <>
+                                <li className='items-center text-lg w-36 hover:text-yellow-300'>
+                                    <button onClick={() => setShowModalLogin(true)}>{roleName}</button>
+                                </li>
+                                <li>
+                                    <Link to={`/viewprofile`}>
+                                        <img className='logo rounded-full' src='./langtu.jpg' alt='profile' />
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            <li className='items-center text-lg w-36 hover:text-yellow-300'>
+                                <button onClick={() => setShowModalLogin(true)}>Đăng nhập</button>
+                            </li>
+                        )}
                         <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
                             <div className='w-32'>
                                 <span><button><i> Ngôn ngữ </i></button></span>

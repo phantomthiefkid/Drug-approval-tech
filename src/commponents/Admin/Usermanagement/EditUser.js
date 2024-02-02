@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PenFill } from 'react-bootstrap-icons'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { findUserByEmail, updateUsers } from '../../../redux/userlistManagement/userSlice'
 import { toast, ToastContainer } from 'react-toastify';
