@@ -8,8 +8,11 @@ import { viewProfile } from '../../redux/profile/ProfileSlice'
 const ViewProfile = () => {
     const token = localStorage.getItem('token');
     const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
+    console.log(email)
     const dispatch = useDispatch();
     const profileView = useSelector((state) => state.viewProfile.data);
+
+    console.log(profileView)
 
     useEffect(() => {
         const fetchData = async () => {

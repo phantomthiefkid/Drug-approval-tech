@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_PROFILE_VIEW = `https://fams-management.tech/user/find-by-email`
-const URL_PROFILE_UPDATE = `https://fams-management.tech/user/update-user`
+const URL_PROFILE_VIEW = `https://fams-management.tech/admin/user-management/find-by-email`
+const URL_PROFILE_UPDATE = `https://fams-management.tech/admin/user-management/user`
 
 export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejectWithValue }) => {
+    console.log(email)
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -16,7 +17,7 @@ export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejec
                 Authorization: `Bearer ${token}`
             }
         });
-        // console.log('Profile data:', response.data);
+        console.log('Profile data:', response.data);
         return response.data;
     } catch (error) {
         console.log('Error in viewProfile:', error);
@@ -43,7 +44,7 @@ export const updateProfile = createAsyncThunk('updateProfile', async (profileUpd
             dayOfBirth: profileUpdate.dayOfBirth,
             gender: profileUpdate.gender
         }, config);
-
+        console.log(response.data)
 
         if (response.status === 200) {
             console.log(response.data);
