@@ -9,7 +9,7 @@ import CreateUser from './commponents/Admin/Usermanagement/CreateUser';
 import DrugList from './commponents/Admin/DrugManagement/DrugList';
 import Navigation from './commponents/Navbar/Navigation';
 import Footer from './commponents/Footer/Footer';
-
+import CreateDrug from './commponents/Admin/DrugManagement/CreateDrug';
 function App() {
   return (
     <BrowserRouter>
@@ -21,7 +21,8 @@ function App() {
         <Route path='/createuser' element={<CreateUser></CreateUser>}></Route>
         <Route path='/userlist' element={<UserList></UserList>}></Route>
         <Route path='/edituser/:email' element={<EditUser></EditUser>}></Route>
-        <Route path='druglist' element={<DrugList></DrugList>}></Route>
+        <Route path='/druglist' element={<DrugList></DrugList>}></Route>
+        <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const URL_DRUGLIST = `https://fams-management.tech/admin/drug-management/drugs`
+const URL_CREATE_DRUG = `https://fams-management.tech/admin/drug-management/drug/create`
 
 export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSize, sortField, sortOrder, search }) => {
     try {

@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const USERSLIST_URL = "https://fams-management.tech/user/get-pageable-users";
-const UPDATE_USER_URL = "https://fams-management.tech/user/update-user";
-const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/user/find-by-email";
-const ACTIVE_USER_URL = "https://fams-management.tech/user/active-user";
-const DEACTIVATE_USER_URL = "https://fams-management.tech/user/deactivate-user";
+const USERSLIST_URL = "https://fams-management.tech/admin/user-management/users";
+const UPDATE_USER_URL = "https://fams-management.tech/admin/user-management/user";
+const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/admin/user-management/find-by-email";
+const ACTIVE_USER_URL = "https://fams-management.tech/admin/user-management/active-user";
+const DEACTIVATE_USER_URL = "https://fams-management.tech/admin/user-management/deactivate-user";
 const URL_CREATE_USER = "https://fams-management.tech/auth/register";
 
-export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender }) => {
+export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search }) => {
     try {
-        console.log(pageSize, pageNo, sortField, sortOrder, roleName, status, gender)
+        console.log(pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search)
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Missing token');
@@ -27,7 +27,8 @@ export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, page
                 sortOrder,
                 roleName,
                 status,
-                gender
+                gender,
+                search
             }
         };
         const response = await axios.get(USERSLIST_URL, config);
@@ -76,7 +77,7 @@ export const updateUsers = createAsyncThunk('updateUsers', async (userUpdate) =>
             },
         };
 
-        const response = await axios.post(UPDATE_USER_URL + `?email=${userUpdate.email}`, {
+        const response = await axios.put(UPDATE_USER_URL + `?email=${userUpdate.email}`, {
             fullName: userUpdate.fullname,
             dayOfBirth: userUpdate.dayOfBirth,
             gender: userUpdate.gender

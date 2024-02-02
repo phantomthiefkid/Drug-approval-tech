@@ -7,6 +7,7 @@ export default configureStore({
     reducer: {
         userlist: UsersData,
         viewProfile: ProfileSlice,
-        druglist: DrugsData
+        drugData: DrugsData
+
     }
 })
