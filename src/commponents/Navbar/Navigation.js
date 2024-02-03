@@ -5,20 +5,18 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import ModalLogin from '../Account/ModalLogin';
 
-import { getUserDataFromToken } from '../../redux/auth/loginSlice';
+import { getUserDataFromToken, getUserNameFromToken } from '../../redux/auth/loginSlice';
 
 const Navigation = () => {
     const [navbarBackground, setNavbarBackground] = useState('bg-blue-800');
     const [showModalLogin, setShowModalLogin] = useState(false);
     const handleOnClose = () => setShowModalLogin(false);
 
-    const data = getUserDataFromToken();
+    const data = getUserNameFromToken();
     const [isOpen, setIsOpen] = useState(false);
-    const navigate = useNavigate();
     const token = localStorage.getItem('token');
 
-    const roleName = getUserDataFromToken();
-    const dispatch = useDispatch();
+    const roleName = getUserDataFromToken()
 
     const handleScroll = () => {
         if (window.scrollY > 50) {
@@ -88,7 +86,6 @@ const Navigation = () => {
                     </form>
                 </div>
                 <div className="container pl-2">
-
                     <ul className='item-menu flex'>
                         <li className='text-lg flex items-center justify-end hover:text-yellow-300'>
                             <div className='w-32'>
@@ -99,8 +96,8 @@ const Navigation = () => {
 
                         {token ? (
                             <>
-                                <li className='items-center text-lg w-36 hover:text-yellow-300'>
-                                    <button onClick={() => setShowModalLogin(true)}>{roleName}</button>
+                                <li className='items-center text-wrap w-36 hover:text-yellow-300'>
+                                    <button onClick={() => setShowModalLogin(true)}>{data.fullName}</button>
                                 </li>
                                 <li>
                                     <Link to={`/viewprofile`}>

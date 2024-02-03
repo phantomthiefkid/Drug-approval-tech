@@ -145,8 +145,8 @@ const DrugList = () => {
                 </div>
 
                 <div className='mb-6'>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500">
+                    <div class="relative overflow-x-auto shadow-md ">
+                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 rounded-lg">
                             <thead class="text-xs text-white uppercase bg-blue-900">
                                 <tr>
                                     <th scope="col" class="px-2 py-3 ">
