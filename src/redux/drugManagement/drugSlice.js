@@ -6,7 +6,6 @@ const URL_CREATE_DRUG = `https://fams-management.tech/admin/drug-management/drug
 
 export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSize, sortField, sortOrder, search }) => {
     try {
-        console.log(pageNo, pageSize, sortField, sortOrder, search)
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Missing token');

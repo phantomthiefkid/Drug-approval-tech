@@ -17,7 +17,7 @@ export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejec
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log('Profile data:', response.data);
+        // console.log('Profile data:', response.data);
         return response.data;
     } catch (error) {
         console.log('Error in viewProfile:', error);
@@ -38,7 +38,7 @@ export const updateProfile = createAsyncThunk('updateProfile', async (profileUpd
                 'Authorization': `Bearer ${token}`
             },
         };
-        const response = await axios.post(URL_PROFILE_UPDATE + `?email=${profileUpdate.email}`, {
+        const response = await axios.put(URL_PROFILE_UPDATE + `?email=${profileUpdate.email}`, {
 
             fullName: profileUpdate.fullname,
             dayOfBirth: profileUpdate.dayOfBirth,
