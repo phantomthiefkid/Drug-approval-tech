@@ -55,7 +55,7 @@ const EditProfile = () => {
 
     function handleClick() {
         Swal.fire({
-            title: "Your information will not be saved?",
+            title: "Thông tin của bạn sẽ không được lưu?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes",
@@ -87,7 +87,7 @@ const EditProfile = () => {
                 await dispatch(viewProfile(email));
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Update Profile Successfully!',
+                    text: 'Cập nhật hồ sơ thành công!',
                     icon: 'success',
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'OK',
@@ -157,7 +157,7 @@ const EditProfile = () => {
                                 </button>
                             </Link>
                             <Link to=''>
-                                <button className='text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center ml-auto' type='submit' onClick={handleSubmit}>
+                                <button type='submit' onClick={handleSubmit} className='text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center ml-auto' >
                                     Lưu
                                 </button>
                             </Link>

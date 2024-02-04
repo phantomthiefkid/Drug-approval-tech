@@ -13,7 +13,7 @@
 .logo {
     width: 50%;
     /* Thêm margin-top để điều chỉnh khoảng cách từ trên xuống */
-    margin-left: 25%;
+    margin-left: 15%;
     margin-top: 10px;
 }
 
@@ -43,9 +43,9 @@
 }
 
 .item-menu img {
-    width: 70px;
+    width: 55px;
     /* Điều chỉnh kích thước của hình ảnh */
-    border-radius: 100%;
+    /* border-radius: 80%; */
     /* Bo góc hình ảnh để làm tròn */
     margin-right: 20px;
     /* Khoảng cách giữa hình ảnh và văn bản */

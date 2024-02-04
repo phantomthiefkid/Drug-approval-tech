@@ -110,7 +110,7 @@ const CreateUser = () => {
                         } else {
                             Swal.fire({
                                 title: "Success!",
-                                text: "Created User Successfully!",
+                                text: "Thêm mới nhân viên thành công!",
                                 icon: "success",
                                 confirmButtonColor: '#3085d6',
                                 confirmButtonText: 'OK',

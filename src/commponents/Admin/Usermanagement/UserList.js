@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { activeUser, deactivateUser, fetchUsers } from '../../../redux/userlistManagement/userSlice'
 import '../../../css/UserManagement/userlist.css'
 import { Link } from 'react-router-dom';
-import { Filter } from 'react-bootstrap-icons'
+import { Filter, PlusCircle } from 'react-bootstrap-icons'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -234,7 +234,7 @@ const UserList = () => {
 
                         </div>
                     </div>
-                    <div><Link to={'/createuser'}><button type="button" className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4">Thêm mới nhân viên</button></Link></div>
+                    <div><Link to={'/createuser'}><button type="button" className="text-white flex gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4"><PlusCircle size={20}></PlusCircle> Thêm mới nhân viên</button></Link></div>
                 </div>
 
                 <div className='mb-6'>
