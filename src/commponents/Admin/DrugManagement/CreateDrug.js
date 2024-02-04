@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Boxes } from 'react-bootstrap-icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createDrugs } from '../../../redux/drugManagement/drugSlice';
+import { useDispatch } from 'react-redux'
 
 const drug_initial = {
   type: '',
@@ -23,73 +25,84 @@ const drug_error = {
   clinicalDescription: '',
 }
 
-const CreateDrug = () => {
 
+const CreateDrug = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [drug, setDrug] = useState(drug_initial);
   const [errorDrug, setErrorDrug] = useState(drug_error)
   const getDataDrug = (e) => {
     setDrug({ ...drug, [e.target.name]: e.target.value })
   }
 
+  const handleApprovalStatusChange = (newValue) => {
+    setDrug({ ...drug, approvalStatus: newValue });
+  };
+
   const handleValidation = (drug) => {
-    const newErrors = { ...errorDrug };
-    const specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    setErrorDrug({ ...drug_error });
+    const specialCharacters = /[!@#$%^&*+\=\[\]{}':"\\|<>\/?]+/;
     let isValid = false;
     if (!drug) {
       isValid = true;
       return isValid
     }
     if (drug?.type.trim() === '') {
-      errorDrug.type = "Loại thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, type: "Loại thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.type)) {
-      errorDrug.type = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, type: "Loại thuốc được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
     if (drug?.name.trim() === '') {
-      errorDrug.name = "Tên thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, name: "Tên thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.name)) {
-      errorDrug.name = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, name: "Tên thuốc được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
     if (drug?.state.trim() === '') {
-      errorDrug.state = "Trạng thái thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, state: "Trạng thái thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.state)) {
-      errorDrug.state = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, state: "Trạng thái thuốc không được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
     if (drug?.description.trim() === '') {
-      errorDrug.description = "Mô tả thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, description: "Mô tả về thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.description)) {
-      errorDrug.description = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, description: "Mô tả về thuốc không được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
     if (drug?.simpleDescription.trim() === '') {
-      errorDrug.simpleDescription = "Mô tả thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, simpleDescription: "Mô tả về thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.simpleDescription)) {
-      errorDrug.simpleDescription = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, simpleDescription: "Mô tả về thuốc không được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
     if (drug?.clinicalDescription.trim() === '') {
-      errorDrug.clinicalDescription = "Mô tả thuốc không được bỏ trống!!!";
+      setErrorDrug(prevState => ({ ...prevState, clinicalDescription: "Mô tả về thuốc không được bỏ trống!!!" }));
       isValid = true;
     } else if (specialCharacters.test(drug.clinicalDescription)) {
-      errorDrug.clinicalDescription = "Không được có ký tự đặc biệt!!!"
+      setErrorDrug(prevState => ({ ...prevState, clinicalDescription: "Mô tả về thuốc không được có ký tự đặc biệt!!!" }));
       isValid = true;
     }
-    setErrorDrug(newErrors);
     return isValid;
   }
 
   const handleCreate = async (event) => {
-    event.preventDefaut();
+    event.preventDefault();
     try {
-      if (!handleValidation) {
+      if (!handleValidation(drug)) {
+        await dispatch(createDrugs(drug))
         toast.success('Thêm mới thành công!', { autoClose: 200 });
+        setTimeout(() => {
+          navigate(`/druglist`);
+        }, 1000);
+      } else {
+        toast.error('Thêm mới thất bại!', { autoClose: 200 })
       }
     } catch (error) {
       toast.error('Thêm mới thất bại!', { autoClose: 200 })
@@ -112,37 +125,44 @@ const CreateDrug = () => {
           <form className='mt-6 w-3/4 mx-auto'>
             <div className='mb-3 mt-4'>
               <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại</label>
+                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại thuốc</label>
                 <input type="text" name='type' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.type && (<span className='text-red-500'>{errorDrug.type}</span>)}
               </div>
               <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên</label>
+                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên thuốc</label>
                 <input type="text" name='name' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.name && (<span className='text-red-500'>{errorDrug.name}</span>)}
               </div>
               <div class="mb-3 w-full">
                 <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Trạng thái</label>
                 <input type="text" name='state' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.state && (<span className='text-red-500'>{errorDrug.state}</span>)}
               </div>
               <div class="mb-3 w-full">
                 <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả</label>
                 <textarea rows={3} type="text" onChange={getDataDrug} name='description' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.description && (<span className='text-red-500'>{errorDrug.description}</span>)}
               </div>
               <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả đơn giản</label>
+                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả ngắn gọn</label>
                 <textarea rows={3} type="text" onChange={getDataDrug} name='simpleDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.simpleDescription && (<span className='text-red-500'>{errorDrug.simpleDescription}</span>)}
               </div>
               <div class="mb-3 w-full">
                 <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả chi tiết</label>
                 <textarea rows={3} type="text" onChange={getDataDrug} name='clinicalDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                {errorDrug.clinicalDescription && (<span className='text-red-500'>{errorDrug.clinicalDescription}</span>)}
               </div>
               <div className='mb-3'>
-                <label htmlFor="gender" className="block mb-2 text-lg font-medium text-gray-900">Trạng thái phê duyệt</label>
+                <label htmlFor="drug-radio" className="block mb-2 text-lg font-medium text-gray-900">Trạng thái phê duyệt</label>
                 <div className="flex items-center mb-4">
                   <input
                     type="radio"
                     value={1}
                     name="approvalStatus"
-                    onChange={getDataDrug}
+                    onChange={() => handleApprovalStatusChange(1)}
+                    checked={drug.approvalStatus === 1}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                   />
                   <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Được phê duyệt</label>
@@ -152,7 +172,8 @@ const CreateDrug = () => {
                     type="radio"
                     value={0}
                     name="approvalStatus"
-                    onChange={getDataDrug}
+                    onChange={() => handleApprovalStatusChange(0)}
+                    checked={drug.approvalStatus === 0}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                   />
                   <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900">Chưa được phê duyệt</label>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { Filter, Boxes } from 'react-bootstrap-icons'
-
-import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
+import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill } from 'react-bootstrap-icons'
+import ModalUpdateDrug from './ModalUpdateDrug';
+import { deactivateDrugs, fetchDrugs } from '../../../redux/drugManagement/drugSlice'
+import { toast, ToastContainer } from 'react-toastify';
 
 const DrugList = () => {
 
@@ -16,7 +17,12 @@ const DrugList = () => {
     const [drugList, setDrugList] = useState([]);
     const [sortField, setSortField] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
-
+    //------
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedDrug, setSelectedDrug] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [shouldReloadData, setShouldReloadData] = useState(false);
+    const [drugs, setDrugs] = useState([]);
     let count = 1
 
     useEffect(() => {
@@ -44,10 +50,28 @@ const DrugList = () => {
                 // Xử lý lỗi nếu có
                 console.error('Error fetching users:', error);
             });
-    }, [dispatch, currentPage, sortField, sortOrder]);
+    }, [dispatch, currentPage, sortField, sortOrder, shouldReloadData]);
+
     useEffect(() => {
         setDrugList([...apiData]);
     }, [apiData]);
+
+    const handleUpdateSuccess = () => {
+        // Đặt shouldReloadData thành true để load lại dữ liệu
+        setShouldReloadData(true);
+        // Đóng modal
+        setShowModal(false);
+    };
+
+    const toggleModal = () => {
+        setShowModal(!showModal);
+        setIsOpen(false)
+    };
+
+    const toggleDropdown = (drug) => {
+        setSelectedDrug(drug)
+        setIsOpen(!isOpen);
+    };
 
     const handleIncreasePage = () => {
         setCurrentPage((prev) => prev + 1);
@@ -71,9 +95,16 @@ const DrugList = () => {
     const handleSortFieldChange = (e) => setSortField(e.target.value);
     const handleSortOrderChange = (e) => setSortOrder(e.target.value);
 
+    const handleDeactivate = (id) => {
+        dispatch(deactivateDrugs(id))
+        toast.success('Vô hiệu hóa thành công', {autoClose: 300})
+        setIsOpen(false)
+    }
+
     return (
         <>
             <div className='mt-28'>
+                <ToastContainer></ToastContainer>
                 <div className='py-8 flex px-48'>
                     <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
                         <Boxes></Boxes>
@@ -136,6 +167,7 @@ const DrugList = () => {
                             )}
                         </div>
                     </div>
+                    <div><Link to={'/createdrug'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới</button></Link></div>
                 </div>
 
                 <div className='mb-6'>
@@ -157,7 +189,7 @@ const DrugList = () => {
                                     <th scope="col" class="px-2 py-3">
                                         Tình trạng
                                     </th>
-                                    <th scope="col" class="px-2 py-3 w-36">
+                                    <th scope="col" class="px-2 py-3">
                                         <button className='flex'>MÔ TẢ CƠ BẢN</button>
                                     </th>
                                     <th scope="col" class="px-2 py-3">
@@ -182,7 +214,41 @@ const DrugList = () => {
                                     <td class="">
                                         {drug.simpleDescription}
                                     </td>
-
+                                    <td class="px-6 py-4 text-right">
+                                        {/* <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> */}
+                                        <button type="button"
+                                            onClick={() => toggleDropdown(drug)}
+                                            className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-md focus:outline-none  ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
+                                            </svg>
+                                        </button>
+                                        {isOpen && selectedDrug && selectedDrug.id === drug.id && (
+                                            <div className="absolute right-24 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <div className="py-1">
+                                                    <button onClick={toggleModal}
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                    >
+                                                        <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
+                                                    </button>
+                                                </div>
+                                                <div className="py-1">
+                                                    <button
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                    >
+                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
+                                                    </button>
+                                                </div>
+                                                <div className="py-1">
+                                                    <button onClick={() => handleDeactivate(drug.id)}
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                    >
+                                                        <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </td>
                                 </tr>))}
 
 
@@ -217,6 +283,7 @@ const DrugList = () => {
                         </div>
                     </div>
                 </div>
+                <ModalUpdateDrug isOpen={showModal} toggleModal={toggleModal} drug={selectedDrug} onUpdateSuccess={handleUpdateSuccess} />
 
             </div>
         </>
