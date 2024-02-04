@@ -49,6 +49,7 @@ const DrugList = () => {
             } else {
                 setApiData(response.payload.content);
                 setTotalPages(response.payload.totalPages);
+                console.log("123456", response.payload.content)
             }
         })
             .catch((error) => {
@@ -60,7 +61,6 @@ const DrugList = () => {
     useEffect(() => {
         setDrugList([...apiData]);
     }, [apiData]);
-
     const handleUpdateSuccess = () => {
         // Đặt shouldReloadData thành true để load lại dữ liệu
         setShouldReloadData(!shouldReloadData);
@@ -108,17 +108,19 @@ const DrugList = () => {
     const handleDeactivate = (id) => {
         dispatch(deactivateDrugs(id)).then(() => {
             toast.success('Vô hiệu hóa thành công!', { autoClose: 300 })
-            dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+            // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+            setShouldReloadData(!shouldReloadData)
             setIsOpen(false);
         })
 
     }
 
     const handleActive = (drugId) => {
-        const drugActive = { active: true, drugId: drugId }
+        const drugActive = { active: true, id: drugId }
         dispatch(updateDrugs(drugActive)).then(() => {
             toast.success('Kích hoạt thành công!', { autoClose: 300 })
-            dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+            // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+            setShouldReloadData(!shouldReloadData)
             setIsOpen(false);
         })
 
@@ -250,20 +252,20 @@ const DrugList = () => {
                                                         <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
-                                                <div className="py-1">
-                                                    <button onClick={() => handleActive(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
-                                                    </button>
-                                                </div>
-                                                <div className="py-1">
+                                                {drug.active ? (<div className="py-1">
                                                     <button onClick={() => handleDeactivate(drug.id)}
                                                         className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                     >
                                                         <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
                                                     </button>
-                                                </div>
+                                                </div>) : (<div className="py-1">
+                                                    <button onClick={() => handleActive(drug.id)}
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                    >
+                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
+                                                    </button>
+                                                </div>)}
+
                                             </div>
                                         )}
                                     </td>

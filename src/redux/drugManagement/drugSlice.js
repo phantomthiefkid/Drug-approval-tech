@@ -52,7 +52,7 @@ export const createDrugs = createAsyncThunk('drugs/createDrug', async (DrugData,
 }, [])
 
 export const updateDrugs = createAsyncThunk('drugs/updateDrug', async (DrugData, { rejectWithValue }) => {
-  
+    console.log("here: ", DrugData)
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -72,7 +72,7 @@ export const updateDrugs = createAsyncThunk('drugs/updateDrug', async (DrugData,
 }, [])
 
 export const deactivateDrugs = createAsyncThunk('drugs/deactivateDrugs', async (drugId, { rejectWithValue }) => {
-  
+
     try {
         const token = localStorage.getItem('token');
         if (!token) {
