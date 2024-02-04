@@ -41,7 +41,7 @@ const CreateDrug = () => {
 
   const handleValidation = (drug) => {
     setErrorDrug({ ...drug_error });
-    const specialCharacters = /[!@#$%^&*+\=\[\]{}':"\\|<>\/?]+/;
+    const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
     let isValid = false;
     if (!drug) {
       isValid = true;

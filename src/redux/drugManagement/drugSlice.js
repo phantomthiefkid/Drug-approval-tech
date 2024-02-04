@@ -64,7 +64,7 @@ export const updateDrugs = createAsyncThunk('drugs/updateDrug', async (DrugData,
                 'Authorization': `Bearer ${token}`
             },
         };
-        const response = await axios.put(URL_UPDATE_DRUG + `/?drugId=${DrugData.drugId}`, DrugData, config);
+        const response = await axios.put(URL_UPDATE_DRUG + `/?drugId=${DrugData.id}`, DrugData, config);
         return response.data;
     } catch (error) {
         throw error;

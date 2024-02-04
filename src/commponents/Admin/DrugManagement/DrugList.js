@@ -116,7 +116,7 @@ const DrugList = () => {
     }
 
     const handleActive = (drugId) => {
-        const drugActive = { active: true, drugId: drugId }
+        const drugActive = { active: true, id: drugId }
         dispatch(updateDrugs(drugActive)).then(() => {
             toast.success('Kích hoạt thành công!', { autoClose: 300 })
             // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))

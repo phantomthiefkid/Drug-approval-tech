@@ -24,7 +24,7 @@ const ModalUpdateDrug = ({ isOpen, toggleModal, drug, onUpdateSuccess }) => {
 
     const handleValidation = (drug) => {
         setErrorDrug({ ...drug_error });
-        const specialCharacters = /[!@#$%^&*+\=\[\]{}:"\\|<>\/?]+/;
+        const specialCharacters = /[@#$%^&*+\=\[\]{}:"\\|<>\/]+/;
         let isValid = false;
         if (!drug) {
             isValid = true;
