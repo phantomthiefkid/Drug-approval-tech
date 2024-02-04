@@ -10,6 +10,7 @@ import DrugList from './commponents/Admin/DrugManagement/DrugList';
 import Navigation from './commponents/Navbar/Navigation';
 import Footer from './commponents/Footer/Footer';
 import CreateDrug from './commponents/Admin/DrugManagement/CreateDrug';
+import ModalUpdateDrug from './commponents/Admin/DrugManagement/ModalUpdateDrug';
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +24,7 @@ function App() {
         <Route path='/edituser/:email' element={<EditUser></EditUser>}></Route>
         <Route path='/druglist' element={<DrugList></DrugList>}></Route>
         <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
+        <Route path='/modal' element={<ModalUpdateDrug></ModalUpdateDrug>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

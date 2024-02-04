@@ -3,7 +3,8 @@ import axios from "axios";
 
 const URL_DRUGLIST = `https://fams-management.tech/admin/drug-management/drugs`
 const URL_CREATE_DRUG = `https://fams-management.tech/admin/drug-management/drug/create`
-
+const URL_UPDATE_DRUG = `https://fams-management.tech/admin/drug-management/drug/update`
+const URL_DEACTIVE_DRUG = `https://fams-management.tech/admin/drug-management/drug/delete`
 export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSize, sortField, sortOrder, search }) => {
     try {
         const token = localStorage.getItem('token');
@@ -26,12 +27,71 @@ export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSi
         const response = await axios.get(URL_DRUGLIST, config);
         return response.data;
     } catch (error) {
-        console.log("Error in try catch: ", error)
         throw error;
     }
 }, [])
 
-export const DrugsData = createAsyncThunk({
+export const createDrugs = createAsyncThunk('drugs/createDrug', async (DrugData, { rejectWithValue }) => {
+
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return rejectWithValue('No authentication token found');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        const response = await axios.post(URL_CREATE_DRUG, DrugData, config);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}, [])
+
+export const updateDrugs = createAsyncThunk('drugs/updateDrug', async (DrugData, { rejectWithValue }) => {
+  
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return rejectWithValue('No authentication token found');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        const response = await axios.put(URL_UPDATE_DRUG + `/?drugId=${DrugData.id}`, DrugData, config);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}, [])
+
+export const deactivateDrugs = createAsyncThunk('drugs/deactivateDrugs', async (drugId, { rejectWithValue }) => {
+  
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return rejectWithValue('No authentication token found');
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        const response = await axios.delete(URL_DEACTIVE_DRUG + `?id=${drugId}`, config);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}, [])
+
+export const DrugsData = createSlice({
     name: 'drugData',
     initialState: {
         isLoading: false,
@@ -51,6 +111,17 @@ export const DrugsData = createAsyncThunk({
                 state.isError = true;
             })
             .addCase(fetchDrugs.pending, (state) => {
+                state.isLoading = true;
+            })
+        builder.addCase(createDrugs.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isError = false;
+            state.drug = action.payload
+        })
+            .addCase(createDrugs.rejected, (state) => {
+                state.isError = true;
+            })
+            .addCase(createDrugs.pending, (state) => {
                 state.isLoading = true;
             })
     }
