@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { activeUser, deactivateUser, fetchUsers } from '../../../redux/userlistManagement/userSlice'
 import '../../../css/UserManagement/userlist.css'
 import { Link } from 'react-router-dom';
-import { Filter, PlusCircle } from 'react-bootstrap-icons'
+import { EyeFill, EyeSlashFill, Filter, PencilFill, PlusCircle } from 'react-bootstrap-icons'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -310,23 +310,23 @@ const UserList = () => {
                                         {isOpen && selectedUser && selectedUser.id === user.id && (
                                             <div className="absolute right-10 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-2">
-                                                    <button
+                                                    <Link to={`/edituser/${user.email}`}><button
 
-                                                        className="block px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                     >
-                                                        <Link to={`/edituser/${user.email}`}>Chỉnh sửa người dùng</Link>
-                                                    </button>
+                                                        <div><PencilFill size={15}></PencilFill></div>Chỉnh sửa người dùng
+                                                    </button></Link>
                                                     {
                                                         user.isActive === 'Active' ? (<button onClick={() => handleChangeStatus(selectedUser)}
 
-                                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                            className="flex gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                         >
-                                                            Vô hiệu hóa người dùng
+                                                           <div className='mt-1'> <EyeSlashFill size={15}></EyeSlashFill></div>Vô hiệu hóa người dùng
                                                         </button>) : (<button onClick={() => handleChangeStatus(selectedUser)}
 
                                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                         >
-                                                            Kích hoạt người dùng
+                                                            <div className='mt-1'> <EyeFill size={15}></EyeFill></div> Kích hoạt người dùng
                                                         </button>)
                                                     }
 
