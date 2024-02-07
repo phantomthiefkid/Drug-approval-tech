@@ -78,11 +78,15 @@ const DrugList = () => {
     };
 
     const handleIncreasePage = () => {
-        setCurrentPage((prev) => prev + 1);
+        if (currentPage < totalPages - 1) {
+            setCurrentPage((prev) => prev + 1);
+        }
     };
 
     const handleDecreasePage = () => {
-        setCurrentPage((prev) => prev - 1);
+        if (currentPage > 0) {
+            setCurrentPage((prev) => prev - 1);
+        }
     };
 
     const handlePageChange = (page) => {
@@ -193,29 +197,29 @@ const DrugList = () => {
                 </div>
 
                 <div className='mb-6'>
-                    <div class="relative overflow-x-auto shadow-md ">
-                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 rounded-lg">
-                            <thead class="text-xs text-white uppercase bg-blue-600">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 ">
+                            <thead class="text-xs text-white uppercase bg-blue-900">
                                 <tr>
-                                    <th scope="col" class="px-2 py-3 ">
+                                    <th scope="col" class="py-3 w-14 text-center">
                                         Số thứ tự
                                     </th>
-                                    <th scope="col" class="px-2 py-3">
+                                    <th scope="col" class=" py-3 w-14">
                                         Tên
                                     </th>
-                                    <th scope="col" class="px-2 py-3">
+                                    <th scope="col" class=" py-3 w-20">
                                         Loại
                                     </th>
-                                    <th scope="col" class="px-2 py-3">
+                                    <th scope="col" class=" py-3 w-20">
                                         Tình trạng
                                     </th>
-                                    <th scope="col" class="px-2 py-3">
+                                    <th scope="col" class=" py-3 w-40">
                                         <button className='flex'>MÔ TẢ CƠ BẢN</button>
                                     </th>
-
-                                    <th scope="col" class="px-2 py-3">
-
+                                    <th scope="col" class=" py-3 w-14">
+                                        <button className='flex'>HOẠT ĐỘNG</button>
                                     </th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -223,20 +227,19 @@ const DrugList = () => {
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                         {/* {index + 1 + currentPage * itemsPerPage} */} {count++}
                                     </th>
-                                    <td class="">
+                                    <td class=" py-4 w-14">
                                         {drug.name}
                                     </td>
-                                    <td class="">
+                                    <td class=" py-4 w-20">
                                         {drug.type}
                                     </td>
-                                    <td class="">
+                                    <td class=" py-4 w-20">
                                         {drug.state}
                                     </td>
-                                    <td class="">
+                                    <td class=" py-4">
                                         {drug.simpleDescription}
                                     </td>
-
-                                    <td class="px-6 py-4 text-right">
+                                    <td class=" py-4 w-14">
                                         <button type="button"
                                             onClick={() => toggleDropdown(drug)}
                                             className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-md focus:outline-none  ">
@@ -269,26 +272,25 @@ const DrugList = () => {
                         </table>
                         <div className='mb-6 flex justify-center'>
                             <nav aria-label="">
-                                <ul class="flex items-center -space-x-px h-10 text-base">
+                                <ul className="flex items-center -space-x-2 h-10 text-base">
                                     <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
-                                        <button onClick={handleDecreasePage} class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
-                                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
-                                            </svg>
+                                        <button onClick={handleDecreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                                            Previous
                                         </button>
                                     </li>
                                     {totalPages ? [...Array(totalPages).keys()].map((page) => (
-                                        <li className={`page-item ${currentPage === page ? 'active' : ''}`}
-                                            key={page}>
-                                            <button onClick={() => handlePageChange(page)} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{page + 1}</button>
+                                        <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
+                                            <button
+                                                onClick={() => handlePageChange(page)}
+                                                className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}
+                                            >
+                                                {page + 1}
+                                            </button>
                                         </li>
                                     )) : <div></div>}
                                     <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
-                                        <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
-
-                                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                            </svg>
+                                        <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                                            Next
                                         </button>
                                     </li>
                                 </ul>

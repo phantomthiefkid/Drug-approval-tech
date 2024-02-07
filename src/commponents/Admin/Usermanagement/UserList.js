@@ -350,7 +350,7 @@ const UserList = () => {
                                     {totalPages ? [...Array(totalPages).keys()].map((page) => (
                                         <li className={`page-item ${currentPage === page ? 'active' : ''}`}
                                             key={page}>
-                                            <button onClick={() => handlePageChange(page)} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{page + 1}</button>
+                                            <button onClick={() => handlePageChange(page)} class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ${currentPage === page? "bg-blue-600 text-white" : 'bg-white'}`}>{page + 1}</button>
                                         </li>
                                     )) : <div></div>}
                                     <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
