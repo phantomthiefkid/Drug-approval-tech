@@ -115,22 +115,22 @@ const CreateDrug = () => {
       <div className='mt-28 mb-16'>
         <ToastContainer></ToastContainer>
         <div className='py-8 flex px-48'>
-          <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
+          <h1 className=' italic text-3xl font-extrabold text-blue-800 flex'>
             <Boxes size={48}></Boxes>
             <span className='ml-2'>Thêm mới hoạt chất</span>
           </h1>
         </div>
-        <div className='w-5/12 mx-auto shadow-xl rounded-b-3xl'>
-          <div className='bg-blue-900 mt-4 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hoạt chất</h2></div>
+        <div className='w-5/12 mx-auto shadow-2xl shadow-gray-500 rounded-b-3xl'>
+          <div className='bg-blue-600 mt-4 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hoạt chất</h2></div>
           <form className='mt-6 w-3/4 mx-auto'>
             <div className='mb-3 mt-4'>
               <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại thuốc</label>
+                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại</label>
                 <input type="text" name='type' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                 {errorDrug.type && (<span className='text-red-500'>{errorDrug.type}</span>)}
               </div>
               <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên thuốc</label>
+                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên</label>
                 <input type="text" name='name' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                 {errorDrug.name && (<span className='text-red-500'>{errorDrug.name}</span>)}
               </div>

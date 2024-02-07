@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill } from 'react-bootstrap-icons'
+import { Filter, Boxes, PlusCircle, PencilFill, Trash3Fill } from 'react-bootstrap-icons'
 import ModalUpdateDrug from './ModalUpdateDrug';
-import { deactivateDrugs, fetchDrugs, updateDrugs } from '../../../redux/drugManagement/drugSlice'
+import { deactivateDrugs, fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { toast, ToastContainer } from 'react-toastify';
 
 const DrugList = () => {
@@ -24,9 +24,8 @@ const DrugList = () => {
     const [shouldReloadData, setShouldReloadData] = useState(true);
     const [drugs, setDrugs] = useState([]);
     let count = 1
-    const [searchTerm, setSearchTerm] = useState('');
 
-    const itemsPerPage = 8
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (Array.isArray(drugsAPI)) {
@@ -119,16 +118,16 @@ const DrugList = () => {
 
     }
 
-    const handleActive = (drugId) => {
-        const drugActive = { active: true, id: drugId }
-        dispatch(updateDrugs(drugActive)).then(() => {
-            toast.success('Kích hoạt thành công!', { autoClose: 300 })
-            // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
-            setShouldReloadData(!shouldReloadData)
-            setIsOpen(false);
-        })
+    // const handleActive = (drugId) => {
+    //     const drugActive = { active: true, id: drugId }
+    //     dispatch(updateDrugs(drugActive)).then(() => {
+    //         toast.success('Kích hoạt thành công!', { autoClose: 300 })
+    //         // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+    //         setShouldReloadData(!shouldReloadData)
+    //         setIsOpen(false);
+    //     })
 
-    }
+    // }
 
     return (
         <>
@@ -224,9 +223,9 @@ const DrugList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(drugList) && drugList.map((drug, index) => (<tr class="odd:bg-white odd:dark:bg-blue-50 even:bg-gray-50 even:dark:bg-white  dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">
-                                        {index + 1 + currentPage * itemsPerPage}
+                                {Array.isArray(drugList) && drugList.map((drug, index) => drug.active ? (<tr class="bg-white border-b hover:bg-gray-100">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        {/* {index + 1 + currentPage * itemsPerPage} */} {count++}
                                     </th>
                                     <td class=" py-4 w-14">
                                         {drug.name}
@@ -252,29 +251,23 @@ const DrugList = () => {
                                             <div className="absolute right-24 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-1">
                                                     <button onClick={toggleModal}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-blue-600 hover:bg-gray-200 hover:text-blue-900"
                                                     >
-                                                        <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
+                                                        <div className='mt-1'><PencilFill size={15} color="blue"></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
-                                                {drug.active ? (<div className="py-1">
+                                                <div className="py-1">
                                                     <button onClick={() => handleDeactivate(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900"
                                                     >
-                                                        <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
+                                                        <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
                                                     </button>
-                                                </div>) : (<div className="py-1">
-                                                    <button onClick={() => handleActive(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
-                                                    </button>
-                                                </div>)}
+                                                </div>
 
                                             </div>
                                         )}
                                     </td>
-                                </tr>))}
+                                </tr>) : null)}
                             </tbody>
                         </table>
                         <div className='mb-6 flex justify-center'>
