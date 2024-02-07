@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill } from 'react-bootstrap-icons'
+import { Filter, Boxes, PlusCircle, PencilFill, Trash3Fill } from 'react-bootstrap-icons'
 import ModalUpdateDrug from './ModalUpdateDrug';
-import { deactivateDrugs, fetchDrugs, updateDrugs } from '../../../redux/drugManagement/drugSlice'
+import { deactivateDrugs, fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { toast, ToastContainer } from 'react-toastify';
 
 const DrugList = () => {
@@ -24,9 +24,8 @@ const DrugList = () => {
     const [shouldReloadData, setShouldReloadData] = useState(true);
     const [drugs, setDrugs] = useState([]);
     let count = 1
-    const [searchTerm, setSearchTerm] = useState('');
 
-    const itemsPerPage = 8
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (Array.isArray(drugsAPI)) {
@@ -115,16 +114,16 @@ const DrugList = () => {
 
     }
 
-    const handleActive = (drugId) => {
-        const drugActive = { active: true, id: drugId }
-        dispatch(updateDrugs(drugActive)).then(() => {
-            toast.success('Kích hoạt thành công!', { autoClose: 300 })
-            // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
-            setShouldReloadData(!shouldReloadData)
-            setIsOpen(false);
-        })
+    // const handleActive = (drugId) => {
+    //     const drugActive = { active: true, id: drugId }
+    //     dispatch(updateDrugs(drugActive)).then(() => {
+    //         toast.success('Kích hoạt thành công!', { autoClose: 300 })
+    //         // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+    //         setShouldReloadData(!shouldReloadData)
+    //         setIsOpen(false);
+    //     })
 
-    }
+    // }
 
     return (
         <>
@@ -196,7 +195,7 @@ const DrugList = () => {
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md ">
                         <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 rounded-lg">
-                            <thead class="text-xs text-white uppercase bg-blue-900">
+                            <thead class="text-xs text-white uppercase bg-blue-600">
                                 <tr>
                                     <th scope="col" class="px-2 py-3 ">
                                         Số thứ tự
@@ -213,15 +212,16 @@ const DrugList = () => {
                                     <th scope="col" class="px-2 py-3">
                                         <button className='flex'>MÔ TẢ CƠ BẢN</button>
                                     </th>
+
                                     <th scope="col" class="px-2 py-3">
 
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(drugList) && drugList.map((drug, index) => (<tr class="bg-white border-b hover:bg-gray-100">
+                                {Array.isArray(drugList) && drugList.map((drug, index) => drug.active ? (<tr class="bg-white border-b hover:bg-gray-100">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {index + 1 + currentPage * itemsPerPage}
+                                        {/* {index + 1 + currentPage * itemsPerPage} */} {count++}
                                     </th>
                                     <td class="">
                                         {drug.name}
@@ -235,6 +235,7 @@ const DrugList = () => {
                                     <td class="">
                                         {drug.simpleDescription}
                                     </td>
+
                                     <td class="px-6 py-4 text-right">
                                         <button type="button"
                                             onClick={() => toggleDropdown(drug)}
@@ -247,29 +248,23 @@ const DrugList = () => {
                                             <div className="absolute right-24 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-1">
                                                     <button onClick={toggleModal}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-blue-600 hover:bg-gray-200 hover:text-blue-900"
                                                     >
-                                                        <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
+                                                        <div className='mt-1'><PencilFill size={15} color="blue"></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
-                                                {drug.active ? (<div className="py-1">
+                                                <div className="py-1">
                                                     <button onClick={() => handleDeactivate(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900"
                                                     >
-                                                        <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
+                                                        <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
                                                     </button>
-                                                </div>) : (<div className="py-1">
-                                                    <button onClick={() => handleActive(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
-                                                    </button>
-                                                </div>)}
+                                                </div>
 
                                             </div>
                                         )}
                                     </td>
-                                </tr>))}
+                                </tr>) : null)}
                             </tbody>
                         </table>
                         <div className='mb-6 flex justify-center'>

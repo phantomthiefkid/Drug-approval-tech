@@ -13,7 +13,7 @@ const Home = () => {
   }, [currentImage]);
 
   return (
-    <div>
+    <div className='w-full'>
       <div className="mt-32 mb-28 h-screen">
         <div className="slider">
           <div className="slides">
@@ -43,11 +43,11 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="navigation-manual z-0">
+          {/* <div className="navigation-manual z-0">
             {Array.from({ length: 4 }).map((_, index) => (
               <label key={index} htmlFor={`radio${index + 1}`} className="manual-btn"></label>
             ))}
-          </div>
+          </div> */}
         </div>
         <h2 className='mt-16 text-center text-3xl font-extrabold'>Drug data is rapidly increasing</h2>
         <h2 className='text-center mt-8 text-2xl'>

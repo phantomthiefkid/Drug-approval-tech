@@ -240,7 +240,7 @@ const UserList = () => {
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 ">
-                            <thead class="text-xs text-white uppercase bg-blue-900">
+                            <thead class="text-xs text-white uppercase bg-blue-600">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
                                         STT
@@ -309,24 +309,24 @@ const UserList = () => {
                                         </button>
                                         {isOpen && selectedUser && selectedUser.id === user.id && (
                                             <div className="absolute right-10 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <div className="py-2">
+                                                <div className="py-2 text-amber-800">
                                                     <Link to={`/edituser/${user.email}`}><button
 
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
                                                     >
-                                                        <div><PencilFill size={15}></PencilFill></div>Chỉnh sửa người dùng
+                                                        <div><PencilFill size={15} color="brown"></PencilFill></div>Chỉnh sửa người dùng
                                                     </button></Link>
                                                     {
                                                         user.isActive === 'Active' ? (<button onClick={() => handleChangeStatus(selectedUser)}
 
-                                                            className="flex gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                            className="flex gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:text-gray-900"
                                                         >
-                                                           <div className='mt-1'> <EyeSlashFill size={15}></EyeSlashFill></div>Vô hiệu hóa người dùng
+                                                           <div className='mt-1'> <EyeSlashFill size={15} color="red"></EyeSlashFill></div>Vô hiệu hóa người dùng
                                                         </button>) : (<button onClick={() => handleChangeStatus(selectedUser)}
 
-                                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                            className="flex px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 hover:text-gray-900"
                                                         >
-                                                            <div className='mt-1'> <EyeFill size={15}></EyeFill></div> Kích hoạt người dùng
+                                                            <div className='mt-1 mr-2'> <EyeFill size={15} color="blue"></EyeFill></div> Kích hoạt người dùng
                                                         </button>)
                                                     }
 
