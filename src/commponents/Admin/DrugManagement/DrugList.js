@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { Filter, Boxes, PlusCircle, PencilFill, Trash3Fill } from 'react-bootstrap-icons'
+import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill } from 'react-bootstrap-icons'
 import ModalUpdateDrug from './ModalUpdateDrug';
-import { deactivateDrugs, fetchDrugs } from '../../../redux/drugManagement/drugSlice'
+import { deactivateDrugs, fetchDrugs, updateDrugs } from '../../../redux/drugManagement/drugSlice'
+import ModalDetailDrug from './ModalDetailDrug';
 import { toast, ToastContainer } from 'react-toastify';
 
 const DrugList = () => {
@@ -17,15 +18,23 @@ const DrugList = () => {
     const [drugList, setDrugList] = useState([]);
     const [sortField, setSortField] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [searchTerm, setSearchTerm] = useState('');
     //------
     const [isOpen, setIsOpen] = useState(false);
     const [selectedDrug, setSelectedDrug] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [shouldReloadData, setShouldReloadData] = useState(true);
     const [drugs, setDrugs] = useState([]);
-    let count = 1
 
-    const [searchTerm, setSearchTerm] = useState('');
+    const [isOpenDetail, setIsOpenDetail] = useState(false);
+    const [selectedDrugDetail, setSelectedDrugDetail] = useState(null);
+    const [showModalDetailDrug, setShowModalDetailDrug] = useState(false);
+    const handleOnClose = () => {
+        setShowModalDetailDrug(false)
+        setSelectedDrugDetail(null)
+    };
+
+    const itemsPerPage = 8
 
     useEffect(() => {
         if (Array.isArray(drugsAPI)) {
@@ -60,6 +69,7 @@ const DrugList = () => {
     useEffect(() => {
         setDrugList([...apiData]);
     }, [apiData]);
+
     const handleUpdateSuccess = () => {
         // Đặt shouldReloadData thành true để load lại dữ liệu
         setShouldReloadData(!shouldReloadData);
@@ -76,6 +86,12 @@ const DrugList = () => {
         setSelectedDrug(drug)
         setIsOpen(!isOpen);
     };
+
+    const handleOpenDetail = (drug) => {
+        setShowModalDetailDrug(!showModalDetailDrug)
+        setIsOpenDetail(!isOpenDetail)
+        setSelectedDrugDetail(drug)
+    }
 
     const handleIncreasePage = () => {
         if (currentPage < totalPages - 1) {
@@ -115,19 +131,37 @@ const DrugList = () => {
             setShouldReloadData(!shouldReloadData)
             setIsOpen(false);
         })
-
     }
 
-    // const handleActive = (drugId) => {
-    //     const drugActive = { active: true, id: drugId }
-    //     dispatch(updateDrugs(drugActive)).then(() => {
-    //         toast.success('Kích hoạt thành công!', { autoClose: 300 })
-    //         // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
-    //         setShouldReloadData(!shouldReloadData)
-    //         setIsOpen(false);
-    //     })
+    const handleActive = (drugId) => {
+        const drugActive = { active: true, id: drugId }
+        dispatch(updateDrugs(drugActive)).then(() => {
+            toast.success('Kích hoạt thành công!', { autoClose: 300 })
+            // dispatch(fetchDrugs({ pageSize: 8, pageNo: currentPage }))
+            setShouldReloadData(!shouldReloadData)
+            setIsOpen(false);
+        })
+    }
 
-    // }
+    const handleSortByName = () => {
+        if (sortField === 'name') {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField('name');
+            setSortOrder('asc');
+        }
+        setCurrentPage(0);
+    };
+
+    const handleSortByType = () => {
+        if (sortField === 'type') {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+        } else {
+            setSortField('type');
+            setSortOrder('asc')
+        }
+        setCurrentPage(0)
+    }
 
     return (
         <>
@@ -139,7 +173,6 @@ const DrugList = () => {
                         <span className='ml-2'>Quản lý hoạt chất</span>
                     </h1>
                 </div>
-
                 <div className='flex'>
                     <div className='w-2/3 mt-8 mb-10 px-48 flex'>
                         <form>
@@ -195,7 +228,6 @@ const DrugList = () => {
                     </div>
                     <div><Link to={'/createdrug'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới</button></Link></div>
                 </div>
-
                 <div className='mb-6'>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 ">
@@ -204,14 +236,39 @@ const DrugList = () => {
                                     <th scope="col" class="py-3 w-14 text-center">
                                         Số thứ tự
                                     </th>
-                                    <th scope="col" class=" py-3 w-14">
-                                        Tên
+                                    <th scope="col" className="py-3 w-20 cursor-pointer">
+                                        <span className="flex items-center">
+                                            <span className='mr-3'>Tên</span>
+                                            {(!sortField || sortField === 'name') && (
+                                                <svg
+                                                    onClick={handleSortByName}
+                                                    className={`w-6 h-6 text-gray-800 dark:text-white flex-shrink-0 ${sortOrder === 'asc' ? 'text-green-500' : ''}`}
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
+                                                </svg>
+                                            )}
+                                        </span>
                                     </th>
-                                    <th scope="col" class=" py-3 w-20">
-                                        Loại
-                                    </th>
-                                    <th scope="col" class=" py-3 w-20">
-                                        Tình trạng
+                                    <th scope="col" className="py-3 w-20 cursor-pointer">
+                                        <span className="flex items-center">
+                                            <span className='mr-3'>Loại</span>
+                                            {(!sortField || sortField === 'type') && (
+                                                <svg
+                                                    onClick={handleSortByType}
+                                                    className={`w-6 h-6 text-gray-800 dark:text-white flex-shrink-0 ${sortOrder === 'asc' ? 'text-green-500' : ''}`}
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
+                                                </svg>
+                                            )}
+                                        </span>
                                     </th>
                                     <th scope="col" class=" py-3 w-40">
                                         <button className='flex'>MÔ TẢ CƠ BẢN</button>
@@ -219,26 +276,28 @@ const DrugList = () => {
                                     <th scope="col" class=" py-3 w-14">
                                         <button className='flex'>HOẠT ĐỘNG</button>
                                     </th>
-
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(drugList) && drugList.map((drug, index) => drug.active ? (<tr class="bg-white border-b hover:bg-gray-100">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {/* {index + 1 + currentPage * itemsPerPage} */} {count++}
-                                    </th>
-                                    <td class=" py-4 w-14">
-                                        {drug.name}
-                                    </td>
-                                    <td class=" py-4 w-20">
-                                        {drug.type}
-                                    </td>
-                                    <td class=" py-4 w-20">
-                                        {drug.state}
-                                    </td>
-                                    <td class=" py-4">
-                                        {drug.simpleDescription}
-                                    </td>
+                                {Array.isArray(drugList) && drugList.map((drug, index) => (<tr class="odd:bg-white odd:dark:bg-blue-50 even:bg-gray-50 even:dark:bg-white  dark:border-gray-700">
+                                    {selectedDrugDetail && (
+                                        <ModalDetailDrug onClose={handleOnClose} isOpenDetail={showModalDetailDrug} drug={selectedDrugDetail} />
+                                    )}
+                                    <>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">
+                                            {index + 1 + currentPage * itemsPerPage}
+                                        </th>
+                                        <td class=" py-4 w-14">
+                                            <button onClick={() => handleOpenDetail(drug)} > {drug.name}</button>
+                                        </td>
+                                        <td class=" py-4 w-20">
+                                            {drug.type}
+                                        </td>
+                                        <td class=" py-4">
+                                            {drug.simpleDescription}
+                                        </td>
+                                    </>
+
                                     <td class=" py-4 w-14">
                                         <button type="button"
                                             onClick={() => toggleDropdown(drug)}
@@ -251,23 +310,30 @@ const DrugList = () => {
                                             <div className="absolute right-24 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-1">
                                                     <button onClick={toggleModal}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-blue-600 hover:bg-gray-200 hover:text-blue-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                     >
-                                                        <div className='mt-1'><PencilFill size={15} color="blue"></PencilFill></div>Chỉnh sửa
+                                                        <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
-                                                <div className="py-1">
+                                                {drug.active ? (<div className="py-1">
                                                     <button onClick={() => handleDeactivate(drug.id)}
-                                                        className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                                     >
-                                                        <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
+                                                        <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
                                                     </button>
-                                                </div>
+                                                </div>) : (<div className="py-1">
+                                                    <button onClick={() => handleActive(drug.id)}
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                    >
+                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
+                                                    </button>
+                                                </div>)}
 
                                             </div>
                                         )}
                                     </td>
-                                </tr>) : null)}
+                                </tr>
+                                ))}
                             </tbody>
                         </table>
                         <div className='mb-6 flex justify-center'>
@@ -299,7 +365,6 @@ const DrugList = () => {
                     </div>
                 </div>
                 <ModalUpdateDrug isOpen={showModal} toggleModal={toggleModal} drug={selectedDrug} onUpdateSuccess={handleUpdateSuccess} />
-
             </div>
         </>
     )
