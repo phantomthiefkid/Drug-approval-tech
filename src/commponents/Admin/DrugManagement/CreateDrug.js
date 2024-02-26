@@ -31,6 +31,7 @@ const CreateDrug = () => {
   const navigate = useNavigate();
   const [drug, setDrug] = useState(drug_initial);
   const [errorDrug, setErrorDrug] = useState(drug_error)
+  const [drugImage, setDrugImage] = useState('')
   const getDataDrug = (e) => {
     setDrug({ ...drug, [e.target.name]: e.target.value })
   }
@@ -120,83 +121,90 @@ const CreateDrug = () => {
             <span className='ml-2'>Thêm mới hoạt chất</span>
           </h1>
         </div>
-        <div className='w-5/12 mx-auto shadow-2xl shadow-gray-500 rounded-b-3xl'>
-          <div className='bg-blue-600 mt-4 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hoạt chất</h2></div>
-          <form className='mt-6 w-3/4 mx-auto'>
-            <div className='mb-3 mt-4'>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại</label>
-                <input type="text" name='type' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.type && (<span className='text-red-500'>{errorDrug.type}</span>)}
-              </div>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên</label>
-                <input type="text" name='name' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.name && (<span className='text-red-500'>{errorDrug.name}</span>)}
-              </div>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Trạng thái</label>
-                <input type="text" name='state' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.state && (<span className='text-red-500'>{errorDrug.state}</span>)}
-              </div>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả</label>
-                <textarea rows={2} type="text" onChange={getDataDrug} name='description' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.description && (<span className='text-red-500'>{errorDrug.description}</span>)}
-              </div>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả cơ bản</label>
-                <textarea rows={2} type="text" onChange={getDataDrug} name='simpleDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.simpleDescription && (<span className='text-red-500'>{errorDrug.simpleDescription}</span>)}
-              </div>
-              <div class="mb-3 w-full">
-                <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả chi tiết</label>
-                <textarea rows={2} type="text" onChange={getDataDrug} name='clinicalDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                {errorDrug.clinicalDescription && (<span className='text-red-500'>{errorDrug.clinicalDescription}</span>)}
-              </div>
-              <div className='mb-3'>
-                <label htmlFor="drug-radio" className="block mb-2 text-lg font-medium text-gray-900">Trạng thái phê duyệt</label>
-                <div className="flex items-center mb-4">
-                  <input
-                    type="radio"
-                    value={1}
-                    name="approvalStatus"
-                    onChange={() => handleApprovalStatusChange(1)}
-                    checked={drug.approvalStatus === 1}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                  />
-                  <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Được phê duyệt</label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    value={0}
-                    name="approvalStatus"
-                    onChange={() => handleApprovalStatusChange(0)}
-                    checked={drug.approvalStatus === 0}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                  />
-                  <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900">Chưa được phê duyệt</label>
-                </div>
-              </div>
+        <div className='w-5/6 mx-auto shadow-sm shadow-gray-400 '>
+          <div className='bg-blue-600 mt-4 h-12 '><h2 className='text-center pt-2 font-bold text-white text-xl'>Hoạt chất</h2></div>
+          <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
+            <div className='col-span-5 py-12'>
+              <img className='border-2 rounded-xl' src={`${drugImage ? drugImage: "https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg"}`} alt='drug' />
             </div>
-            <div class="flex justify-center gap-8 mt-6 ml-6 mb-16 space-x-3 rtl:space-x-reverse">
+            <div className='col-span-7'>
+              <div className='w-4/5'>
+                <div className='flex gap-6'>
+                  <div class="mb-3 w-full">
+                    <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Loại</label>
+                    <input type="text" name='type' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    {errorDrug.type && (<span className='text-red-500'>{errorDrug.type}</span>)}
+                  </div>
+                  <div class="mb-3 w-full">
+                    <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Tên</label>
+                    <input type="text" name='name' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    {errorDrug.name && (<span className='text-red-500'>{errorDrug.name}</span>)}
+                  </div>
+                </div>
+                <div class="mb-3 w-full">
+                  <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Trạng thái</label>
+                  <input type="text" name='state' onChange={getDataDrug} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  {errorDrug.state && (<span className='text-red-500'>{errorDrug.state}</span>)}
+                </div>
+                <div class="mb-3 w-full">
+                  <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả</label>
+                  <textarea rows={2} type="text" onChange={getDataDrug} name='description' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  {errorDrug.description && (<span className='text-red-500'>{errorDrug.description}</span>)}
+                </div>
+                <div class="mb-3 w-full">
+                  <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả cơ bản</label>
+                  <textarea rows={2} type="text" onChange={getDataDrug} name='simpleDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  {errorDrug.simpleDescription && (<span className='text-red-500'>{errorDrug.simpleDescription}</span>)}
+                </div>
+                <div class="mb-3 w-full">
+                  <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Mô tả chi tiết</label>
+                  <textarea rows={2} type="text" onChange={getDataDrug} name='clinicalDescription' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  {errorDrug.clinicalDescription && (<span className='text-red-500'>{errorDrug.clinicalDescription}</span>)}
+                </div>
+                <div className='mb-3'>
+                  <label htmlFor="drug-radio" className="block mb-2 text-lg font-medium text-gray-900">Trạng thái phê duyệt</label>
+                  <div className="flex items-center mb-4">
+                    <input
+                      type="radio"
+                      value={1}
+                      name="approvalStatus"
+                      onChange={() => handleApprovalStatusChange(1)}
+                      checked={drug.approvalStatus === 1}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                    />
+                    <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Được phê duyệt</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      value={0}
+                      name="approvalStatus"
+                      onChange={() => handleApprovalStatusChange(0)}
+                      checked={drug.approvalStatus === 0}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                    />
+                    <label htmlFor="drug-radio" className="ms-2 text-sm font-medium text-gray-900">Chưa được phê duyệt</label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-start mt-4 gap-16 ml-6 space-x-3 rtl:space-x-reverse">
 
-              <Link to="/druglist">
-                <button
-                  type="button"
-                  className="text-red-600 mb-8 hover:scale-x-110 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10"
-                >
-                  <u>
-                    <b>Trở lại</b>
-                  </u>
+                <Link to="/druglist">
+                  <button
+                    type="button"
+                    className="text-red-600 mb-8 hover:scale-x-125 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10"
+                  >
+                    <u>
+                      <b>Trở lại</b>
+                    </u>
+                  </button>
+                </Link>
+
+                <button type='button' onClick={handleCreate} className="text-white mb-8 hover:scale-x-125 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-auto">
+                  Thêm mới
                 </button>
-              </Link>
 
-              <button type='button' onClick={handleCreate} className="text-white mb-8 hover:scale-x-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-auto">
-                Thêm mới
-              </button>
-
+              </div>
             </div>
           </form>
         </div>

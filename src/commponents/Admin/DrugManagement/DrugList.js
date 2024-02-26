@@ -23,8 +23,7 @@ const DrugList = () => {
     const [showModal, setShowModal] = useState(false);
     const [shouldReloadData, setShouldReloadData] = useState(true);
     const [drugs, setDrugs] = useState([]);
-    let count = 1
-
+    const itemsPerPage = 8
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
@@ -223,9 +222,9 @@ const DrugList = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(drugList) && drugList.map((drug, index) => drug.active ? (<tr class="bg-white border-b hover:bg-gray-100">
+                                {Array.isArray(drugList) && drugList.map((drug, index) => (<tr class="bg-white border-b hover:bg-gray-100">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {/* {index + 1 + currentPage * itemsPerPage} */} {count++}
+                                        {index + 1 + currentPage * itemsPerPage}
                                     </th>
                                     <td class=" py-4 w-14">
                                         {drug.name}
@@ -256,18 +255,21 @@ const DrugList = () => {
                                                         <div className='mt-1'><PencilFill size={15} color="blue"></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
-                                                <div className="py-1">
-                                                    <button onClick={() => handleDeactivate(drug.id)}
-                                                        className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900"
-                                                    >
+                                                {drug.active ? (<div className="py-1">
+                                                    <button onClick={() => handleDeactivate(drug.id)} className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900">
                                                         <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
                                                     </button>
-                                                </div>
+                                                </div>) : (<div className="py-1">
+
+                                                    <div className='mt-1 text-center'>  <i>Đã vô hiệu hóa</i></div>
+
+                                                </div>)}
+
 
                                             </div>
                                         )}
                                     </td>
-                                </tr>) : null)}
+                                </tr>))}
                             </tbody>
                         </table>
                         <div className='mb-6 flex justify-center'>
