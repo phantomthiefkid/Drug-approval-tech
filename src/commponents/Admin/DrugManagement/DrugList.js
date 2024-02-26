@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill } from 'react-bootstrap-icons'
+import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill, Trash3Fill } from 'react-bootstrap-icons'
 import ModalUpdateDrug from './ModalUpdateDrug';
 import { deactivateDrugs, fetchDrugs, updateDrugs } from '../../../redux/drugManagement/drugSlice'
 import ModalDetailDrug from './ModalDetailDrug';
@@ -310,24 +310,21 @@ const DrugList = () => {
                                             <div className="absolute right-24 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="py-1">
                                                     <button onClick={toggleModal}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-blue-600 hover:bg-gray-200 hover:text-blue-900"
                                                     >
-                                                        <div className='mt-1'><PencilFill size={15}></PencilFill></div>Chỉnh sửa
+                                                        <div className='mt-1'><PencilFill size={15} color="blue"></PencilFill></div>Chỉnh sửa
                                                     </button>
                                                 </div>
                                                 {drug.active ? (<div className="py-1">
-                                                    <button onClick={() => handleDeactivate(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        <div className='mt-1'><EyeSlashFill size={15}></EyeSlashFill></div>Deactivate
+                                                    <button onClick={() => handleDeactivate(drug.id)} className="flex text-red-600 gap-2 px-4 w-full py-2 text-sm hover:bg-gray-200 hover:text-red-900">
+                                                        <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
                                                     </button>
                                                 </div>) : (<div className="py-1">
-                                                    <button onClick={() => handleActive(drug.id)}
-                                                        className="flex gap-2 px-4 w-full py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                                    >
-                                                        <div className='mt-1'><EyeFill size={15}></EyeFill></div>Active
-                                                    </button>
+
+                                                    <div className='mt-1 text-center'>  <i>Đã vô hiệu hóa</i></div>
+
                                                 </div>)}
+
 
                                             </div>
                                         )}
