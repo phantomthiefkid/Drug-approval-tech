@@ -1,9 +1,9 @@
 .slider {
-    width: 1200px;
+    width: 1050px;
     height: 450px;
     border-radius: 30px;
     overflow: hidden;
-    margin-left: 200px;
+    margin: auto;
 }
 
 .first {
@@ -12,7 +12,7 @@
 
 .slides {
     width: 500%;
-    height: 500px;
+    height: 450px;
     display: flex;
 }
 
@@ -32,10 +32,10 @@
 
 .navigation-manual {
     position: absolute;
-    width: 1200px;
+    width: 100%;
     margin-top: -40px;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .manual-btn {
@@ -73,9 +73,10 @@
 .navigation-auto {
     position: absolute;
     display: flex;
-    width: 1200px;
+    width: 100%;
     justify-content: center;
-    margin-top: 460px;
+    margin-top: 470px;
+    margin-left: -240px;
 }
 
 .navigation-auto div {
