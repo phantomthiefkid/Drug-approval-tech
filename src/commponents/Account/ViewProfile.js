@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
 import '../../css/Profile.css'
@@ -8,11 +8,14 @@ import { viewProfile } from '../../redux/profile/ProfileSlice'
 const ViewProfile = () => {
     const token = localStorage.getItem('token');
     const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
-    console.log(email)
     const dispatch = useDispatch();
     const profileView = useSelector((state) => state.viewProfile.data);
-
-    console.log(profileView)
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!token) {
+            navigate('/')
+        }
+    }, [token])
 
     useEffect(() => {
         const fetchData = async () => {

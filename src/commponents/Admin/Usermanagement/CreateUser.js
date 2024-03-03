@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
@@ -8,6 +8,7 @@ import { createUser } from '../../../redux/userlistManagement/userSlice'
 const CreateUser = () => {
     const Navigate = useNavigate();
     const dispatch = useDispatch();
+    const token = localStorage.getItem('token')
     const [users, setUsers] = useState({
         roleID: '',
         fullName: '',
@@ -23,7 +24,12 @@ const CreateUser = () => {
     const getUserData = (e) => {
         setUsers({ ...users, [e.target.name]: e.target.value })
     }
-    console.log("Data: ", users);
+
+    useEffect(() => {
+        if (!token) {
+            Navigate('/')
+        }
+    }, [token])
 
     const handleValidationEmail = async (field) => {
         if (field === 'email') {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { findUserByEmail, updateUsers } from '../../../redux/userlistManagement/userSlice'
 import { toast, ToastContainer } from 'react-toastify';
@@ -13,11 +13,12 @@ const initialUser = {
 
 const EditUser = () => {
   const { email } = useParams();
+  const navigate = useNavigate();
   const user = useSelector((user) => user.userlist.user)
   const [inforUser, setInforUser] = useState(initialUser);
   const [errorUser, setErrorUser] = useState(initialUser)
   const dispatch = useDispatch();
-console.log(email, "heiufh")
+  const token = localStorage.getItem('token')
   useEffect(() => {
     const fetchData = async () => {
       const response = await dispatch(findUserByEmail(email));
@@ -31,6 +32,13 @@ console.log(email, "heiufh")
 
     fetchData();
   }, [email, dispatch]);
+
+  useEffect(() => {
+    if (!token) {
+        navigate('/')
+    }
+}, [token])
+
 
   const handleOnChange = (event) => {
     const { name, value, type, checked } = event.target;
