@@ -13,6 +13,7 @@ import CreateDrug from './commponents/Admin/DrugManagement/CreateDrug';
 import ProductList from './commponents/Admin/ProductManagement/ProductList';
 import CreateProduct from './commponents/Admin/ProductManagement/CreateProduct';
 import UpdateProduct from './commponents/Admin/ProductManagement/UpdateProduct';
+import ProductDetail from './commponents/Admin/ProductManagement/ProductDetail';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path='/productlist' element={<ProductList></ProductList>}></Route>
         <Route path='/createproduct' element={<CreateProduct></CreateProduct>}></Route>
         <Route path='/updateproduct' element={<UpdateProduct></UpdateProduct>}></Route>
+        <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

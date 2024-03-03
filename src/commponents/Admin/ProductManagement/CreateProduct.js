@@ -486,7 +486,7 @@ const CreateProduct = () => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'OK',
         }).then(() => {
-          Navigate('/');
+          Navigate('/productlist');
         });
       } else {
         throw new Error('Thêm mới thất bại')
@@ -504,11 +504,11 @@ const CreateProduct = () => {
 
   function handleClick() {
     Swal.fire({
-      title: "Thông tin của bạn sẽ không được lưu?",
+      title: "Thông tin của thuốc sẽ không được lưu?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
+      confirmButtonText: "Có",
+      cancelButtonText: "Không",
       customClass: {
         confirmButton: "btn btn-success",
         cancelButton: "btn btn-danger"
@@ -523,7 +523,7 @@ const CreateProduct = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         window.scrollTo(0, 0);
-        Navigate(`/`);
+        Navigate(`/productlist`);
       }
     });
   }
@@ -741,24 +741,24 @@ const CreateProduct = () => {
                         <div className='border border-solid border-gray-200 p-2 rounded-md mb-5'>
                           <div className='flex  ml-4'>
                             <div class="mb-5">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Độ mạnh</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Nồng độ</label>
                               <input type="text" name='strength' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                               {/* {errorProduct.drugIngredients.strength && (<span className='text-red-500'>{errorProduct.drugIngredients.strength}</span>)} */}
                             </div>
                             <div class="mb-5 ml-20">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Số độ mạnh</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Số nồng độ</label>
                               <input type="text" name='strengthNumber' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 " />
                               {/* {errorProduct.drugIngredients.strengthNumber && (<span className='text-red-500'>{errorProduct.drugIngredients.strengthNumber}</span>)} */}
                             </div>
                           </div>
                           <div className='flex  ml-4'>
                             <div class="mb-5">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Độ mạnh đơn vị</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Đơn vị nồng độ</label>
                               <input type="text" name='strengthUnit' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                               {/* {errorProduct.drugIngredients.strengthUnit && (<span className='text-red-500'>{errorProduct.drugIngredients.strengthUnit}</span>)} */}
                             </div>
                             <div class="mb-5 ml-20">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Lâm sàng</label>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Thông tin lâm sàng</label>
                               <input type="text" name='clinicallyRelevant' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                               {/* {errorProduct.drugIngredients.clinicallyRelevant && (<span className='text-red-500'>{errorProduct.drugIngredients.clinicallyRelevant}</span>)} */}
                             </div>
@@ -820,7 +820,7 @@ const CreateProduct = () => {
 
                 <div class="flex justify-center gap-14 row mt-10 mb-5">
                   <div class="w-1/2 ml-20">
-                    <Link to={'/'}
+                    <Link to={'/productlist'}
                       onClick={(e) => {
                         e.preventDefault();
                         handleClick();

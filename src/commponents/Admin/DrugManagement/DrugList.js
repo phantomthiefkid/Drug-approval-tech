@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Filter, Boxes, PlusCircle, PencilFill, EyeSlashFill, EyeFill, Trash3Fill } from 'react-bootstrap-icons'
 import ModalUpdateDrug from './ModalUpdateDrug';
 import { deactivateDrugs, fetchDrugs, updateDrugs } from '../../../redux/drugManagement/drugSlice'
@@ -25,10 +25,11 @@ const DrugList = () => {
   const [showModal, setShowModal] = useState(false);
   const [shouldReloadData, setShouldReloadData] = useState(true);
   const [drugs, setDrugs] = useState([]);
-
+  const navigate = useNavigate();
   const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [selectedDrugDetail, setSelectedDrugDetail] = useState(null);
   const [showModalDetailDrug, setShowModalDetailDrug] = useState(false);
+  const token = localStorage.getItem('token')
   const handleOnClose = () => {
     setShowModalDetailDrug(false)
     setSelectedDrugDetail(null)
@@ -57,7 +58,7 @@ const DrugList = () => {
       } else {
         setApiData(response.payload.content);
         setTotalPages(response.payload.totalPages);
-        console.log("123456", response.payload.content)
+
       }
     })
       .catch((error) => {
@@ -163,9 +164,14 @@ const DrugList = () => {
     setCurrentPage(0)
   }
 
+  useEffect(() => {
+    if (!token) {
+      navigate('/')
+    }
+  }, [token])
   return (
     <>
-      <div className='mt-28'>
+      <div className='mt-20'>
         <ToastContainer></ToastContainer>
         <div className='py-8 flex px-48'>
           <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
@@ -174,7 +180,7 @@ const DrugList = () => {
           </h1>
         </div>
         <div className='flex'>
-          <div className='w-2/3 mt-8 mb-10 px-48 flex'>
+          <div className='w-2/3 mt-2 mb-10 px-48 flex'>
             <form>
               <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
               <div class="relative">
@@ -226,7 +232,7 @@ const DrugList = () => {
               )}
             </div>
           </div>
-          <div><Link to={'/createdrug'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới</button></Link></div>
+          <div><Link to={'/createdrug'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới hoạt chất</button></Link></div>
         </div>
         <div className='mb-6'>
           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

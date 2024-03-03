@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Capsule, Sliders, Boxes } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import '../../css/Navbar.css'
 import ModalLogin from '../Account/ModalLogin';
-
 import { getUserDataFromToken, getUserNameFromToken } from '../../redux/auth/loginSlice';
 
 const Navigation = () => {
@@ -13,11 +11,11 @@ const Navigation = () => {
   const [image, setImage] = useState('')
   const [showModalLogin, setShowModalLogin] = useState(false);
   const handleOnClose = () => setShowModalLogin(false);
+  const data = getUserNameFromToken();
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem('token');
-
+  const navigate = useNavigate()
   const roleName = getUserDataFromToken()
-  const data = getUserNameFromToken();
 
   const handleScroll = () => {
     if (window.scrollY > 50) {
@@ -38,13 +36,20 @@ const Navigation = () => {
   const toggleCloseDropdown = () => {
     setIsOpen(false)
   }
-
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
+    if (confirmLogout) {
+      localStorage.removeItem("token");
+      navigate('/');
+    }
+  }
 
   return (
     <>
@@ -59,7 +64,7 @@ const Navigation = () => {
             </div></Link>
             </div>
             <div className='text-lg flex items-center'>
-              <Link to={'/'}><Capsule size={20}></Capsule>
+              <Link to={'/productlist'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc  </p></Link>
             </div>
             {(roleName === 'SUPERADMIN' || roleName === 'ADMIN') && (
@@ -98,7 +103,6 @@ const Navigation = () => {
               </div>
               <div><img className={`logo ${image}`} src='./vietnam.png' alt='Drug bank' /></div>
             </div>
-
             {token ? (
               <div className='flex items-center'>
                 <div className='items-center text-wrap hover:text-yellow-300'>
@@ -106,22 +110,21 @@ const Navigation = () => {
                 </div>
                 <div>
                   <Link to={`/viewprofile`}>
-                    <img className={`logo rounded-full ${image}`} src='https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/422911099_1079163673307571_3799414645168137984_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEstcAO0PgeSZ1Pn5KhwcXq9_r-E9Ym30D3-v4T1ibfQBE13gcukayN5kYEeRoJi3vnzZ0ZZGJA4bvyFTqbqVFp&_nc_ohc=uQ3WKyFqv9wAX8qhu8a&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfApdRNxrQ3q7qvU24cB_2SnkmSDTA3sOP33lwg5ImRnzg&oe=65C4D331' alt='profile' />
+                    <img className={`logo rounded-full ${image}`} src='https://images2.thanhnien.vn/528068263637045248/2024/1/27/den-vau-99-17063223334631232917099.jpg' alt='profile' />
                   </Link>
                 </div>
+                <div><button onClick={handleLogout}>Đăng xuất</button></div>
               </div>
             ) : (
               <div className='items-center text-lg w-36 hover:text-yellow-300'>
                 <button onClick={() => setShowModalLogin(true)}>Đăng nhập</button>
               </div>
             )}
-
           </div>
         </div>
       </div>
     </>
   );
 };
-
 
 export default Navigation

@@ -49,7 +49,6 @@ const Home = () => {
             ))}
           </div> */}
         </div>
-        <div><Link to={'/createproduct'}><button>Create</button></Link></div>
         <div><Link to={'/updateproduct'}><button>Update</button></Link></div>
         <h2 className='mt-16 text-center text-3xl font-extrabold'>Drug data is rapidly increasing</h2>
         <h2 className='text-center mt-8 text-2xl'>

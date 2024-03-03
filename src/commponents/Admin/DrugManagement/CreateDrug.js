@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Boxes } from 'react-bootstrap-icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
@@ -32,6 +32,12 @@ const CreateDrug = () => {
   const [drug, setDrug] = useState(drug_initial);
   const [errorDrug, setErrorDrug] = useState(drug_error)
   const [drugImage, setDrugImage] = useState('')
+  const token = localStorage.getItem('token')
+  useEffect(() => {
+    if (!token) {
+        navigate('/')
+    }
+}, [token])
   const getDataDrug = (e) => {
     setDrug({ ...drug, [e.target.name]: e.target.value })
   }
