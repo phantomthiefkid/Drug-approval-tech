@@ -11,6 +11,7 @@ import Navigation from './commponents/Navbar/Navigation';
 import Footer from './commponents/Footer/Footer';
 import CreateDrug from './commponents/Admin/DrugManagement/CreateDrug';
 import ProductList from './commponents/Admin/ProductManagement/ProductList';
+import ProductDetail from './commponents/Admin/ProductManagement/ProductDetail';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/druglist' element={<DrugList></DrugList>}></Route>
         <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
         <Route path='/productlist' element={<ProductList></ProductList>}></Route>
+        <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { EyeFill, EyeSlashFill, Filter, PencilFill, PlusCircle } from 'react-bootstrap-icons'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useNavigate } from 'react-router-dom';
 const UserList = () => {
     const usersAPI = useSelector((user) => user.userlist.data.content)
     const dispatch = useDispatch();
@@ -23,9 +23,14 @@ const UserList = () => {
     const [status, setStatus] = useState('');
     const [genderFilter, setGenderFilter] = useState('');
     const [search, setSearch] = useState('');
-
+    const token = localStorage.getItem('token')
+    const navigate = useNavigate()
     let count = 1
-
+    useEffect(() => {
+        if (!token) {
+            navigate('/')
+        }
+    }, [token])
     useEffect(() => {
         if (Array.isArray(usersAPI)) {
             setUserList([...usersAPI]);
@@ -136,7 +141,7 @@ const UserList = () => {
     return (
         <>
             <ToastContainer></ToastContainer>
-            <div className='mt-28'>
+            <div className='mt-20'>
                 <div className='py-8 flex px-48'>
                     <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-people mt-1" viewBox="0 0 16 16">
@@ -146,7 +151,7 @@ const UserList = () => {
                     </h1>
                 </div>
                 <div className='flex'>
-                    <div className='w-2/3 mt-8 mb-10 px-48 flex'>
+                    <div className='w-2/3 mt-2 mb-10 px-48 flex'>
                         <form>
                             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div class="relative">
@@ -321,7 +326,7 @@ const UserList = () => {
 
                                                             className="flex gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:text-gray-900"
                                                         >
-                                                           <div className='mt-1'> <EyeSlashFill size={15} color="red"></EyeSlashFill></div>Vô hiệu hóa người dùng
+                                                            <div className='mt-1'> <EyeSlashFill size={15} color="red"></EyeSlashFill></div>Vô hiệu hóa người dùng
                                                         </button>) : (<button onClick={() => handleChangeStatus(selectedUser)}
 
                                                             className="flex px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 hover:text-gray-900"
@@ -350,7 +355,7 @@ const UserList = () => {
                                     {totalPages ? [...Array(totalPages).keys()].map((page) => (
                                         <li className={`page-item ${currentPage === page ? 'active' : ''}`}
                                             key={page}>
-                                            <button onClick={() => handlePageChange(page)} class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ${currentPage === page? "bg-blue-600 text-white" : 'bg-white'}`}>{page + 1}</button>
+                                            <button onClick={() => handlePageChange(page)} class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ${currentPage === page ? "bg-blue-600 text-white" : 'bg-white'}`}>{page + 1}</button>
                                         </li>
                                     )) : <div></div>}
                                     <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>

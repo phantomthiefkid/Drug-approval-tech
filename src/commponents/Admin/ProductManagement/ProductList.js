@@ -1,24 +1,92 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Filter, PlusCircle } from 'react-bootstrap-icons'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { fetchProducts } from '../../../redux/productManagement/ProductSlice';
+import '../../../css/ProductManagement/Product.css'
 const ProductList = () => {
 
     const [isOpenFilter, setIsOpenFilter] = useState(false);
+    const dispatch = useDispatch();
+    const totalPagesAPI = useSelector((page) => page.product.totalPages)
+    const [sortField, setSortField] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+    const [productListApi, setProductListApi] = useState([]);
+    const productList = useSelector((product) => product.product.data)
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [search, setSearch] = useState('');
+    const [flag, setFlag] = useState(false)
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token')
+
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/')
+        }
+    }, [token])
 
     const toggleFilter = () => {
         setIsOpenFilter(!isOpenFilter)
     }
 
+    useEffect(() => {
+        if (Array.isArray(productListApi)) {
+            setProductListApi([...productList]);
+        }
+    }, [productList]);
+
+    useEffect(() => {
+        dispatch(fetchProducts({ pageSize: 8, sortOrder: 'asc', pageNo: currentPage, search: search, flag })).then(() => {
+            setTotalPages(totalPagesAPI);
+        });
+    }, [dispatch, currentPage, totalPagesAPI, search]);
+    const handleSortFieldChange = (e) => setSortField(e.target.value);
+    const handleSortOrderChange = (e) => setSortOrder(e.target.value);
+    const fetchNewProducts = () => {
+        dispatch(fetchProducts({ sortField: sortField, sortOrder: sortOrder, pageSize: 8, pageNo: 0 }))
+    }
+
+    const handleOnClickFilter = () => {
+        setFlag(!flag)
+        fetchNewProducts();
+        setIsOpenFilter(false);
+        setCurrentPage(0)
+    }
+
+    const handleIncreasePage = () => {
+        if (currentPage < totalPages - 1) {
+            setCurrentPage((prev) => prev + 1);
+        }
+    };
+
+    const handleDecreasePage = () => {
+        if (currentPage > 0) {
+            setCurrentPage((prev) => prev - 1);
+        }
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value)
+        setCurrentPage(0)
+    }
+
     return (
         <>
-            <div className='mt-28'>
+            <div className='mt-20'>
                 <div className='py-8 flex px-48'>
                     <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
-                        <span className='ml-2'>Quản lý thuốc</span>
+                        <span className='ml-2'>Danh sách thuốc được cấp phép</span>
                     </h1>
                 </div>
                 <div className='flex'>
-                    <div className='w-2/3 gap-4 mt-8 mb-10 px-48 flex'>
+                    <div className='w-2/3 gap-4 mt-2 mb-10 px-48 flex'>
                         <form className='w-1/2'>
                             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div class="relative w-full">
@@ -28,26 +96,52 @@ const ProductList = () => {
                                     </svg>
                                 </div>
                                 <input
-                                    type="search" name='search' id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-blue-400 focus:outline-blue-500 rounded-lg " placeholder="Tìm kiếm..." required />
+                                    type="search" onChange={handleSearchChange} value={search} name='search' id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-blue-400 focus:outline-blue-500 rounded-lg " placeholder="Tìm kiếm..." required />
                             </div>
                         </form>
-                        <div className=' ml-2 relative'>
-                            <button onClick={toggleFilter} className='text-white bg-blue-600 flex w-auto focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'>Filter
-                                <svg className="w-3.5 h-3.5 mt-1 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
+                        <div className=' ml-2 mt-1 relative'>
+                            <button onClick={toggleFilter} className={`text-white rounded-md  bg-blue-600 ${isOpenFilter ? "bg-blue-300" : ''} flex w-auto focus:ring-2 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2`}><Filter size={20}></Filter>
+
                             </button>
                             {isOpenFilter && (
-                                <div className="absolute z-10 left-0 top-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                                    <div className="py-1 text-center" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                        <h3 className="text-lg font-semibold mb-2">Dropdown Content</h3>
-                                        <ul>
-                                            <li className="py-2">Option 1</li>
-                                            <li className="py-2">Option 2</li>
-                                            <li className="py-2">Option 3</li>
-                                        </ul>
+
+                                <div className="absolute z-10 left-16 top-0 rounded-md w-56 shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+
+                                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                        <div className='flex flex-col justify-start px-2 py-2'>
+                                            <h3 className="text-xl font-semibold mb-2">Lọc</h3>
+                                            <hr></hr>
+                                            <div className='p-2'><h3><b>Sort Field</b></h3>
+                                                <div className="flex items-center mb-2">
+                                                    <input type="radio" id="sortByName" onChange={handleSortFieldChange} name="sortField" value="name" className="mr-2" />
+                                                    <label htmlFor="sortByName">Name</label>
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                    <input type="radio" id="sortByCompany" onChange={handleSortFieldChange} name="sortField" value="company" className="mr-2" />
+                                                    <label htmlFor="sortByCompany">Company</label>
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                    <input type="radio" id="sortByCategory" onChange={handleSortFieldChange} name="sortField" value="category" className="mr-2" />
+                                                    <label htmlFor="sortByCategory">Category</label>
+                                                </div></div>
+                                            <div className='p-2'><h3><b>Sort Order</b></h3>
+                                                <div className="flex items-center mb-2">
+                                                    <input type="radio" id="sortOrderAsc" onChange={handleSortOrderChange} name="sortOrder" value="asc" className="mr-2" />
+                                                    <label htmlFor="sortOrderAsc">Ascending</label>
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                    <input type="radio" id="sortOrderDesc" onChange={handleSortOrderChange} name="sortOrder" value="desc" className="mr-2" />
+                                                    <label htmlFor="sortOrderDesc">Descending</label>
+                                                </div></div>
+                                        </div>
+                                        <hr className="my-2" />
+                                        <div className='flex justify-center'>
+                                            <button className='bg-green-500 text-white rounded-md px-4 py-2 mx-2' onClick={handleOnClickFilter}>Apply</button>
+                                            <button className='bg-red-500 text-white rounded-md px-4 py-2 mx-2' onClick={() => setIsOpenFilter(false)}>Cancel</button>
+                                        </div>
                                     </div>
                                 </div>
+
                             )}
                         </div>
 
@@ -56,57 +150,51 @@ const ProductList = () => {
                 </div>
                 <div className='w-11/12 mx-auto text-center'>
                     <h3 className='text-2xl font-medium text-blue-900 mb-6'>Thuốc được phê duyệt</h3>
-                    <hr></hr>
+                    <hr className=' border-gray-300 mb-4 border-t-2'></hr>
                 </div>
-                <div className='mb-6 mt-10 grid grid-cols-4'>
-                    <div class="max-w-sm bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto">
-                        <a href="#">
-                            <img class=" w-full h-64 rounded-lg rounded-b-none object-cover border border-b-1" src="https://www.mccabespharmacy.com/cdn/shop/products/5011080125090_t1.jpg?v=1685712737" alt="" />
-                        </a>
+                <div className='mb-6 p-6 mt-4 grid grid-cols-4'>
+                    {productListApi && productListApi.map((product) => (<div class="max-w-sm mt-4 bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto">
+                        <div className="img-container">
+                            <Link to={`/productdetail/${product.id}`}>
+                                <img className="w-full h-56 rounded-lg rounded-b-none object-cover border border-b-1" src="https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG" alt="" />
+                            </Link>
+                        </div>
+
                         <div class="p-3">
                             <a href="#">
-                                <h5 class="mb-2 text-2xl font-light font-serif tracking-tight text-gray-900 dark:text-white">Panadol</h5>
+                                <h5 class=" text-xl font-light font-sans tracking-tight text-gray-900 dark:text-white">{product.name}</h5>
                             </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: Giảm đau</p>
-                           
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: <i>{product.category}</i></p>
+
                         </div>
-                    </div>
-                    <div class="max-w-sm bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto ">
-                        <a href="#">
-                            <img class=" w-full h-64 rounded-lg rounded-b-none object-cover border border-b-1" src="https://i5.walmartimages.com/seo/Panadol-Cold-Flu-24ct_573e7718-7305-47a8-ae32-9425ac427cc3.d447f65f7b66dfd553ac1b957e529189.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF" alt="" />
-                        </a>
-                        <div class="p-3">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-light font-serif tracking-tight text-gray-900 dark:text-white">Panadol</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: Giảm đau</p>
-                           
-                        </div>
-                    </div>
-                    <div class="max-w-sm bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto ">
-                        <a href="#">
-                            <img class=" w-full h-64 rounded-lg rounded-b-none object-cover border border-b-1" src="https://www.medicalsupplies.com.sg/4750-superlarge_default/panadol-cough-and-cold-16-sbox.jpg" alt="" />
-                        </a>
-                        <div class="p-3">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-light font-serif tracking-tight text-gray-900 dark:text-white">Panadol</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: Giảm đau</p>
-                           
-                        </div>
-                    </div>
-                    <div class="max-w-sm bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto ">
-                        <a href="#">
-                            <img class=" w-full h-64 rounded-lg rounded-b-none object-cover border border-b-1" src="https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/vi_vn/vietnamproduct/panadol_regular_pack_shot_blue/product_detail/Desktop-455x455.png?auto=format" alt="" />
-                        </a>
-                        <div class="p-3">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-light font-serif tracking-tight text-gray-900 dark:text-white">Panadol</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: Giảm đau</p>
-                           
-                        </div>
-                    </div>
+                    </div>))}
+
+                </div>
+                <div className='mb-6 flex justify-center'>
+                    <nav aria-label="">
+                        <ul className="flex items-center -space-x-2 h-10 text-base">
+                            <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+                                <button onClick={handleDecreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                                    Previous
+                                </button>
+                            </li>
+                            {totalPages ? [...Array(totalPages).keys()].map((page) => (
+                                <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
+                                    <button
+                                        onClick={() => handlePageChange(page)}
+                                        className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}
+                                    >
+                                        {page + 1}
+                                    </button>
+                                </li>
+                            )) : <div></div>}
+                            <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
+                                <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </>

@@ -18,6 +18,13 @@ const EditProfile = () => {
         dayOfBirth: '',
         gender: 0,
     });
+
+    useEffect(() => {
+        if (!token) {
+            Navigate('/')
+        }
+    }, [token])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
