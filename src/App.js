@@ -11,6 +11,8 @@ import Navigation from './commponents/Navbar/Navigation';
 import Footer from './commponents/Footer/Footer';
 import CreateDrug from './commponents/Admin/DrugManagement/CreateDrug';
 import ProductList from './commponents/Admin/ProductManagement/ProductList';
+import CreateProduct from './commponents/Admin/ProductManagement/CreateProduct';
+import UpdateProduct from './commponents/Admin/ProductManagement/UpdateProduct';
 import ProductDetail from './commponents/Admin/ProductManagement/ProductDetail';
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
         <Route path='/druglist' element={<DrugList></DrugList>}></Route>
         <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
         <Route path='/productlist' element={<ProductList></ProductList>}></Route>
+        <Route path='/createproduct' element={<CreateProduct></CreateProduct>}></Route>
+        <Route path='/updateproduct' element={<UpdateProduct></UpdateProduct>}></Route>
         <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
       </Routes>
       <Footer></Footer>
