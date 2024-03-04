@@ -14,6 +14,7 @@ const CreateProduct = () => {
   const drugsAPI = useSelector((drug) => drug.drugData.data)
 
   const [showToggle, setShowToggle] = useState([])
+  const [showModalsCerti, setShowModalsCerti] = useState([])
   const [showModals, setShowModals] = useState(Array(showToggle.length).fill(false));
   const [countriesList, setCountriesList] = useState([])
   const [categoriesList, setCategoriesList] = useState([])
@@ -122,10 +123,21 @@ const CreateProduct = () => {
     setShowModals(Array(add.length).fill(false));
   }
 
+  const handleAddModal = () => {
+    const add = [...showModalsCerti, []]
+    setShowModalsCerti(add)
+  }
+
   const handleDelete = (i) => {
     const deleteToggle = [...showToggle]
     deleteToggle.splice(i, 1)
     setShowToggle(deleteToggle)
+  }
+
+  const handleDeleteModals = (i) => {
+    const deleteModal = [...showModalsCerti]
+    deleteModal.splice(i, 1)
+    setShowModalsCerti(deleteModal)
   }
 
   const handleToggleClick = (index) => {
@@ -601,41 +613,51 @@ const CreateProduct = () => {
                   </div>
                 </div>
 
-                <label class="block mb-2 text-md font-extrabold text-gray-900 mt-5 ">Chính phủ:</label>
-                <div class="mb-5 flex ml-8">
-                  <div class="mb-5">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên chứng chỉ</label>
-                    <input type="text" name='certificateName' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                    {/* {errorProduct.authorities.certificateName && (<span className='text-red-500'>{errorProduct.authorities.certificateName}</span>)} */}
-                  </div>
-                  <div className='mb-5 ml-20'>
-                    <div className="relative mt-2 mr-24">
-                      <select
-                        value={selectedCountry}
-                        onChange={(e) => setSelectedCountry(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                        <option value="" disabled hidden>
-                          Chọn Quốc Gia
-                        </option>
-                        {Array.isArray(countriesList) &&
-                          countriesList.map((country, index) => (
-                            <option key={index} value={country.id}>
-                              {country.name}
-                            </option>
-                          ))}
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                        <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path
-                            fillRule="evenodd"
-                            d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
+                <label class=" flex mb-2 text-md font-extrabold text-gray-900 mt-5 ">Cơ quan chứng nhận:
+                  <PlusCircle class="ml-2" size={20} onClick={() => handleAddModal()}></PlusCircle>
+                </label>
+                {showModalsCerti.map((data, i) => {
+                  return (
+                    <>
+                      <div class=" border border-solid border-gray-200 mb-2 p-2 rounded-md flex w-3/4 justify-between ml-8">
+                        <div class="mb-5">
+                          <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên chứng chỉ</label>
+                          <input type="text" name='certificateName' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                          {/* {errorProduct.authorities.certificateName && (<span className='text-red-500'>{errorProduct.authorities.certificateName}</span>)} */}
+                        </div>
+                        <div className='mb-5 mt-4'>
+                          <div className="relative mt-2">
+                            <select
+                              value={selectedCountry}
+                              onChange={(e) => setSelectedCountry(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                              <option value="" disabled hidden>
+                                Chọn Quốc Gia
+                              </option>
+                              {Array.isArray(countriesList) &&
+                                countriesList.map((country, index) => (
+                                  <option key={index} value={country.id}>
+                                    {country.name}
+                                  </option>
+                                ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        <div className='ml-5 mt-8' onClick={() => handleDeleteModals(i)}>
+                          <Trash3Fill size={25} color="red"></Trash3Fill>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
+                    </>
+                  )
+                })}
                 <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
                   Sản phẩm dị ứng:
                 </label>
@@ -671,12 +693,36 @@ const CreateProduct = () => {
                 </div>
                 <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
                   Thành phần thuốc: <PlusCircle class="ml-2" size={20} onClick={() => handleAdd()}></PlusCircle>
+                  <div className="relative mt-2 ml-14 ">
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                      <option value="" disabled hidden>
+                        Loại thuốc
+                      </option>
+                      {Array.isArray(categoriesList) &&
+                        categoriesList.map((category, index) => (
+                          <option key={index} value={category.id}>
+                            {category.title}
+                          </option>
+                        ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                          fillRule="evenodd"
+                          d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </label>
 
                 {showToggle.map((data, i) => {
                   return (
                     <>
-                      <div className='border border-solid border-gray-200 p-2 rounded-md mb-2'>
+                      <div className='border border-solid border-gray-200 p-2 rounded-md mb-2 w-3/4 ml-8'>
                         <div className='mb-1 flex'>
                           <div className="relative mt-2">
                             <select
@@ -703,32 +749,6 @@ const CreateProduct = () => {
                               </svg>
                             </div>
                           </div>
-
-                          <div className="relative mt-2 ml-14">
-                            <select
-                              value={selectedCategory}
-                              onChange={(e) => setSelectedCategory(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                              <option value="" disabled hidden>
-                                Loại thuốc
-                              </option>
-                              {Array.isArray(categoriesList) &&
-                                categoriesList.map((category, index) => (
-                                  <option key={index} value={category.id}>
-                                    {category.title}
-                                  </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-
                           <div className='ml-32 mt-3' onClick={() => handleToggleClick(i)}>
                             <ArrowDownCircle size={25}></ArrowDownCircle>
                           </div>
@@ -738,8 +758,8 @@ const CreateProduct = () => {
                         </div>
                       </div>
                       {showModals[i] && (
-                        <div className='border border-solid border-gray-200 p-2 rounded-md mb-5'>
-                          <div className='flex  ml-4'>
+                        <div className='border border-solid border-gray-200 p-2 rounded-md mb-5 w-3/4 ml-8'>
+                          <div className='flex'>
                             <div class="mb-5">
                               <label class="block mb-2 text-sm font-medium text-gray-900 ">Nồng độ</label>
                               <input type="text" name='strength' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
@@ -751,7 +771,7 @@ const CreateProduct = () => {
                               {/* {errorProduct.drugIngredients.strengthNumber && (<span className='text-red-500'>{errorProduct.drugIngredients.strengthNumber}</span>)} */}
                             </div>
                           </div>
-                          <div className='flex  ml-4'>
+                          <div className='flex'>
                             <div class="mb-5">
                               <label class="block mb-2 text-sm font-medium text-gray-900 ">Đơn vị nồng độ</label>
                               <input type="text" name='strengthUnit' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
@@ -763,7 +783,7 @@ const CreateProduct = () => {
                               {/* {errorProduct.drugIngredients.clinicallyRelevant && (<span className='text-red-500'>{errorProduct.drugIngredients.clinicallyRelevant}</span>)} */}
                             </div>
                           </div>
-                          <div className='text-right mr-28'>
+                          <div className='text-right mr-10'>
                             <button onClick={() => handleSave(i)} className='text-white mb-3 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2 text-center ml-auto'>
                               Lưu
                             </button>
