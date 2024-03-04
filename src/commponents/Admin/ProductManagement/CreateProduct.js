@@ -742,7 +742,6 @@ const CreateProduct = () => {
                     </div>
                   </div>
                 </label>
-
                 {showToggle.map((data, i) => {
                   return (
                     <>
@@ -762,7 +761,6 @@ const CreateProduct = () => {
                                   </option>
                                 ))}
                             </select>
-
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                               <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                 <path
