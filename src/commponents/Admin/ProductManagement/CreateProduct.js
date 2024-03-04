@@ -491,7 +491,7 @@ const CreateProduct = () => {
           indication: name === "indication" ? value : prevProduct.pharmacogenomic.indication,
           pharmacodynamic: name === "pharmacodynamic" ? value : prevProduct.pharmacogenomic.pharmacodynamic,
           mechanismOfAction: name === "mechanismOfAction" ? value : prevProduct.pharmacogenomic.mechanismOfAction,
-          absorption: name === "absorption" ? value : prevProduct.pharmacogenomic.absorption,
+          asorption: name === "asorption" ? value : prevProduct.pharmacogenomic.asorption,
           toxicity: name === "toxicity" ? value : prevProduct.pharmacogenomic.toxicity,
         },
         productAllergyDetail: {
