@@ -123,15 +123,15 @@ const CreateProduct = () => {
     setShowModals(Array(add.length).fill(false));
   }
 
-  const handleAddModal = () => {
-    const add = [...showModalsCerti, []]
-    setShowModalsCerti(add)
-  }
-
   const handleDelete = (i) => {
     const deleteToggle = [...showToggle]
     deleteToggle.splice(i, 1)
     setShowToggle(deleteToggle)
+  }
+
+  const handleAddModal = () => {
+    const add = [...showModalsCerti, []]
+    setShowModalsCerti(add)
   }
 
   const handleDeleteModals = (i) => {
@@ -404,47 +404,71 @@ const CreateProduct = () => {
     return isValid
   }
 
+  const handleChangeCountry = (e) => {
+    const value = e.target.value;
+    console.log("Selected Country ID:", value);
+    setSelectedCountry(value);
+  };
+
+  const handleChangeDrug = (e) => {
+    const value = e.target.value;
+    console.log("Selected Drug ID:", value);
+    setSelectedDrug(value)
+  }
+
   const getDataProduct = (e, index) => {
     const { name, value } = e.target;
 
     setProduct((prevProduct) => {
-      let updatedDrugIngredients = [...prevProduct.drugIngredients];
-      let updatedAuthorities = [...prevProduct.authorities];
+      // updatedDrugIngredients = updatedDrugIngredients.map((ingredient) => {
+      //   if (ingredient.drugId === selectedDrug) {
+      //     console.log("Matching drugId found");
+      //     return {
+      //       ...ingredient,
+      //       drugId: selectedDrug,
+      //       strength: name === "strength" ? value : ingredient.strength,
+      //       strengthNumber: name === "strengthNumber" ? value : ingredient.strengthNumber,
+      //       strengthUnit: name === "strengthUnit" ? value : ingredient.strengthUnit,
+      //       clinicallyRelevant: name === "clinicallyRelevant" ? value : ingredient.clinicallyRelevant,
+      //     };
+      //   }
+      //   return ingredient;
+      // });
+      // updatedAuthorities = updatedAuthorities.map((authority, i) => {
 
-      updatedDrugIngredients = updatedDrugIngredients.map((ingredient) => {
-        console.log("Ingredient.drugId:", ingredient.drugId);
-        console.log("selectedDrug:", selectedDrug);
-        console.log("Comparing:", ingredient.drugId === selectedDrug);
+      //   if (authority.countryId === selectedCountry) {
+      //     return {
+      //       ...authority,
+      //       countryId: selectedCountry,
+      //       certificateName: name === "certificateName" ? value : authority.certificateName
 
-        if (ingredient.drugId === selectedDrug) {
-          console.log("Matching drugId found");
-          return {
+      //     };
+      //   }
+      //   return authority;
+      // });
+
+      let updatedDrugIngredients = prevProduct.drugIngredients.map((ingredient) => {
+        return ingredient.drugId === selectedDrug
+          ? {
             ...ingredient,
+            drugId: selectedDrug,
             strength: name === "strength" ? value : ingredient.strength,
             strengthNumber: name === "strengthNumber" ? value : ingredient.strengthNumber,
             strengthUnit: name === "strengthUnit" ? value : ingredient.strengthUnit,
             clinicallyRelevant: name === "clinicallyRelevant" ? value : ingredient.clinicallyRelevant,
-          };
-        }
-        return ingredient;
+          }
+          : ingredient;
       });
-      updatedAuthorities = updatedAuthorities.map((authority, i) => {
-        if (authority.countryId === selectedCountry) {
-          return {
+
+      let updatedAuthorities = prevProduct.authorities.map((authority) => {
+        return authority.countryId === selectedCountry
+          ? {
             ...authority,
-            certificateName: name === "certificateName" ? value : authority.certificateName
-          };
-        }
-        return authority;
+            countryId: selectedCountry,
+            certificateName: name === "certificateName" ? value : authority.certificateName,
+          }
+          : authority;
       });
-      // console.log("Name:", name);
-      // console.log("Value:", value);
-      // console.log("Selected Drug:", selectedDrug);
-      // console.log("Selected Country:", selectedCountry);
-      console.log("selectedDrug:", selectedDrug);
-      console.log("name:", name);
-      console.log("value:", value);
-      console.log("updatedDrugIngredients:", updatedDrugIngredients);
 
       return {
         ...prevProduct,
@@ -621,7 +645,7 @@ const CreateProduct = () => {
                     <>
                       <div class=" border border-solid border-gray-200 mb-2 p-2 rounded-md flex w-3/4 justify-between ml-8">
                         <div class="mb-5">
-                          <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên chứng chỉ</label>
+                          <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên chứng nhận</label>
                           <input type="text" name='certificateName' onChange={getDataProduct} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                           {/* {errorProduct.authorities.certificateName && (<span className='text-red-500'>{errorProduct.authorities.certificateName}</span>)} */}
                         </div>
@@ -629,13 +653,13 @@ const CreateProduct = () => {
                           <div className="relative mt-2">
                             <select
                               value={selectedCountry}
-                              onChange={(e) => setSelectedCountry(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                              onChange={handleChangeCountry} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                               <option value="" disabled hidden>
                                 Chọn Quốc Gia
                               </option>
                               {Array.isArray(countriesList) &&
                                 countriesList.map((country, index) => (
-                                  <option key={index} value={country.id}>
+                                  <option key={country.id} value={country.id}>
                                     {country.name}
                                   </option>
                                 ))}
@@ -727,7 +751,7 @@ const CreateProduct = () => {
                           <div className="relative mt-2">
                             <select
                               value={selectedDrug}
-                              onChange={(e) => setSelectedDrug(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                              onChange={handleChangeDrug} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
                               <option value="" disabled hidden>
                                 Hoạt chất
                               </option>
