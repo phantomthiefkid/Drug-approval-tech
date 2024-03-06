@@ -448,6 +448,9 @@ const CreateProduct = () => {
       // });
 
       let updatedDrugIngredients = prevProduct.drugIngredients.map((ingredient) => {
+        console.log("ingredient.drugId:", typeof ingredient.drugId, ingredient.drugId);
+        console.log("selectedDrug:", typeof selectedDrug, selectedDrug);
+
         return ingredient.drugId === selectedDrug
           ? {
             ...ingredient,
@@ -460,14 +463,20 @@ const CreateProduct = () => {
           : ingredient;
       });
 
+
       let updatedAuthorities = prevProduct.authorities.map((authority) => {
+
+        console.log("authority.countryId:", typeof authority.countryId, authority.countryId);
+        console.log("selectedCountry:", typeof selectedCountry, selectedCountry);
+
         return authority.countryId === selectedCountry
           ? {
             ...authority,
+            // countryId: name === "countryId" ? value : selectedCountry,
             countryId: selectedCountry,
             certificateName: name === "certificateName" ? value : authority.certificateName,
           }
-          : authority;
+          : authority
       });
 
       return {
@@ -507,7 +516,6 @@ const CreateProduct = () => {
       };
     });
   };
-
 
   const handleCreateProduct = async (e) => {
     e.preventDefault();
