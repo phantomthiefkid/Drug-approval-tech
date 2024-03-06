@@ -27,6 +27,7 @@ const ProductDetail = () => {
     <>
       <div className='container mx-auto mt-28 mb-20'>
         <h1 className='text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400  text-center mb-6'>Chi tiết về thuốc</h1>
+
         <hr className='border-gray-300'></hr>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mx-auto'>
           <div className='w-full flex justify-center border-gray-200'>
