@@ -27,6 +27,7 @@ const ProductDetail = () => {
     <>
       <div className='container mx-auto mt-28 mb-20'>
         <h1 className='text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400  text-center mb-6'>Chi tiết về thuốc</h1>
+
         <hr className='border-gray-300'></hr>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mx-auto'>
           <div className='w-full flex justify-center border-gray-200'>
@@ -35,7 +36,7 @@ const ProductDetail = () => {
           <div className='max-w-2xl'>
 
             {productApi && (
-              <h2 className='text-3xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 font-bold mb-2'>{productApi.name}</h2>
+             <div className='relative inline-block'><h2 className='text-3xl text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-600  font-bold mb-2 hover:to-yellow-500 transition-colors duration-700'>{productApi.name}</h2></div>
             )}
             <hr className='w-32 border-gray-400 mb-4 border-t-4'></hr>
             {productApi && productApi.route && (
