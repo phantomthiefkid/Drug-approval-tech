@@ -448,6 +448,9 @@ const CreateProduct = () => {
       // });
 
       let updatedDrugIngredients = prevProduct.drugIngredients.map((ingredient) => {
+        console.log("ingredient.drugId:", typeof ingredient.drugId, ingredient.drugId);
+        console.log("selectedDrug:", typeof selectedDrug, selectedDrug);
+
         return ingredient.drugId === selectedDrug
           ? {
             ...ingredient,
@@ -460,14 +463,20 @@ const CreateProduct = () => {
           : ingredient;
       });
 
+
       let updatedAuthorities = prevProduct.authorities.map((authority) => {
+
+        console.log("authority.countryId:", typeof authority.countryId, authority.countryId);
+        console.log("selectedCountry:", typeof selectedCountry, selectedCountry);
+
         return authority.countryId === selectedCountry
           ? {
             ...authority,
+            // countryId: name === "countryId" ? value : selectedCountry,
             countryId: selectedCountry,
             certificateName: name === "certificateName" ? value : authority.certificateName,
           }
-          : authority;
+          : authority
       });
 
       return {
@@ -491,7 +500,7 @@ const CreateProduct = () => {
           indication: name === "indication" ? value : prevProduct.pharmacogenomic.indication,
           pharmacodynamic: name === "pharmacodynamic" ? value : prevProduct.pharmacogenomic.pharmacodynamic,
           mechanismOfAction: name === "mechanismOfAction" ? value : prevProduct.pharmacogenomic.mechanismOfAction,
-          absorption: name === "absorption" ? value : prevProduct.pharmacogenomic.absorption,
+          asorption: name === "asorption" ? value : prevProduct.pharmacogenomic.asorption,
           toxicity: name === "toxicity" ? value : prevProduct.pharmacogenomic.toxicity,
         },
         productAllergyDetail: {
@@ -507,7 +516,6 @@ const CreateProduct = () => {
       };
     });
   };
-
 
   const handleCreateProduct = async (e) => {
     e.preventDefault();
@@ -742,7 +750,6 @@ const CreateProduct = () => {
                     </div>
                   </div>
                 </label>
-
                 {showToggle.map((data, i) => {
                   return (
                     <>
@@ -762,7 +769,6 @@ const CreateProduct = () => {
                                   </option>
                                 ))}
                             </select>
-
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                               <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                 <path
