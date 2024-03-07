@@ -119,7 +119,7 @@ const CreateDrug = () => {
 
   return (
     <>
-      <div className='mt-28 mb-16'>
+      <div className='mt-20 mb-16'>
         <ToastContainer></ToastContainer>
         <div className='py-8 flex px-48'>
           <h1 className=' italic text-3xl font-extrabold text-blue-800 flex'>
