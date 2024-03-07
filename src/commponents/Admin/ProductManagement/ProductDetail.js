@@ -36,7 +36,7 @@ const ProductDetail = () => {
           <div className='max-w-2xl'>
             <div className='flex justify-between'>
               {productApi && (
-                <h2 className='text-3xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 font-bold mb-2'>{productApi.name}</h2>
+                <h2 className='text-3xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 hover:to-yellow-500 font-bold mb-2'>{productApi.name}</h2>
               )}
               <div><Link to={`/updateproduct/${productApi.id}`}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PencilSquare size={20}></PencilSquare> Chỉnh sửa</button></Link></div>
             </div>

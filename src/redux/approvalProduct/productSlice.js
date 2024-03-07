@@ -5,7 +5,7 @@ const URL_COUNTRIES = `https://fams-management.tech/public/countries`
 const URL_CATEGORIES = `https://fams-management.tech/public/categories`
 const URL_CREATE_PRODUCT = `https://fams-management.tech/admin/approval-product-management/create-approval-product`
 
-export const fetchCountries = createAsyncThunk('fetchCountries', async ({ search }) => {
+export const fetchCountries = createAsyncThunk('fetchCountries', async () => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -15,9 +15,6 @@ export const fetchCountries = createAsyncThunk('fetchCountries', async ({ search
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
-      },
-      params: {
-        search
       }
     };
     const response = await axios.get(URL_COUNTRIES, config);
@@ -27,7 +24,7 @@ export const fetchCountries = createAsyncThunk('fetchCountries', async ({ search
   }
 }, [])
 
-export const fetchCategories = createAsyncThunk('fetchCategories', async ({ search }) => {
+export const fetchCategories = createAsyncThunk('fetchCategories', async () => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -38,9 +35,7 @@ export const fetchCategories = createAsyncThunk('fetchCategories', async ({ sear
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      params: {
-        search
-      }
+      
     };
     const response = await axios.get(URL_CATEGORIES, config);
     return response.data;
