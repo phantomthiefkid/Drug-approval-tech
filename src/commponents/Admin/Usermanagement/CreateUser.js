@@ -24,7 +24,6 @@ const CreateUser = () => {
   const getUserData = (e) => {
     setUsers({ ...users, [e.target.name]: e.target.value })
   }
-  console.log("Data: ", users);
 
   const handleValidationEmail = async (field) => {
     if (field === 'email') {
