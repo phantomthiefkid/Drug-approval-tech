@@ -48,7 +48,6 @@ export const fetchProductDetail = createAsyncThunk('fetchProductDetail', async (
             }
         }
         const response = await axios.get(URL_PRODUCT_DETAIL, config);
-       console.log("Check:", response.data)
         return response.data;
     } catch (error) {
         throw error;
