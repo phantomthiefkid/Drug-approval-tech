@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { PlusCircle, Trash3Fill, ArrowDownCircle } from 'react-bootstrap-icons'
+import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons'
 
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
-import { fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice';
+import { fetchCategories, fetchCountries, updateProducts } from '../../../redux/approvalProduct/productSlice';
 import { fetchProductDetail } from '../../../redux/productManagement/ProductSlice';
 
 const UpdateProduct = () => {
@@ -15,114 +15,204 @@ const UpdateProduct = () => {
   const { id } = useParams();
   const productApi = useSelector((product) => product.product.detail)
 
-  const [showToggle, setShowToggle] = useState([])
-  const [showModalsCerti, setShowModalsCerti] = useState([])
-  const [showModals, setShowModals] = useState(Array(showToggle.length).fill(false));
-  const [searchDrug, setSearchDrug] = useState('')
-  const [countriesList, setCountriesList] = useState([])
-  const [categoriesList, setCategoriesList] = useState([])
-  const [drugList, setDrugList] = useState([]);
-
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedCountryNSX, setSelectedCountryNSX] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedDrug, setSelectedDrug] = useState('');
+  const [productUpdate, setProductUpdate] = useState({
+    labeller: '',
+    name: '',
+    prescriptionName: '',
+    route: '',
+    drugIngredients: [],
+    category: -1,
+    manufactor: {
+      name: '',
+      company: '',
+      score: '',
+      source: '',
+      countryId: -1
+    },
+    authorities: [],
+    pharmacogenomic: {
+      indication: '',
+      pharmacodynamic: '',
+      mechanismOfAction: '',
+      asorption: '',
+      toxicity: ''
+    },
+    productAllergyDetail: {
+      detail: '',
+      summary: ''
+    },
+    contraindication: {
+      relationship: '',
+      value: ''
+    }
+  })
 
   const Navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleAdd = () => {
-    const add = [...showToggle, []]
-    setShowToggle(add)
-    setShowModals(Array(add.length).fill(false));
-  }
-
-  const handleDelete = (i) => {
-    const deleteToggle = [...showToggle]
-    deleteToggle.splice(i, 1)
-    setShowToggle(deleteToggle)
-  }
-
-  const handleAddModal = () => {
-    const add = [...showModalsCerti, []]
-    setShowModalsCerti(add)
-  }
-
-  const handleDeleteModals = (i) => {
-    const deleteModal = [...showModalsCerti]
-    deleteModal.splice(i, 1)
-    setShowModalsCerti(deleteModal)
-  }
-
-  const handleToggleClick = (index) => {
-    setShowModals((prev) => {
-      const newModals = [...prev];
-      newModals[index] = !newModals[index];
-      return newModals;
-    });
-  };
-
   useEffect(() => {
-    if (Array.isArray(countriesAPI)) {
-      setCountriesList(countriesAPI); //
-    }
-  }, [countriesAPI]);
-
-  useEffect(() => {
-    if (Array.isArray(categoriesAPI)) {
-      setCategoriesList(categoriesAPI);
-    }
-  }, [categoriesAPI]);
-
-  useEffect(() => {
-    if (Array.isArray(drugsAPI)) {
-      setDrugList(drugsAPI)
-    }
-  }, [drugsAPI])
-
-  useEffect(() => {
-    dispatch(fetchCountries({}))
-      .then((response) => { })
-      .catch((error) => {
-        console.error('Error fetching countries', error)
-      })
-
-    dispatch(fetchCategories({}))
-      .then((response) => { })
-      .catch((error) => {
-        console.error('Error fetching categories', error);
-      });
-
-    dispatch(fetchDrugs({
-      search: searchDrug,
-      pageSize: 15,
-    }))
-      .then((response) => { })
-      .catch((error) => {
-        console.error('Error fetching drugs', error);
-      });
-  }, [dispatch, searchDrug])
+    dispatch(fetchCategories())
+    dispatch(fetchCountries())
+    dispatch(fetchDrugs({}))
+  }, [dispatch])
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    dispatch(fetchProductDetail({ id })).then(() => { });
+    dispatch(fetchProductDetail({ id }));
 
   }, [dispatch, id]);
 
-  const handleChangeCountry = (e) => {
-    const value = e.target.value;
-    console.log("Selected Country ID:", value);
-    setSelectedCountry(value);
+  useEffect(() => {
+    setProductUpdate(productApi)
+  }, [productApi])
+
+  const [drugIngredients, setDrugIngredients] = useState([
+    { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }
+  ]);
+
+  const handleAddIngredient = () => {
+    setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
 
-  const handleChangeDrug = (e) => {
-    const value = e.target.value;
-    console.log("Selected Drug ID:", value);
-    setSelectedDrug(value)
-  }
+  useEffect(() => {
+    setDrugIngredients(productUpdate.drugIngredients || []);
+  }, [productUpdate]);
+
+  const handleChangeIngredient = (index, event) => {
+    const { name, value } = event.target;
+
+    setDrugIngredients((prevIngredients) => {
+      const updatedIngredients = [...prevIngredients];
+      const updatedIngredient = { ...updatedIngredients[index], [name]: value };
+
+      if (event.target.tagName === 'SELECT') {
+        updatedIngredient.drugId = parseInt(value);
+      }
+      updatedIngredients[index] = updatedIngredient;
+      const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients };
+      setProductUpdate(updatedProduct);
+      return updatedIngredients;
+    });
+  };
+
+  const handleDeleteIngredient = (index) => {
+    const updatedIngredients = [...drugIngredients];
+    updatedIngredients.splice(index, 1)
+    setDrugIngredients(updatedIngredients);
+  };
+
+  //------------------------------------
+  const [authorities, setAuthorities] = useState([
+    { certificateName: '', countryId: 0 }
+  ]);
+
+  useEffect(() => {
+    setAuthorities(productUpdate.authorities || []);
+  }, [productUpdate])
+  const handleAddAuthority = () => {
+    setAuthorities([...authorities, { certificateName: '', countryId: 0 }]);
+  };
+
+  const handleChangeAuthority = (index, event) => {
+    const { name, value } = event.target;
+
+    setAuthorities((prevAuthorities) => {
+      const updatedAuthorities = [...prevAuthorities];
+      const updatedAuthority = { ...updatedAuthorities[index], [name]: value };
+
+      if (event.target.tagName === 'SELECT') {
+        updatedAuthority.countryId = parseInt(value);
+      }
+      updatedAuthorities[index] = updatedAuthority;
+      const updatedProduct = { ...productUpdate, authorities: updatedAuthorities };
+      setProductUpdate(updatedProduct);
+      return updatedAuthorities;
+    });
+  };
+
+  const handleDeleteAuthority = (index) => {
+    const updatedAuthorities = [...authorities];
+    updatedAuthorities.splice(index, 1);
+    setAuthorities(updatedAuthorities);
+  };
+  //-------------------
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    if (
+      name === 'indication' ||
+      name === 'pharmacodynamic' ||
+      name === 'mechanismOfAction' ||
+      name === 'asorption' ||
+      name === 'toxicity' ||
+      name === 'detail' ||
+      name === 'summary' ||
+      name === 'relationship' ||
+      name === 'countryId'
+    ) {
+      if (name === 'countryId') {
+        // Update countryId within manufactor object
+        setProductUpdate({
+          ...productUpdate,
+          manufactor: {
+            ...productUpdate.manufactor,
+            countryId: value === '' ? '' : parseInt(value), // Check if value is empty before parsing
+          },
+        });
+      } else {
+        // Update other fields within pharmacogenomic
+        setProductUpdate({
+          ...productUpdate,
+          pharmacogenomic: {
+            ...productUpdate.pharmacogenomic,
+            [name]: value,
+          },
+        });
+      }
+    } else if (name.startsWith('manufactor')) {
+      // Update other fields within manufactor
+      const manufactorName = name.split('.')[1];
+      setProductUpdate({
+        ...productUpdate,
+        manufactor: {
+          ...productUpdate.manufactor,
+          [manufactorName]: value,
+        },
+      });
+    } else if (name === 'categoryId') {
+      // Update categoryId
+      setProductUpdate({
+        ...productUpdate,
+        [name]: parseInt(value),
+      });
+    } else if (name.startsWith('contraindication')) {
+      // Update other fields within contraindication
+      const fieldName = name.split('.')[1];
+      setProductUpdate({
+        ...productUpdate,
+        contraindication: {
+          ...productUpdate.contraindication,
+          [fieldName]: value,
+        },
+      });
+    } else if (name.startsWith('productAllergyDetail')) {
+      // Update other fields within productAllergyDetail
+      const fieldName = name.split('.')[1];
+      setProductUpdate({
+        ...productUpdate,
+        productAllergyDetail: {
+          ...productUpdate.productAllergyDetail,
+          [fieldName]: value,
+        },
+      });
+    } else {
+      // Update other fields
+      setProductUpdate({ ...productUpdate, [name]: value });
+    }
+  };
+
   function handleClick() {
     Swal.fire({
-      title: "Thông tin của thuốc sẽ không được lưu?",
+      title: "Thông tin của bạn sẽ không được lưu?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Có",
@@ -146,325 +236,292 @@ const UpdateProduct = () => {
     });
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateProducts(productUpdate))
+      .then(() => {
+        Swal.fire({
+          title: "Success!",
+          text: "Chỉnh sửa thông tin thuốc thành công",
+          icon: "success",
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Navigate(`/productdetail/${id}`);
+            window.scrollTo(0, 0);
+          }
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 409) {
+          Swal.fire({
+            title: "Conflict!",
+            text: "There is a conflict. Please choose different values.",
+            icon: "error",
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK',
+          });
+        } else {
+          console.error("Error during update:", error);
+        }
+      });
+  }
+  console.log("LOggggggg", productApi)
+  console.log(productUpdate)
+
   return (
     <>
-      <div className='mt-20 py-8 '>
-        <div class="max-w-6xl mx-auto py-4 lg:px-4 shadow-lg shadow-gray-400 rounded-md">
-          <form class="">
-            <div class="flex flex-col md:flex-row ">
-              <div class="sm:flex-1">
-                <div class="flex items-center justify-center">
-                  <img className='border-2 rounded-xl' src={"https://t4.ftcdn.net/jpg/05/65/22/41/360_F_565224180_QNRiRQkf9Fw0dKRoZGwUknmmfk51SuSS.jpg"} alt='product' />
-                </div>
-                <div class="mb-5 flex justify-between mt-5">
-                  <label class="block mb-2 text-md font-extrabold text-gray-900 ">Nhà sản xuất:</label>
-                  <div className="relative mt-2 mr-24">
-                    <select
-                      value={selectedCountryNSX}
-                      onChange={(e) => setSelectedCountryNSX(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                      <option value="" disabled hidden>
-                        Chọn Quốc Gia
-                      </option>
-                      {Array.isArray(countriesList) &&
-                        countriesList.map((country, index) => (
-                          <option key={index} value={country.id}>
-                            {country.name}
-                          </option>
-                        ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                {productApi.manufactor && (
-                  <>
-                    <div className='flex ml-8'>
-                      <div class="mb-5 ">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên nhà sản xuất</label>
-                        <input type="text" name='manufactorName' value={productApi.manufactor.name} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-
-                      </div>
-                      <div class="mb-5 ml-20">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Công ty</label>
-                        <input type="text" name='company' value={productApi.manufactor.company} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-
-                      </div>
-                    </div>
-                    <div className='flex ml-8'>
-                      <div class="mb-5">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Điểm đánh giá</label>
-                        <input type="text" name='score' value={productApi.manufactor.score} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-
-                      </div>
-                      <div class="mb-5 ml-20">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Nguồn</label>
-                        <input type="text" name='source' value={productApi.manufactor.source} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-
-                      </div>
-                    </div>
-                  </>
-                )}
-                <label class=" flex mb-2 text-md font-extrabold text-gray-900 mt-5 ">Cơ quan chứng nhận:
-                  <PlusCircle class="ml-2" size={20} onClick={() => handleAddModal()}></PlusCircle>
-                </label>
-                {showModalsCerti.map((data, i) => {
-                  return (
-                    <>
-                      <div class=" border border-solid border-gray-200 mb-2 p-2 rounded-md flex w-3/4 justify-between ml-8">
-                        <div class="mb-5">
-                          <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên chứng nhận</label>
-                          <input type="text" name='certificateName' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-
-                        </div>
-                        <div className='mb-5 mt-4'>
-                          <div className="relative mt-2">
-                            <select
-                              value={selectedCountry}
-                              onChange={handleChangeCountry} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                              <option value="" disabled hidden>
-                                Chọn Quốc Gia
-                              </option>
-                              {Array.isArray(countriesList) &&
-                                countriesList.map((country, index) => (
-                                  <option key={country.id} value={country.id}>
-                                    {country.name}
-                                  </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='ml-5 mt-8' onClick={() => handleDeleteModals(i)}>
-                          <Trash3Fill size={25} color="red"></Trash3Fill>
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
-                <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
-                  Sản phẩm dị ứng:
-                </label>
-                {productApi.productAllergyDetail && (
-                  <>
-                    <div class="mb-5 ml-8 mr-16">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Chi tiết</label>
-                      <textarea type="text" name='detail' value={productApi.productAllergyDetail.detail} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
-
-                    </div>
-                    <div class="mb-5 ml-8 mr-16">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Tóm tắt</label>
-                      <textarea type="text" name='summary' value={productApi.productAllergyDetail.summary} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
-
-                    </div>
-                  </>
-                )}
+      <div className='mt-36 mb-16'>
+        <div>
+          <div className='w-5/6 mx-auto shadow-sm shadow-gray-400'>
+            <div className='bg-blue-600 mt-2 h-12'><h2 className='text-center pt-2 font-bold text-white text-xl'>Chỉnh sửa thông tin thuốc</h2></div>
+            <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
+              <div className='col-span-5 py-8'>
+                <img className='border-2 rounded-xl' src="https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg" alt='drug' />
               </div>
+              <div className='col-span-7'>
+                <div className='w-full'>
+                  <div className='flex gap-4'>
+                    <div class="mb-3 w-full">
+                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Tên thuốc</label>
+                      <input onChange={handleOnChange} name='name' type="text" value={productUpdate.name} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
-              <div class="sm:flex-1 px-2">
-                <div className='flex justify-between'>
-                  <div class="mb-5">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên sản phẩm</label>
-                    {productApi && productApi.name && (
-                      <input type="text" name='name' value={productApi.name} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                    )}
-                  </div>
-                  <div class="mb-5">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Người dán nhãn</label>
-                    {productApi && productApi.labeller && (
-                      <input type="text" name='labeller' value={productApi.labeller} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                    )}
-                  </div>
-                </div>
-                <div class="mb-5">
-                  <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên đơn thuốc</label>
-                  {productApi && productApi.prescriptionName && (
-                    <input type="text" name='prescriptionName' value={productApi.prescriptionName} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                  )}
-                </div>
-                <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
-                  Thành phần thuốc: <PlusCircle class="ml-2" size={20} onClick={() => handleAdd()}></PlusCircle>
-                  <div className="relative mt-2 ml-14 ">
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                      <option value="" disabled hidden>
-                        Loại thuốc
-                      </option>
-                      {Array.isArray(categoriesList) &&
-                        categoriesList.map((category, index) => (
-                          <option key={index} value={category.id}>
-                            {category.title}
-                          </option>
-                        ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                    </div>
+                    <div class="mb-3 w-full">
+                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Nhãn</label>
+                      <input onChange={handleOnChange} name='labeller' type="text" value={productUpdate.labeller} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
                     </div>
                   </div>
-                </label>
-                {showToggle.map((data, i) => {
-                  return (
-                    <>
-                      <div className='border border-solid border-gray-200 p-2 rounded-md mb-2 w-3/4 ml-8'>
-                        <div className='mb-1 flex'>
-                          <div className="relative mt-2">
-                            <select
-                              value={selectedDrug}
-                              onChange={handleChangeDrug} className="appearance-none relative w-full cursor-pointer rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
-                              <option value="" disabled hidden>
-                                Hoạt chất
-                              </option>
-                              {Array.isArray(drugList) &&
-                                drugList.map((drug, index) => (
-                                  <option key={index} value={drug.id}>
-                                    {drug.name}
-                                  </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                          <div className='ml-32 mt-3' onClick={() => handleToggleClick(i)}>
-                            <ArrowDownCircle size={25}></ArrowDownCircle>
-                          </div>
-                          <div className='ml-5 mt-3' onClick={() => handleDelete(i)}>
-                            <Trash3Fill size={25} color="red"></Trash3Fill>
-                          </div>
-                        </div>
+                  <div className='flex gap-4'>
+                    <div class="mb-3 w-2/3">
+                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Đường dẫn</label>
+                      <input onChange={handleOnChange} name='route' type="text" value={productUpdate.route} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
+                    </div>
+                    <div className='mb-3 w-1/3'>
+                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Loại thuốc</label>
+                      <select name='category' value={(productUpdate && productUpdate.category) || ''} onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50'>
+                        {/* <option value=''>{productUpdate && productUpdate.category ? productUpdate.category.title : 'Select a category'}</option> */}
+                        {categoriesAPI && categoriesAPI.map((cate) => (<option value={cate.id}>{cate.title}</option>))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 w-full">
+                    <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">Tên đơn thuốc</label>
+                    <input onChange={handleOnChange} name='prescriptionName' type="text" value={productUpdate.prescriptionName} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
+                  </div>
+                  <div class="mb-5 border border-gray-300 p-5">
+                    <h3 className='text-lg mb-2 w-full font-bold'>Nhà sản xuất</h3>
+                    <div className="flex gap-4">
+                      <div className='mb-3 w-2/3'>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Tên nhà sản xuất</label>
+                        <input onChange={handleOnChange} name='manufactor.name' value={productUpdate.manufactor.name} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                       </div>
-                      {showModals[i] && (
-                        <div className='border border-solid border-gray-200 p-2 rounded-md mb-5 w-3/4 ml-8'>
-                          <div className='flex'>
-                            <div class="mb-5">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Nồng độ</label>
-                              <input type="text" name='strength' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                              {/* {errorProduct.drugIngredients.strength && (<span className='text-red-500'>{errorProduct.drugIngredients.strength}</span>)} */}
-                            </div>
-                            <div class="mb-5 ml-20">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Số nồng độ</label>
-                              <input type="text" name='strengthNumber' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 " />
-                              {/* {errorProduct.drugIngredients.strengthNumber && (<span className='text-red-500'>{errorProduct.drugIngredients.strengthNumber}</span>)} */}
-                            </div>
-                          </div>
-                          <div className='flex'>
-                            <div class="mb-5">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Đơn vị nồng độ</label>
-                              <input type="text" name='strengthUnit' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                              {/* {errorProduct.drugIngredients.strengthUnit && (<span className='text-red-500'>{errorProduct.drugIngredients.strengthUnit}</span>)} */}
-                            </div>
-                            <div class="mb-5 ml-20">
-                              <label class="block mb-2 text-sm font-medium text-gray-900 ">Thông tin lâm sàng</label>
-                              <input type="text" name='clinicallyRelevant' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
-                              {/* {errorProduct.drugIngredients.clinicallyRelevant && (<span className='text-red-500'>{errorProduct.drugIngredients.clinicallyRelevant}</span>)} */}
-                            </div>
-                          </div>
-                          <div className='text-right mr-10'>
-                            <button className='text-white mb-3 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2 text-center ml-auto'>
-                              Lưu
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )
-                })}
 
-                <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
-                  Dược động học:
-                </label>
-                {productApi && productApi.pharmacogenomic && (
-                  <div className='ml-8'>
-                    <div class="mb-5">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Chỉ dẫn</label>
-                      <textarea type="text" name='indication' value={productApi.pharmacogenomic.indication} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
+                      <div class="mb-3 w-1/3">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
+                        <select onChange={handleOnChange} value={productUpdate && productUpdate.countryId} name='countryId' class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                          {/* <option value="">Chọn quốc gia</option> */}
+                          {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
+                        </select>
+                      </div>
                     </div>
-                    <div class="mb-5">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Dược động học</label>
-                      <textarea type="text" name='pharmacodynamic' value={productApi.pharmacogenomic.pharmacodynamic} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
+                    <div className="flex gap-4">
+                      <div className='mb-3 w-2/3'>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Nguồn</label>
+                        <input onChange={handleOnChange} name='manufactor.source' value={productUpdate.manufactor.source} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                      </div>
+                      <div className='mb-3 w-1/3'>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Điểm số</label>
+                        <input onChange={handleOnChange} name='manufactor.score' value={productUpdate.manufactor.score} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                      </div>
                     </div>
-                    <div class="mb-5">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Cơ chế hoạt động</label>
-                      <textarea type="text" name='mechanismOfAction' value={productApi.pharmacogenomic.mechanismOfAction} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
-                    </div>
-                    <div class="mb-5">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Sự thấp thụ</label>
-                      <textarea type="text" name='asorption' value={productApi.pharmacogenomic.asorption} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
-                    </div>
-                    <div class="mb-5">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Độc tính</label>
-                      <textarea type="text" name='toxicity' value={productApi.pharmacogenomic.toxicity} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
+                    <div className=''>
+                      <label class="block mb-2 text-sm font-medium text-gray-900">Công ty</label>
+                      <input onChange={handleOnChange} name='manufactor.company' value={productUpdate.manufactor.company} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                     </div>
                   </div>
-                )}
+                </div>
+              </div>
+              <div className='col-span-12'>
+                <h3 className="text-lg mb-2 font-bold">Thành phần hoạt chất</h3>
+                {drugIngredients.map((ingredient, index) => (
+                  <div key={index} className="mb-6 border border-gray-300 p-5">
+                    <div className='flex gap-6'>
+                      <h3 className="text-sm mb-2 font-bold">Thành phần hoạt chất {index + 1}</h3>
+                      <div className="relative px-6" id="customSelect">
 
-                <label class="flex items-center mb-2 text-md font-extrabold text-gray-900">
-                  Chống chỉ định:
-                </label>
-                {productApi.contraindication && (
-                  <>
-                    <div class="mb-5 ml-8">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Mối quan hệ</label>
-                      <textarea type="text" name='relationship' value={productApi.contraindication.relationship} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
+                        <form class="max-w-sm mx-auto">
+                          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
+                          <select value={ingredient?.drugId || ''} onChange={(event) => handleChangeIngredient(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                            {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
+                          </select>
+                        </form>
+
+                      </div>
                     </div>
-                    <div class="mb-5 ml-8">
-                      <label class="block mb-2 text-sm font-medium text-gray-900 ">Giá trị</label>
-                      <textarea type="text" name='value' value={productApi.contraindication.value} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full " />
+
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900">Nồng độ</label>
+                        <input name='strength' value={drugIngredients[index].strength} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                      </div>
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900">Chỉ số nồng độ</label>
+                        <input name='strengthNumber' value={drugIngredients[index].strengthNumber} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                      </div>
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900">Đơn vị nồng độ</label>
+                        <input name='strengthUnit' value={drugIngredients[index].strengthUnit} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                      </div>
+
                     </div>
-                  </>
-                )}
-                <div class="flex justify-center gap-14 row mt-10 mb-5">
-                  <div class="w-1/2 ml-20">
-                    <Link to={`/productdetail/${productApi.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleClick();
-                      }}>
-                      <button className="w-40 rounded-full text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
-                        Trở về
+                    <div>
+                      <label className="block mb-2 text-sm font-medium text-gray-900">Thông tin lâm sàng</label>
+                      <textarea name='clinicallyRelevant' value={drugIngredients[index].clinicallyRelevant} onChange={(event) => handleChangeIngredient(index, event)} rows={3} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    </div>
+                    <div className='flex justify-end'>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteIngredient(index)}
+                        className="mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                      >
+                        <XCircle className="mr-1" size={20} />
+                        Xóa
                       </button>
-                    </Link>
+                    </div>
                   </div>
-                  <div class="w-1/2 mr-28">
-                    <button type='button' className='w-40 rounded-full text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-sm px-5 py-2.5 text-center ml-auto'>
-                      Lưu
-                    </button>
+                ))}
+                <button type="button" className="bg-blue-500 mb-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center" onClick={handleAddIngredient}>
+                  <PlusCircle className="mr-1" size={20} />
+                  Thêm thành phần hoạt chất</button>
+                <hr></hr>
+              </div>
+
+              <div className='col-span-12 flex flex-wrap'>
+                <div className='w-full'> <h2 className="text-2xl w-full font-bold mb-4">Dược lý và di truyền</h2></div>
+                <div className='mb-3 w-full'>
+                  <label className="block mb-2 text-sm font-medium text-gray-900">Triệu chứng</label>
+                  <textarea onChange={handleOnChange} rows={3} name='indication' value={productUpdate.pharmacogenomic.indication} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                </div>
+                <div className='mb-3 w-full'>
+                  <label className="block mb-2 text-sm font-medium text-gray-900">Dược lực học</label>
+                  <input onChange={handleOnChange} name='pharmacodynamic' type="text" value={productUpdate.pharmacogenomic.pharmacodynamic} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                </div>
+                <div className='mb-3 w-full'>
+                  <label className="block mb-2 text-sm font-medium text-gray-900">Cơ chế hoạt động</label>
+                  <textarea onChange={handleOnChange} rows={2} name='mechanismOfAction' value={productUpdate.pharmacogenomic.mechanismOfAction} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                </div>
+                <div className='w-full flex gap-4'>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Hấp thụ</label>
+                    <input onChange={handleOnChange} rows={2} name='asorption' type="text" value={productUpdate.pharmacogenomic.asorption} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  </div>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Độc tính</label>
+                    <input onChange={handleOnChange} rows={2} name='toxicity' type="text" value={productUpdate.pharmacogenomic.toxicity} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                   </div>
                 </div>
               </div>
+              <div className='col-span-12'>
+                <div className='w-full'> <h2 className="text-2xl w-full font-bold mb-4">Dị ứng thuốc</h2></div>
+                <div className='flex gap-4'>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Chi tiết</label>
+                    <textarea onChange={handleOnChange} rows={2} name='productAllergyDetail.detail' value={productUpdate.productAllergyDetail.detail} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  </div>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Tóm tắt về dị ứng thuốc</label>
+                    <textarea onChange={handleOnChange} rows={2} name='productAllergyDetail.summary' value={productUpdate.productAllergyDetail.summary} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  </div>
+                </div>
+              </div>
+              <div className='col-span-12'>
+                <div className='w-full'> <h2 className="text-2xl w-full font-bold mb-4">Chống chỉ định</h2></div>
+                <div className='flex gap-4'>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Mối liên hệ</label>
+                    <input onChange={handleOnChange} name='contraindication.relationship' value={productUpdate.contraindication.relationship} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  </div>
+                  <div className='mb-3 w-1/2'>
+                    <label className="block mb-2 text-sm font-medium text-gray-900">Giá trị</label>
+                    <input onChange={handleOnChange} name='contraindication.value' type="text" value={productUpdate.contraindication.value} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                  </div>
+                </div>
+              </div>
+
+              <div className='col-span-12'>
+                <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
+                {authorities.map((authority, index) => (
+                  <div key={index} className="mb-4 flex border border-gray-300 p-5">
+                    <div className="mb-2 w-1/2">
+
+                      <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
+                      <input
+                        type="text"
+                        id={`certificateName${index}`}
+                        name="certificateName"
+                        value={authorities[index].certificateName}
+                        onChange={(event) => handleChangeAuthority(index, event)}
+                        className="md:w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                    <div className="mb-3 w-1/4">
+
+                      <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
+                      <select value={authorities[index].countryId} onChange={(event) => handleChangeAuthority(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                        {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
+                      </select>
+                    </div>
+
+                    <div className='w-1/4 mt-6'><button
+                      type="button"
+                      onClick={() => handleDeleteAuthority(index)}
+                      className="mt-1 ml-8 bg-red-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    >
+                      <XCircle className="mr-1" size={20} />
+                      Xóa
+                    </button></div>
+
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleAddAuthority}
+                  className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                >
+                  <PlusCircle className="mr-1" size={20} />
+                  Thêm cơ quan có thẩm quyền
+                </button>
+              </div>
+              <div>
+              </div>
+            </form>
+            <div className='flex justify-center gap-14 row mt-3 mb-3'>
+              <Link to={'/productlist'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClick();
+                }}>
+                <button className="w-48 rounded-full text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
+                  Trở về
+                </button>
+              </Link>
+              <Link to=''>
+                <button type='submit' onClick={handleSubmit} className='w-48 text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm px-5 py-2.5 text-center ml-auto' >
+                  Lưu
+                </button>
+              </Link>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default UpdateProduct
