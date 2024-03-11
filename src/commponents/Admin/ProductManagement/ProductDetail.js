@@ -111,7 +111,7 @@ const ProductDetail = () => {
                     {productApi && productApi.authorities && productApi.authorities.map((authorities) =>
                     (<tr className='bg-gray-50 hover:bg-slate-100'>
                       <td className='px-6 py-4 whitespace-nowrap'>{authorities.certificateName}</td>
-                      <td className='px-6 py-4 whitespace-nowrap'>{authorities.countryName}</td>
+                      {/* <td className='px-6 py-4 whitespace-nowrap'>{authorities.countryName}</td> */}
                     </tr>))}
                   </tbody>
                 </table>

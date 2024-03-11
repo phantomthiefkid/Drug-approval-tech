@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { createProducts, fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice';
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 const product_initial = {
@@ -12,6 +13,7 @@ const product_initial = {
   prescriptionName: '',
   drugIngredients: [],
   categoryId: -1,
+  administrationId: 1,
   manufactor: {
     name: '',
     company: '',
@@ -82,6 +84,7 @@ const CreateProduct = () => {
   const drugsAPI = useSelector((drug) => drug.drugData.data)
   const [productCreate, setProductCreate] = useState(product_initial)
   const [productError, setProductError] = useState(product_err_initial)
+  const Navigate = useNavigate();
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -219,243 +222,269 @@ const CreateProduct = () => {
     }
   };
 
-  // const handleValidationDrugIgredient = (product) => {
-  //   let error = '';
-  //   const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
-  //   product.forEach((ingred, index) => {
-  //     if (!ingred.strength) {
-  //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-  //       return error
-  //     } else if (specialCharacters.test(ingred.strength)) {
-  //       error = 'Vui lòng không nhập ký tự đặc biệt';
-  //       return error
-  //     }
+  const handleCheck = async () => {
+    productCreate.drugIngredients = drugIngredients;
+    productCreate.authorities = authorities;
+    // const handleValidationDrugIgredient = (product) => {
+    //   let error = '';
+    //   const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
+    //   product.forEach((ingred, index) => {
+    //     if (!ingred.strength) {
+    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
+    //       return error
+    //     } else if (specialCharacters.test(ingred.strength)) {
+    //       error = 'Vui lòng không nhập ký tự đặc biệt';
+    //       return error
+    //     }
 
-  //     if (!ingred.strengthNumber) {
-  //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-  //       return error
-  //     } else if (specialCharacters.test(ingred.strengthNumber)) {
-  //       error = 'Vui lòng không nhập ký tự đặc biệt';
-  //       return error
-  //     }
+    //     if (!ingred.strengthNumber) {
+    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
+    //       return error
+    //     } else if (specialCharacters.test(ingred.strengthNumber)) {
+    //       error = 'Vui lòng không nhập ký tự đặc biệt';
+    //       return error
+    //     }
 
-  //     if (!ingred.strengthUnit) {
-  //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-  //       return error
-  //     } else if (specialCharacters.test(ingred.strengthUnit)) {
-  //       error = 'Vui lòng không nhập ký tự đặc biệt';
-  //       return error
-  //     }
+    //     if (!ingred.strengthUnit) {
+    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
+    //       return error
+    //     } else if (specialCharacters.test(ingred.strengthUnit)) {
+    //       error = 'Vui lòng không nhập ký tự đặc biệt';
+    //       return error
+    //     }
 
-  //     if (!ingred.clinicallyRelevant) {
-  //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-  //       return error
-  //     } else if (specialCharacters.test(ingred.clinicallyRelevant)) {
-  //       error = 'Vui lòng không nhập ký tự đặc biệt';
-  //       return error
-  //     }
-  //   })
-  //   return error
-  // }
+    //     if (!ingred.clinicallyRelevant) {
+    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
+    //       return error
+    //     } else if (specialCharacters.test(ingred.clinicallyRelevant)) {
+    //       error = 'Vui lòng không nhập ký tự đặc biệt';
+    //       return error
+    //     }
+    //   })
+    //   return error
+    // }
 
-  const handleValidationDrugIgredient = (ingredients) => {
-    let errors = [];
-    const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
-    // Lặp qua mỗi phần tử trong mảng drugIngredients
-    ingredients.forEach((ingredient, index) => {
-      // Kiểm tra các điều kiện của từng thuộc tính trong phần tử
-      if (!ingredient.strength) {
-        errors.push({ index, field: 'strength', message: 'Strength không được bỏ trống!' });
-      } else if (specialCharacters.test(ingredient.strength)) {
-        errors.push({ index, field: 'strength', message: 'Strength không được có ký tự đặc biệt!' });
+    const handleValidationDrugIgredient = (ingredients) => {
+      let errors = [];
+      const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
+      // Lặp qua mỗi phần tử trong mảng drugIngredients
+      ingredients.forEach((ingredient, index) => {
+        // Kiểm tra các điều kiện của từng thuộc tính trong phần tử
+        if (!ingredient.strength) {
+          errors.push({ index, field: 'strength', message: 'Strength không được bỏ trống!' });
+        } else if (specialCharacters.test(ingredient.strength)) {
+          errors.push({ index, field: 'strength', message: 'Strength không được có ký tự đặc biệt!' });
+        }
+
+        if (!ingredient.strengthNumber) {
+          errors.push({ index, field: 'strengthNumber', message: 'strengthNumber không được bỏ trống!' });
+        } else if (specialCharacters.test(ingredient.strengthNumber)) {
+          errors.push({ index, field: 'strengthNumber', message: 'strengthNumber không được có ký tự đặc biệt!' });
+        }
+
+        if (!ingredient.strengthUnit) {
+          errors.push({ index, field: 'strengthUnit', message: 'strengthUnit không được bỏ trống!' });
+        } else if (specialCharacters.test(ingredient.strengthUnit)) {
+          errors.push({ index, field: 'strengthUnit', message: 'strengthUnit không được có ký tự đặc biệt!' });
+        }
+
+        if (!ingredient.clinicallyRelevant) {
+          errors.push({ index, field: 'clinicallyRelevant', message: 'clinicallyRelevant không được bỏ trống!' });
+        } else if (specialCharacters.test(ingredient.clinicallyRelevant)) {
+          errors.push({ index, field: 'clinicallyRelevant', message: 'clinicallyRelevant không được có ký tự đặc biệt!' });
+        }
+
+        if (!ingredient.drugId) {
+          errors.push({ index, field: 'drugId', message: 'drugId không được bỏ trống!' });
+        } else if (specialCharacters.test(ingredient.drugId)) {
+          errors.push({ index, field: 'drugId', message: 'drugId không được có ký tự đặc biệt!' });
+        }
+      });
+
+      return errors;
+    };
+
+    const handleValidation = (product1) => {
+      setProductError({ ...product_err_initial })
+      let isValid = false;
+      const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
+      if (!product1) {
+        isValid = true
+        return isValid
+      }
+      if (product1?.labeller.trim() === '') {
+        setProductError(prevState => ({ ...prevState, labeller: 'Nhãn không được bỏ trống!!!' }))
+        isValid = true
+      } else if (specialCharacters.test(product1.labeller)) {
+        setProductError(prevState => ({ ...prevState, labeller: 'Nhãn không được có ký tự đặc biệt!!!' }))
+        isValid = true
       }
 
-      if (!ingredient.strengthNumber) {
-        errors.push({ index, field: 'strengthNumber', message: 'strengthNumber không được bỏ trống!' });
-      } else if (specialCharacters.test(ingredient.strengthNumber)) {
-        errors.push({ index, field: 'strengthNumber', message: 'strengthNumber không được có ký tự đặc biệt!' });
+      if (product1?.name.trim() === '') {
+        setProductError(prevState => ({ ...prevState, name: 'Tên thuốc không được bỏ trống!!!' }))
+        isValid = true
+      } else if (specialCharacters.test(product1.name)) {
+        setProductError(prevState => ({ ...prevState, name: 'Tên thuốc không được có ký tự đặc biệt!!!' }))
+        isValid = true
       }
 
-      if (!ingredient.strengthUnit) {
-        errors.push({ index, field: 'strengthUnit', message: 'strengthUnit không được bỏ trống!' });
-      } else if (specialCharacters.test(ingredient.strengthUnit)) {
-        errors.push({ index, field: 'strengthUnit', message: 'strengthUnit không được có ký tự đặc biệt!' });
+      if (product1?.route.trim() === '') {
+        setProductError(prevState => ({ ...prevState, route: 'Đường dẫn thuốc không được bỏ trống!!!' }))
+        isValid = true
+      } else if (specialCharacters.test(product1.route)) {
+        setProductError(prevState => ({ ...prevState, route: 'Đường dẫn thuốc không được có ký tự đặc biệt!!!' }))
+        isValid = true
       }
 
-      if (!ingredient.clinicallyRelevant) {
-        errors.push({ index, field: 'clinicallyRelevant', message: 'clinicallyRelevant không được bỏ trống!' });
-      } else if (specialCharacters.test(ingredient.clinicallyRelevant)) {
-        errors.push({ index, field: 'clinicallyRelevant', message: 'clinicallyRelevant không được có ký tự đặc biệt!' });
+      if (product1?.prescriptionName.trim() === '') {
+        setProductError(prevState => ({ ...prevState, prescriptionName: 'Tên đơn thuốc không được bỏ trống!!!' }))
+        isValid = true
+      } else if (specialCharacters.test(product1.prescriptionName)) {
+        setProductError(prevState => ({ ...prevState, prescriptionName: 'Tên đơn thuốc không được có ký tự đặc biệt!!!' }))
+        isValid = true
       }
 
-      if (!ingredient.drugId) {
-        errors.push({ index, field: 'drugId', message: 'drugId không được bỏ trống!' });
-      } else if (specialCharacters.test(ingredient.drugId)) {
-        errors.push({ index, field: 'drugId', message: 'drugId không được có ký tự đặc biệt!' });
+      if (product1?.manufactor.name.trim() === '') {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, name: 'Tên đơn thuốc không được bỏ trống!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.manufactor.name)) {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, name: 'Tên đơn thuốc không được có ký tự đặc biệt!!!' } }))
+        isValid = true
       }
-    });
 
-    return errors;
-  };
+      if (product1?.manufactor.company.trim() === '') {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, company: 'Công ty không được bỏ trống!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.manufactor.company)) {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, company: 'Công ty không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
 
-  const handleValidation = (product1) => {
-    setProductError({ ...product_err_initial })
-    let isValid = false;
-    const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
-    if (!product1) {
-      isValid = true
+      if (product1?.manufactor.score.trim() === '') {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, score: 'Điểm số không được bỏ trống!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.manufactor.score)) {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, score: 'Điểm số không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.manufactor.source.trim() === '') {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, source: 'Điểm số không được bỏ trống!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.manufactor.source)) {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, source: 'Điểm số không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.manufactor.countryId === 0 || product1?.manufactor.countryId === -1) {
+        setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, countryId: 'Vui lòng chọn quốc gia!' } }))
+        isValid = true
+      }
+
+      if (product1?.pharmacogenomic.indication.trim() === '') {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, indication: 'Triệu chứng không được bỏ trống!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.pharmacogenomic.indication)) {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, indication: 'Triệu chứng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.pharmacogenomic.asorption.trim() === '') {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, asorption: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.pharmacogenomic.asorption)) {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, asorption: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.pharmacogenomic.pharmacodynamic.trim() === '') {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, pharmacodynamic: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.pharmacogenomic.pharmacodynamic)) {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, pharmacodynamic: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.pharmacogenomic.mechanismOfAction.trim() === '') {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, mechanismOfAction: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.pharmacogenomic.mechanismOfAction)) {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, mechanismOfAction: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.pharmacogenomic.toxicity.trim() === '') {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, toxicity: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.pharmacogenomic.toxicity)) {
+        setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, toxicity: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.productAllergyDetail.detail.trim() === '') {
+        setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, detail: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.productAllergyDetail.detail)) {
+        setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, detail: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.productAllergyDetail.summary.trim() === '') {
+        setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, summary: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.productAllergyDetail.summary)) {
+        setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, summary: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.contraindication.relationship.trim() === '') {
+        setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, relationship: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.contraindication.relationship)) {
+        setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, relationship: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.contraindication.value.trim() === '') {
+        setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, value: 'Vui lòng điền vào trường bên trên!!!' } }))
+        isValid = true
+      } else if (specialCharacters.test(product1.contraindication.value)) {
+        setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, value: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
+        isValid = true
+      }
+
+      if (product1?.categoryId === 0 || product1?.categoryId === -1) {
+        setProductError(prevState => ({ ...prevState, categoryId: 'Vui lòng chọn loại thuốc!' }))
+        isValid = true
+      }
       return isValid
     }
-    if (product1?.labeller.trim() === '') {
-      setProductError(prevState => ({ ...prevState, labeller: 'Nhãn không được bỏ trống!!!' }))
-      isValid = true
-    } else if (specialCharacters.test(product1.labeller)) {
-      setProductError(prevState => ({ ...prevState, labeller: 'Nhãn không được có ký tự đặc biệt!!!' }))
-      isValid = true
+    try {
+      const resultAction = await dispatch(createProducts(productCreate));
+
+      if (createProducts.fulfilled.match(resultAction)) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Thêm mới thuốc thành công!',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          Navigate('/productlist');
+        });
+      } else {
+        throw new Error('Thêm mới thuốc thất bại');
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: ` ${error.message || 'Unknown error'}`,
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+      });
     }
-
-    if (product1?.name.trim() === '') {
-      setProductError(prevState => ({ ...prevState, name: 'Tên thuốc không được bỏ trống!!!' }))
-      isValid = true
-    } else if (specialCharacters.test(product1.name)) {
-      setProductError(prevState => ({ ...prevState, name: 'Tên thuốc không được có ký tự đặc biệt!!!' }))
-      isValid = true
-    }
-
-    if (product1?.route.trim() === '') {
-      setProductError(prevState => ({ ...prevState, route: 'Đường dẫn thuốc không được bỏ trống!!!' }))
-      isValid = true
-    } else if (specialCharacters.test(product1.route)) {
-      setProductError(prevState => ({ ...prevState, route: 'Đường dẫn thuốc không được có ký tự đặc biệt!!!' }))
-      isValid = true
-    }
-
-    if (product1?.prescriptionName.trim() === '') {
-      setProductError(prevState => ({ ...prevState, prescriptionName: 'Tên đơn thuốc không được bỏ trống!!!' }))
-      isValid = true
-    } else if (specialCharacters.test(product1.prescriptionName)) {
-      setProductError(prevState => ({ ...prevState, prescriptionName: 'Tên đơn thuốc không được có ký tự đặc biệt!!!' }))
-      isValid = true
-    }
-
-    if (product1?.manufactor.name.trim() === '') {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, name: 'Tên đơn thuốc không được bỏ trống!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.manufactor.name)) {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, name: 'Tên đơn thuốc không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.manufactor.company.trim() === '') {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, company: 'Công ty không được bỏ trống!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.manufactor.company)) {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, company: 'Công ty không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.manufactor.score.trim() === '') {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, score: 'Điểm số không được bỏ trống!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.manufactor.score)) {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, score: 'Điểm số không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.manufactor.source.trim() === '') {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, source: 'Điểm số không được bỏ trống!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.manufactor.source)) {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, source: 'Điểm số không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.manufactor.countryId === 0 || product1?.manufactor.countryId === -1) {
-      setProductError(prevState => ({ ...prevState, manufactor: { ...prevState.manufactor, countryId: 'Vui lòng chọn quốc gia!' } }))
-      isValid = true
-    }
-
-    if (product1?.pharmacogenomic.indication.trim() === '') {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, indication: 'Triệu chứng không được bỏ trống!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.pharmacogenomic.indication)) {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, indication: 'Triệu chứng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.pharmacogenomic.asorption.trim() === '') {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, asorption: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.pharmacogenomic.asorption)) {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, asorption: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.pharmacogenomic.pharmacodynamic.trim() === '') {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, pharmacodynamic: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.pharmacogenomic.pharmacodynamic)) {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, pharmacodynamic: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.pharmacogenomic.mechanismOfAction.trim() === '') {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, mechanismOfAction: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.pharmacogenomic.mechanismOfAction)) {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, mechanismOfAction: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.pharmacogenomic.toxicity.trim() === '') {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, toxicity: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.pharmacogenomic.toxicity)) {
-      setProductError(prevState => ({ ...prevState, pharmacogenomic: { ...prevState.pharmacogenomic, toxicity: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.productAllergyDetail.detail.trim() === '') {
-      setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, detail: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.productAllergyDetail.detail)) {
-      setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, detail: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.productAllergyDetail.summary.trim() === '') {
-      setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, summary: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.productAllergyDetail.summary)) {
-      setProductError(prevState => ({ ...prevState, productAllergyDetail: { ...prevState.productAllergyDetail, summary: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.contraindication.relationship.trim() === '') {
-      setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, relationship: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.contraindication.relationship)) {
-      setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, relationship: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.contraindication.value.trim() === '') {
-      setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, value: 'Vui lòng điền vào trường bên trên!!!' } }))
-      isValid = true
-    } else if (specialCharacters.test(product1.contraindication.value)) {
-      setProductError(prevState => ({ ...prevState, contraindication: { ...prevState.contraindication, value: 'Vui lòng không được có ký tự đặc biệt!!!' } }))
-      isValid = true
-    }
-
-    if (product1?.categoryId === 0 || product1?.categoryId === -1) {
-      setProductError(prevState => ({ ...prevState, categoryId: 'Vui lòng chọn loại thuốc!' }))
-      isValid = true
-    }
-    return isValid
-  }
-
-  const handleCheck = () => {
-
+    console.log(productCreate)
     if (handleValidationDrugIgredient(drugIngredients).length === 0 && !handleValidation(productCreate)) {
       productCreate.drugIngredients = drugIngredients
       productCreate.authorities = authorities
@@ -468,8 +497,34 @@ const CreateProduct = () => {
       console.log(handleValidationDrugIgredient(drugIngredients))
       setDrugIngredientsError(handleValidationDrugIgredient(drugIngredients))
     }
-  }
+  };
 
+  function handleClick() {
+    Swal.fire({
+      title: "Thông tin của bạn sẽ không được lưu?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Có",
+      cancelButtonText: "Không",
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      showClass: {
+        popup: 'animate__animated animate__fadeIn'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOut'
+      },
+      showCloseButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.scrollTo(0, 0);
+        Navigate(`/productlist`);
+      }
+    });
+
+  }
   return (
     <>
       <div className='mt-20 mb-16'>
@@ -508,7 +563,7 @@ const CreateProduct = () => {
                     </div>
                     <div className='mb-3 w-1/3'>
                       <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Loại thuốc</label>
-                      <select name='categoryId' onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50'>
+                      <select name='categoryId' onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50' required>
                         <option value=''>Chọn loại thuốc</option>
                         {categoriesAPI && categoriesAPI.map((cate) => (<option value={cate.id}>{cate.title}</option>))}
                       </select>
@@ -521,7 +576,6 @@ const CreateProduct = () => {
                     <input onChange={handleOnChange} name='prescriptionName' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     {productError.prescriptionName && (<span className='text-red-600'>{productError.prescriptionName}</span>)}
                   </div>
-
                   <div class="mb-5 border border-gray-300 p-5">
                     <h3 className='text-lg mb-2 w-full font-bold'>Nhà sản xuất</h3>
                     <div className="flex gap-4">
@@ -533,7 +587,7 @@ const CreateProduct = () => {
 
                       <div class="mb-3 w-1/3">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                        <select onChange={handleOnChange} name='countryId' class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                        <select onChange={handleOnChange} name='countryId' class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
                           <option value="">Chọn quốc gia</option>
                           {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
                         </select>
@@ -558,10 +612,7 @@ const CreateProduct = () => {
                       {productError.manufactor.company && (<span className='text-red-600'>{productError.manufactor.company}</span>)}
                     </div>
                   </div>
-
-
                 </div>
-
               </div>
               <div className='col-span-12'>
                 <h3 className="text-lg mb-2 font-bold">Thành phần hoạt chất</h3>
@@ -573,7 +624,7 @@ const CreateProduct = () => {
 
                         <form class="max-w-sm mx-auto">
                           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                          <select onChange={(event) => handleChangeIngredient(index, event)} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <select onChange={(event) => handleChangeIngredient(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
                             <option selected>Chọn hoạt chất</option>
                             {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
                           </select>
@@ -585,21 +636,21 @@ const CreateProduct = () => {
                     <div className="grid grid-cols-3 gap-4 mt-4">
                       <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Nồng độ</label>
-                        <input name='strength' value={ingredient.strength} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input name='strength' value={ingredient.strength} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                       </div>
                       <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Chỉ số nồng độ</label>
-                        <input name='strengthNumber' value={ingredient.strengthNumber} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input name='strengthNumber' value={ingredient.strengthNumber} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                       </div>
                       <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Đơn vị nồng độ</label>
-                        <input name='strengthUnit' value={ingredient.strengthUnit} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input name='strengthUnit' value={ingredient.strengthUnit} onChange={(event) => handleChangeIngredient(index, event)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                       </div>
 
                     </div>
                     <div>
                       <label className="block mb-2 text-sm font-medium text-gray-900">Thông tin lâm sàng</label>
-                      <textarea name='clinicallyRelevant' onChange={(event) => handleChangeIngredient(index, event)} rows={3} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                      <textarea name='clinicallyRelevant' onChange={(event) => handleChangeIngredient(index, event)} rows={3} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
                     </div>
                     {drugIngredientsError && drugIngredientsError.map((item) => {
                       if (item.index === index)
@@ -618,7 +669,9 @@ const CreateProduct = () => {
                     </div>
                   </div>
                 ))}
-                <button type="button" className="bg-blue-500 mb-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleAddIngredient}>Thêm thành phần hoạt chất</button>
+                <button type="button" className="bg-blue-500 mb-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center" onClick={handleAddIngredient}>
+                  <PlusCircle className="mr-1" size={20} />
+                  Thêm thành phần hoạt chất</button>
                 <hr></hr>
               </div>
 
@@ -683,7 +736,6 @@ const CreateProduct = () => {
                 </div>
               </div>
 
-
               <div className='col-span-12'>
                 <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
                 {authorities.map((authority, index) => (
@@ -692,6 +744,7 @@ const CreateProduct = () => {
 
                       <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
                       <input
+                        required
                         type="text"
                         id={`certificateName${index}`}
                         name="certificateName"
@@ -703,7 +756,7 @@ const CreateProduct = () => {
                     <div className="mb-3 w-1/4">
 
                       <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                      <select onChange={(event) => handleChangeAuthority(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                      <select onChange={(event) => handleChangeAuthority(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
                         <option value="">Chọn quốc gia</option>
                         {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
                       </select>
@@ -728,18 +781,30 @@ const CreateProduct = () => {
                   <PlusCircle className="mr-1" size={20} />
                   Thêm cơ quan có thẩm quyền
                 </button>
-
               </div>
               <div>
-
               </div>
             </form>
-            <button onClick={handleCheck}>click</button>
+            <div className='flex justify-center gap-14 row mt-3 mb-3'>
+              <Link to={'/productlist'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClick();
+                }}>
+                <button className="w-48 rounded-full text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
+                  Trở về
+                </button>
+              </Link>
+              <Link to=''>
+                <button type='submit' onClick={handleCheck} className='w-48 text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm px-5 py-2.5 text-center ml-auto' >
+                  Lưu
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 }
-
 export default CreateProduct;
