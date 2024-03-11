@@ -3,10 +3,9 @@ import axios from "axios";
 
 const URL_PROFILE_VIEW = `https://fams-management.tech/admin/user-management/find-by-email`
 const URL_PROFILE_UPDATE = `https://fams-management.tech/admin/user-management/user`
-const URL_IMAGE = `https://fams-management.tech/api/storage/user`
+const URL_IMAGE = `https://fams-management.tech/api/storage/user?email=`
 
 export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejectWithValue }) => {
-  console.log(email)
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -59,6 +58,7 @@ export const updateProfile = createAsyncThunk('updateProfile', async (profileUpd
 })
 
 export const uploadImage = createAsyncThunk("uploadImage", async (importImage, { rejectWithValue }) => {
+  console.log("reduxxxx", importImage)
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -67,13 +67,18 @@ export const uploadImage = createAsyncThunk("uploadImage", async (importImage, {
     const formData = new FormData();
     formData.append('file', importImage.file);
 
-    const response = await axios.post(`${URL_IMAGE}/${importImage.email}`, formData, {
+    console.log("->>>>>>>>>", importImage.file)
+
+    const urlWithParams = `${URL_IMAGE}${importImage.email}`
+
+    const response = await axios.post(urlWithParams, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": `multipart/form-data`,
         Authorization: `Bearer ${token}`
-      }
+      },
     })
     if (response.status === 200) {
+      console.log("---->", response.data)
       return response.data;
     } else {
       return rejectWithValue('Request failed with status code ' + response.status);
