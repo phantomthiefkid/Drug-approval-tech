@@ -8,6 +8,7 @@ const product_initial = {
   labeller: '',
   name: '',
   route: '',
+  administrationId: 1,
   prescriptionName: '',
   drugIngredients: [],
   categoryId: -1,
@@ -458,6 +459,7 @@ const CreateProduct = () => {
     if (handleValidationDrugIgredient(drugIngredients).length === 0 && !handleValidation(productCreate)) {
       productCreate.drugIngredients = drugIngredients
       productCreate.authorities = authorities
+      console.log(productCreate)
       dispatch(createProducts(productCreate)).then(() => { console.log("thanh cong!!!") })
     } else if (handleValidation(productCreate) && handleValidationDrugIgredient(drugIngredients).length > 0) {
       setDrugIngredientsError(handleValidationDrugIgredient(drugIngredients))
