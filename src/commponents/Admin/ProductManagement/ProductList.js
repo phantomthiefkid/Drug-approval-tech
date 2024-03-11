@@ -146,7 +146,7 @@ const ProductList = () => {
                         </div>
 
                     </div>
-                    
+
                     <div><Link to={'/createproduct'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới thuốc</button></Link></div>
                 </div>
                 <div className='w-11/12 mx-auto text-center'>
@@ -162,10 +162,11 @@ const ProductList = () => {
                         </div>
 
                         <div class="p-3">
-                            <a href="#">
+                            {/* <a href="#">
                                 <h5 class=" text-xl font-light font-sans tracking-tight text-gray-900 dark:text-white">{product.name}</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: <i>{product.category}</i></p>
+                            </a> */}
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Tên thuốc: <i>{product.name}</i></p>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Loại thuốc: <i>{product.category}</i></p>
 
                         </div>
                     </div>))}
