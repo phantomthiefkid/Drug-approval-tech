@@ -3,6 +3,7 @@ import axios from "axios";
 
 const URL_PROFILE_VIEW = `https://fams-management.tech/admin/user-management/find-by-email`
 const URL_PROFILE_UPDATE = `https://fams-management.tech/admin/user-management/user`
+const URL_IMAGE = `https://fams-management.tech/api/storage/user`
 
 export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejectWithValue }) => {
   console.log(email)
@@ -57,6 +58,33 @@ export const updateProfile = createAsyncThunk('updateProfile', async (profileUpd
   }
 })
 
+export const uploadImage = createAsyncThunk("uploadImage", async (importImage, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return rejectWithValue("Missing token");
+    }
+    const formData = new FormData();
+    formData.append('file', importImage.file);
+
+    const response = await axios.post(`${URL_IMAGE}/${importImage.email}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue('Request failed with status code ' + response.status);
+    }
+
+  } catch (error) {
+    return rejectWithValue('Request failed with an error: ' + error.message);
+
+  }
+})
+
 export const ProfileSlice = createSlice({
   name: 'viewProfile',
   initialState: {
@@ -96,6 +124,20 @@ export const ProfileSlice = createSlice({
         state.isLoading = false;
         state.isError = action.payload ? action.payload : 'Failed to update profile';
         console.error('Error updating profile:', action.error);
+      });
+    builder
+      .addCase(uploadImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload;
+        state.isError = false;
+      })
+      .addCase(uploadImage.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(uploadImage.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       });
   }
 })
