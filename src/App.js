@@ -14,6 +14,7 @@ import ProductList from './commponents/Admin/ProductManagement/ProductList';
 import CreateProduct from './commponents/Admin/ProductManagement/CreateProduct';
 import UpdateProduct from './commponents/Admin/ProductManagement/UpdateProduct';
 import ProductDetail from './commponents/Admin/ProductManagement/ProductDetail';
+import Organization from './commponents/Admin/ProductManagement/Organization';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path='/edituser/:email' element={<EditUser></EditUser>}></Route>
         <Route path='/druglist' element={<DrugList></DrugList>}></Route>
         <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
+        <Route path='/organization' element={<Organization></Organization>}></Route>
         <Route path='/productlist' element={<ProductList></ProductList>}></Route>
         <Route path='/createproduct' element={<CreateProduct></CreateProduct>}></Route>
         <Route path='/updateproduct/:id' element={<UpdateProduct></UpdateProduct>}></Route>

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from 'sweetalert2';
 import '../../css/Profile.css'
 
-import { viewProfile, updateProfile } from '../../redux/profile/ProfileSlice';
+import { viewProfile, updateProfile, uploadImage } from '../../redux/profile/ProfileSlice';
 
 const EditProfile = () => {
   const Navigate = useNavigate();
@@ -12,6 +12,9 @@ const EditProfile = () => {
   const token = localStorage.getItem('token');
   const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
   const profileView = useSelector((state) => state.viewProfile.data)
+
+  const [avatar, setAvatar] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [profileUpdate, setProfileUpdate] = useState({
     fullname: '',
@@ -59,6 +62,34 @@ const EditProfile = () => {
       [name]: newValue,
     }));
   };
+
+  const handleChangAvatar = (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      console.warn('No file selected')
+      return;
+    }
+    setAvatar(file);
+    setSelectedFile(file)
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatar(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const handleUpload = async () => {
+    try {
+      const dataToUpload = {
+        ...profileUpdate,
+        file: selectedFile
+      }
+      await dispatch(uploadImage(dataToUpload));
+    } catch (error) {
+      console.log('Error uploading avatar:', error);
+    }
+  }
 
   function handleClick() {
     Swal.fire({
@@ -113,6 +144,7 @@ const EditProfile = () => {
         confirmButtonText: 'OK',
       });
     }
+    await handleUpload()
   };
 
   if (profileView && profileView.isLoading) {
@@ -124,11 +156,29 @@ const EditProfile = () => {
       <div className='bd mt-32 text-center font-semibold w-2/6'>
         <div className='bg-blue-900 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
         <div>
-          <ul className='item-menu flex justify-center'>
+          {/* <ul className='item-menu flex justify-center'>
             <li>
-              <img className='logo mb-8 w-32 h-20 border' src='./langtu.jpg' alt='profile'></img>
+              <img className='logo' src='./langtu.jpg' alt='profile'></img>
             </li>
-          </ul>
+          </ul> */}
+          <label htmlFor='avatar'>
+            <div className='avatar-position w-150 h-150 overflow-hidden rounded-full ml-55'>
+              <img
+                src={profileUpdate.avatar}
+                alt='Avatar Preview'
+                className='avatar-preview w-full h-full object-cover rounded-full'
+              />
+            </div>
+            <input
+              type='file'
+              id='avatar'
+              name='avatar'
+              accept='image/*'
+              className='avatar-input'
+              onChange={handleChangAvatar}
+            />
+
+          </label>
           <ul>
             <li className='form-item '><span>Role</span></li>
             <li className="custom-input"><input type="text" name='roleName' disabled value={profileUpdate.roleName} className='drop-shadow-md w-96 h-8 mt-3 mb-3'></input></li>
