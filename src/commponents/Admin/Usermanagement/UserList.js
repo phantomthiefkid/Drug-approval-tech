@@ -128,7 +128,7 @@ const UserList = () => {
     setSearch('')
     dispatch(fetchUsers({ pageSize: 8, pageNo: 0 }));
   };
-
+console.log(usersAPI)
   const handleChangeStatus = (user) => {
     try {
       if (user.isActive === "Active") {
@@ -158,7 +158,7 @@ const UserList = () => {
   const handleGenderChange = (e) => setGenderFilter(e.target.value);
   const handleSearchChange = (e) => setSearch(e.target.value);
 
-  if (!usersAPI) {
+ 
 
     return (
       <>
@@ -396,6 +396,6 @@ const UserList = () => {
         </div>
       </>
     )
-  }
+  
 }
 export default UserList
