@@ -3,8 +3,8 @@ import axios from "axios";
 
 const URL_COUNTRIES = `https://fams-management.tech/public/countries`
 const URL_CATEGORIES = `https://fams-management.tech/public/categories`
-const URL_CREATE_PRODUCT = `https://fams-management.tech/admin/approval-products/create`
-const URL_UPDATE_PRODUCT = `https://fams-management.tech/admin/approval-product/update`
+const URL_CREATE_PRODUCT = `https://fams-management.tech/admin/approval-products`
+const URL_UPDATE_PRODUCT = `https://fams-management.tech/admin/approval-products`
 
 export const fetchCountries = createAsyncThunk('fetchCountries', async () => {
   try {

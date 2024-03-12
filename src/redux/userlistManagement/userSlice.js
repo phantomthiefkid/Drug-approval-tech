@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const USERSLIST_URL = "https://fams-management.tech/admin/user-management/users";
-const UPDATE_USER_URL = "https://fams-management.tech/admin/user-management/user";
-const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/admin/user-management/find-by-email";
-const ACTIVE_USER_URL = "https://fams-management.tech/admin/user-management/active-user";
-const DEACTIVATE_USER_URL = "https://fams-management.tech/admin/user-management/deactivate-user";
+const USERSLIST_URL = "https://fams-management.tech/admin/users";
+const UPDATE_USER_URL = "https://fams-management.tech/admin/users";
+const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/admin/users/email";
+const ACTIVE_USER_URL = "https://fams-management.tech/admin/users/activate";
+const DEACTIVATE_USER_URL = "https://fams-management.tech/admin/users/deactivate";
 const URL_CREATE_USER = "https://fams-management.tech/auth/register";
 
 export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search }) => {

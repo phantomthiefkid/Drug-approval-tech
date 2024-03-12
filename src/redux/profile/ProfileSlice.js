@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_PROFILE_VIEW = `https://fams-management.tech/admin/user-management/find-by-email`
-const URL_PROFILE_UPDATE = `https://fams-management.tech/admin/user-management/user`
+const URL_PROFILE_VIEW = `https://fams-management.tech/admin/users/email`
+const URL_PROFILE_UPDATE = `https://fams-management.tech/admin/users`
 const URL_IMAGE = `https://fams-management.tech/api/storage/user?email=`
 
 export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejectWithValue }) => {

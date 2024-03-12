@@ -13,15 +13,7 @@ const ProductDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
     dispatch(fetchProductDetail({ id })).then(() => { console.log(productApi) });
-
   }, [dispatch, id]);
-
-
-  useEffect(() => {
-    if (!token) {
-      navigate('/')
-    }
-  }, [token])
 
   return (
     <>
@@ -31,7 +23,7 @@ const ProductDetail = () => {
         <hr className='border-gray-300'></hr>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mx-auto'>
           <div className='w-full flex justify-center border-gray-200'>
-            <img className='max-w-lg rounded-md border border-gray-300 shadow-lg hover:shadow-xl transition duration-300' src='https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG' alt='Product Image' />
+            <img className='max-w-lg rounded-md border border-gray-300 shadow-lg hover:shadow-xl transition duration-300' src={productApi.image || 'https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG'} alt='Product Image' />
           </div>
           <div className='max-w-2xl'>
             <div className='flex justify-between'>

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_DRUGLIST = `https://fams-management.tech/admin/drug-management/drugs`
-const URL_CREATE_DRUG = `https://fams-management.tech/admin/drug-management/drug/create`
-const URL_UPDATE_DRUG = `https://fams-management.tech/admin/drug-management/drug/update`
-const URL_DEACTIVE_DRUG = `https://fams-management.tech/admin/drug-management/drug/delete`
+const URL_DRUGLIST = `https://fams-management.tech/admin/drugs`
+const URL_CREATE_DRUG = `https://fams-management.tech/admin/drugs`
+const URL_UPDATE_DRUG = `https://fams-management.tech/admin/drugs`
+const URL_DEACTIVE_DRUG = `https://fams-management.tech/admin/drugs`
 export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSize, sortField, sortOrder, search }) => {
   try {
     const token = localStorage.getItem('token');
