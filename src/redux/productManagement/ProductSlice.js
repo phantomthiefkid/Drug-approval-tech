@@ -2,16 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const URL_LIST_PRODUCTS = 'https://fams-management.tech/admin/approval-products'
-const URL_PRODUCT_DETAIL = 'https://fams-management.tech/admin/approval-product-detail'
-const URL_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/public/approval-products-FDA'
-const URL_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/public/approval-products-ANSM'
-const URL_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/public/approval-products-DAV'
+const URL_PRODUCT_DETAIL = 'https://fams-management.tech/admin/approval-products-detail'
 
-const URL_ADMIN_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/admin/approval-products-FDA'
-const URL_ADMIN_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/admin/approval-products-ANSM'
-const URL_ADMIN_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/admin/approval-products-DAV'
+const URL_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/public/approval-products/FDA'
+const URL_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/public/approval-products/ANSM'
+const URL_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/public/approval-products/DAV'
 
-const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/storage/approval-product'
+const URL_ADMIN_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/admin/approval-products/FDA'
+const URL_ADMIN_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/admin/approval-products/ANSM'
+const URL_ADMIN_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/admin/approval-products/DAV'
+
+const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/storage/approval-products'
 
 export const uploadFileProduct = createAsyncThunk('upload', async ({ file, ApprovalProductID }) => {
     try {

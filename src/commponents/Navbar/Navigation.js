@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Capsule, Sliders, Boxes } from 'react-bootstrap-icons';
+import { Search, Capsule, Sliders, Boxes, BoxArrowRight } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../css/Navbar.css'
 import ModalLogin from '../Account/ModalLogin';
 import { getUserDataFromToken, getUserNameFromToken } from '../../redux/auth/loginSlice';
 
 const Navigation = () => {
-  const [navbarBackground, setNavbarBackground] = useState('bg-blue-900 h-20');
+  const [navbarBackground, setNavbarBackground] = useState('bg-blue-900 h-18');
   const [searchForm, setSearchForm] = useState('')
   const [image, setImage] = useState('')
   const [showModalLogin, setShowModalLogin] = useState(false);
@@ -23,7 +23,7 @@ const Navigation = () => {
       setSearchForm('mb-1')
       setImage('mb-1')
     } else {
-      setNavbarBackground('bg-blue-900 h-20');
+      setNavbarBackground('bg-blue-900 h-18');
       setSearchForm('')
       setImage('')
     }
@@ -110,11 +110,11 @@ const Navigation = () => {
                   <Link to={`/viewprofile`}>{data.fullName} </Link>
                 </div>
                 <div>
-                  <Link to={`/viewprofile`}>
+                  <Link to={`/viewprofile`} onClick={() => window.scrollTo(0, 0)}>
                     <img className={`logo rounded-full ${image}`} src='https://images2.thanhnien.vn/528068263637045248/2024/1/27/den-vau-99-17063223334631232917099.jpg' alt='profile' />
                   </Link>
                 </div>
-                <div><button onClick={handleLogout}>Đăng xuất</button></div>
+                <div className='cursor-pointer hover:text-blue-500'><BoxArrowRight size={25} onClick={handleLogout}></BoxArrowRight></div>
               </div>
             ) : (
               <div className='items-center text-lg w-36 hover:text-yellow-300'>

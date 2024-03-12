@@ -154,10 +154,11 @@ const ProductList = () => {
                         </div>
 
                         <div class="p-3">
-                            <a href="#">
+                            {/* <a href="#">
                                 <h5 class=" text-xl font-light font-sans tracking-tight text-gray-900 dark:text-white">{product.name}</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Category: <i>{product.category}</i></p>
+                            </a> */}
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Tên thuốc: <i>{product.name}</i></p>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Loại thuốc: <i>{product.category}</i></p>
 
                         </div>
                     </div>))}
