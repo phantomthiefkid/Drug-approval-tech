@@ -267,8 +267,6 @@ const UpdateProduct = () => {
         }
       });
   }
-  console.log("LOggggggg", productApi)
-  console.log(productUpdate)
 
   return (
     <>
@@ -278,7 +276,7 @@ const UpdateProduct = () => {
             <div className='bg-blue-600 mt-2 h-12'><h2 className='text-center pt-2 font-bold text-white text-xl'>Chỉnh sửa thông tin thuốc</h2></div>
             <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
               <div className='col-span-5 py-8'>
-                <img className='border-2 rounded-xl' src="https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg" alt='drug' />
+                <img className='border-2 rounded-xl' src={productUpdate.image || 'https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG'} alt='drug' />
               </div>
               <div className='col-span-7'>
                 <div className='w-full'>

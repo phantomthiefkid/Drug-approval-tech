@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { createProducts, fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice';
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
+import { uploadFileProduct } from '../../../redux/productManagement/ProductSlice';
 const product_initial = {
   labeller: '',
   name: '',
@@ -84,6 +85,10 @@ const CreateProduct = () => {
   const drugsAPI = useSelector((drug) => drug.drugData.data)
   const [productCreate, setProductCreate] = useState(product_initial)
   const [productError, setProductError] = useState(product_err_initial)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [productCreated, setProductCreated] = useState(false);
+  const { id } = useParams();
+  const responseId = useSelector((state) => state.productData.product.id)
   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -101,7 +106,21 @@ const CreateProduct = () => {
   const handleAddIngredient = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
+  // useEffect(() => {
+  //   if (responseId && selectedFile) {
+  //     dispatch(uploadFileProduct({ file: selectedFile, ApprovalProductID: responseId }));
+  //   }
+  // }, [selectedFile, responseId, dispatch]);
 
+  useEffect(() => {
+    if (responseId && selectedFile) {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId })).then(() => {
+          console.log("Thanh cong!")
+        });
+    }
+}, [responseId, selectedFile]);
 
   const handleChangeIngredient = (index, event) => {
     const { name, value } = event.target;
@@ -225,44 +244,6 @@ const CreateProduct = () => {
   const handleCheck = async () => {
     productCreate.drugIngredients = drugIngredients;
     productCreate.authorities = authorities;
-    // const handleValidationDrugIgredient = (product) => {
-    //   let error = '';
-    //   const specialCharacters = /[@#$%^&*+\=\[\]{}':"\\|<>\/]+/;
-    //   product.forEach((ingred, index) => {
-    //     if (!ingred.strength) {
-    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-    //       return error
-    //     } else if (specialCharacters.test(ingred.strength)) {
-    //       error = 'Vui lòng không nhập ký tự đặc biệt';
-    //       return error
-    //     }
-
-    //     if (!ingred.strengthNumber) {
-    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-    //       return error
-    //     } else if (specialCharacters.test(ingred.strengthNumber)) {
-    //       error = 'Vui lòng không nhập ký tự đặc biệt';
-    //       return error
-    //     }
-
-    //     if (!ingred.strengthUnit) {
-    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-    //       return error
-    //     } else if (specialCharacters.test(ingred.strengthUnit)) {
-    //       error = 'Vui lòng không nhập ký tự đặc biệt';
-    //       return error
-    //     }
-
-    //     if (!ingred.clinicallyRelevant) {
-    //       error = 'Vui lòng nhập đầy đủ các trường bên trên';
-    //       return error
-    //     } else if (specialCharacters.test(ingred.clinicallyRelevant)) {
-    //       error = 'Vui lòng không nhập ký tự đặc biệt';
-    //       return error
-    //     }
-    //   })
-    //   return error
-    // }
 
     const handleValidationDrugIgredient = (ingredients) => {
       let errors = [];
@@ -459,44 +440,68 @@ const CreateProduct = () => {
       }
       return isValid
     }
-    try {
-      const resultAction = await dispatch(createProducts(productCreate));
+    
 
-      if (createProducts.fulfilled.match(resultAction)) {
-        Swal.fire({
-          title: 'Success!',
-          text: 'Thêm mới thuốc thành công!',
-          icon: 'success',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          Navigate('/productlist');
-        });
-      } else {
-        throw new Error('Thêm mới thuốc thất bại');
-      }
-    } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: ` ${error.message || 'Unknown error'}`,
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK',
-      });
-    }
-    console.log(productCreate)
     if (handleValidationDrugIgredient(drugIngredients).length === 0 && !handleValidation(productCreate)) {
       productCreate.drugIngredients = drugIngredients
       productCreate.authorities = authorities
-      console.log(productCreate)
-      dispatch(createProducts(productCreate)).then(() => { console.log("thanh cong!!!") })
+
+      // dispatch(createProducts(productCreate)).then(() => {
+      //   if (responseId || selectedFile) {
+      //     const formData = new FormData();
+      //     formData.append('image', selectedFile);
+      //     dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId }))
+      //   }
+      // });
+      try {
+        const resultAction = await dispatch(createProducts(productCreate));
+  
+        if (createProducts.fulfilled.match(resultAction)) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Thêm mới thuốc thành công!',
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            Navigate(`/productlist/${id}`);
+          });
+        } else {
+          throw new Error('Thêm mới thuốc thất bại');
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: ` ${error.message || 'Unknown error'}`,
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        });
+      }
+      // dispatch(createProducts(productCreate)).then(() => {
+      //   setProductCreated(true);
+        // if (responseId || selectedFile) {
+        //   const formData = new FormData();
+        //   formData.append('image', selectedFile);
+
+        //   dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId }));
+        // }
+      // });
+
+
     } else if (handleValidation(productCreate) && handleValidationDrugIgredient(drugIngredients).length > 0) {
       setDrugIngredientsError(handleValidationDrugIgredient(drugIngredients))
-      console.log(handleValidation(productCreate))
+
     } else if (handleValidationDrugIgredient(drugIngredients).length > 0) {
-      console.log(handleValidationDrugIgredient(drugIngredients))
       setDrugIngredientsError(handleValidationDrugIgredient(drugIngredients))
     }
+  };
+
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
   };
 
   function handleClick() {
@@ -520,11 +525,13 @@ const CreateProduct = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         window.scrollTo(0, 0);
-        Navigate(`/productlist`);
+        Navigate(`/productlist/${id}`);
       }
     });
 
   }
+
+
   return (
     <>
       <div className='mt-20 mb-16'>
@@ -539,7 +546,11 @@ const CreateProduct = () => {
             <div className='bg-blue-600 mt-2 h-12'><h2 className='text-center pt-2 font-bold text-white text-xl'>Thuốc mới</h2></div>
             <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
               <div className='col-span-5 py-8'>
-                <img className='border-2 rounded-xl' src="https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg" alt='drug' />
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="large_size">Upload image</label>
+                <input onChange={handleFileChange} class="block w-full text-lg text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="large_size" type="file"></input>
+                {selectedFile && (
+                  <img className='border-2 rounded-xl mt-4' src={URL.createObjectURL(selectedFile)} alt='drug' />
+                )}
               </div>
               <div className='col-span-7'>
                 <div className='w-full'>
@@ -786,7 +797,7 @@ const CreateProduct = () => {
               </div>
             </form>
             <div className='flex justify-center gap-14 row mt-3 mb-3'>
-              <Link to={'/productlist'}
+              <Link to={`/productlist/${id}`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleClick();

@@ -180,21 +180,21 @@ const DrugList = () => {
           </h1>
         </div>
         <div className='flex'>
-          <div className='w-2/3 mt-2 mb-10 px-48 flex'>
-            <form>
+          <div className='w-2/3 gap-4 mt-2 mb-10 px-48 flex'>
+            <form className='w-1/2'>
               <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-              <div class="relative">
+              <div class="relative w-full">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                   <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                   </svg>
                 </div>
                 <input
-                  type="search" name='search' id="default-search" value={searchTerm} onChange={handleSearchChange} class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg " placeholder="Tìm kiếm..." required />
+                  type="search" name='search' id="default-search" value={searchTerm} onChange={handleSearchChange} class="block w-full p-4 pl-10 text-sm text-gray-900 border border-blue-400 focus:outline-blue-500 rounded-lg " placeholder="Tìm kiếm..." required />
               </div>
             </form>
 
-            <div className='w-1/4 ml-2 flex'><button onClick={toggleFilter} className='text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'><Filter size={30}></Filter> </button>
+            <div className='mt-1 ml-2 relative'><button onClick={toggleFilter} className='text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'><Filter size={20}></Filter> </button>
               {isOpenFilter && (
                 <div className="origin-top-right absolute z-10 ml-14 w-72 rounded-md shadow-xl bg-white ring-1 ring-black ring-opacity-5">
                   <div className="py-4 px-6" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">

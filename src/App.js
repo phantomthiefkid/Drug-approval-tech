@@ -14,6 +14,9 @@ import ProductList from './commponents/Admin/ProductManagement/ProductList';
 import CreateProduct from './commponents/Admin/ProductManagement/CreateProduct';
 import UpdateProduct from './commponents/Admin/ProductManagement/UpdateProduct';
 import ProductDetail from './commponents/Admin/ProductManagement/ProductDetail';
+import OrganizationGuest from './commponents/Admin/ProductManagement/ProductGuest/OrganizationGuest';
+import ProductListGuest from './commponents/Admin/ProductManagement/ProductGuest/ProductListGuest';
+import ProductDetailGuest from './commponents/Admin/ProductManagement/ProductGuest/ProductDetailGuest';
 import Organization from './commponents/Admin/ProductManagement/Organization';
 
 function App() {
@@ -29,11 +32,14 @@ function App() {
         <Route path='/edituser/:email' element={<EditUser></EditUser>}></Route>
         <Route path='/druglist' element={<DrugList></DrugList>}></Route>
         <Route path='/createdrug' element={<CreateDrug></CreateDrug>}></Route>
+        <Route path='/organizationGuest' element={<OrganizationGuest></OrganizationGuest>}></Route>
+        <Route path='/productlist/:id' element={<ProductList></ProductList>}></Route>
+        <Route path='/productlistguest/:id' element={<ProductListGuest></ProductListGuest>}></Route>
         <Route path='/organization' element={<Organization></Organization>}></Route>
-        <Route path='/productlist' element={<ProductList></ProductList>}></Route>
-        <Route path='/createproduct' element={<CreateProduct></CreateProduct>}></Route>
+        <Route path='/createproduct/:id' element={<CreateProduct></CreateProduct>}></Route>
         <Route path='/updateproduct/:id' element={<UpdateProduct></UpdateProduct>}></Route>
         <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
+        <Route path='/productdetailforguest/:id' element={<ProductDetailGuest></ProductDetailGuest>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

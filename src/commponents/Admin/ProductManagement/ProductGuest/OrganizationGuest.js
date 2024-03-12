@@ -19,7 +19,7 @@ const organizations = [
     },
 ];
 
-const Organization = () => {
+const OrganizationGuest = () => {
     return (
         <div className='mt-20 mb-20'>
             <div className='py-8 flex px-48'>
@@ -31,7 +31,7 @@ const Organization = () => {
 
             <div className='w-5/6 mx-auto mt-20 flex gap-12 bg-opacity-40'>
                 {organizations.map((organization, index) => (
-                    <Link key={index} to={`/productlist/${organization.name}`} className='w-1/3 h-52 relative rounded-xl transition-transform duration-300 transform hover:scale-110 hover:shadow-2xl' style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${organization.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <Link key={index} to={`/productlistguest/${organization.name}`} className='w-1/3 h-52 relative rounded-xl transition-transform duration-300 transform hover:scale-110 hover:shadow-2xl' style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${organization.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                         <div className='absolute inset-0 z-0 rounded-xl'></div>
                         <div className='flex flex-col justify-between h-full z-10 border border-gray-300 transition-transform duration-300 transform rounded-xl p-6'>
                             <div className='text-center'>
@@ -48,4 +48,4 @@ const Organization = () => {
     );
 };
 
-export default Organization;
+export default OrganizationGuest;

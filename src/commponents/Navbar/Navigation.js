@@ -64,8 +64,9 @@ const Navigation = () => {
             </div></Link>
             </div>
             <div className='text-lg flex items-center'>
-              <Link to={'/productlist'}><Capsule size={20}></Capsule>
-                <p className='ml-2 hover:text-yellow-300'>Thuốc  </p></Link>
+              {roleName === 'SUPERADMIN' || roleName === 'ADMIN'? <Link to={'/organization'}><Capsule size={20}></Capsule>
+                <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>: <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
+                <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>}
             </div>
             {(roleName === 'SUPERADMIN' || roleName === 'ADMIN') && (
               <div className='text-lg flex items-center'>
@@ -78,7 +79,7 @@ const Navigation = () => {
             {roleName && roleName === 'SUPERADMIN' && (
               <div onClick={toggleDropdown} className='text-lg w-full flex items-center hover:text-yellow-300'><Sliders className='mr-2' size={20} /><button><p className='w-20'>Quản lí</p></button>
                 {isOpen && (
-                  <div className="absolute w-44 top-20 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="absolute w-44 top-14 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-2 w-full">
                       <Link to={`/userlist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí người dùng</button></Link>
                       <button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí đơn hàng</button>

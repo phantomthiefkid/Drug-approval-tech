@@ -2,43 +2,40 @@ import React, { useState, useEffect } from 'react'
 import { Filter, PlusCircle } from 'react-bootstrap-icons'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { fetchProducts } from '../../../redux/productManagement/ProductSlice';
-import '../../../css/ProductManagement/Product.css'
-const ProductList = () => {
-    const { id } = useParams();
-    const [isOpenFilter, setIsOpenFilter] = useState(false);
-    const dispatch = useDispatch();
-    const totalPagesAPI = useSelector((page) => page.product.totalPages)
-    const [sortField, setSortField] = useState('');
-    const [sortOrder, setSortOrder] = useState('');
-    const [productListApi, setProductListApi] = useState([]);
-    const productList = useSelector((product) => product.product.data)
-    const [currentPage, setCurrentPage] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
-    const [search, setSearch] = useState('');
-    const [flag, setFlag] = useState(false)
-    const navigate = useNavigate();
-   
-    const toggleFilter = () => {
-        setIsOpenFilter(!isOpenFilter)
-    }
 
+import { fetchProductsFollowOrganization } from '../../../../redux/productManagement/ProductSlice';
+
+const ProductListGuest = () => {
+    const { id } = useParams()
+    const dispatch = useDispatch();
+    const productList = useSelector((state) => state.product.dataGuest)
+    const [productListApi, setProductListApi] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [sortField, setSortField] = useState('');
+    const [isOpenFilter, setIsOpenFilter] = useState(false);
+    const [sortOrder, setSortOrder] = useState('');
+    const [search, setSearch] = useState('');
+    const [totalPages, setTotalPages] = useState(0);
+    const [flag, setFlag] = useState(false)
+    const totalPagesAPI = useSelector((page) => page.product.totalPages)
+
+    
     useEffect(() => {
         if (Array.isArray(productListApi)) {
             setProductListApi([...productList]);
+            
         }
     }, [productList]);
-
+    
     useEffect(() => {
-        dispatch(fetchProducts({ pageSize: 8, sortOrder: 'asc', pageNo: currentPage, search: search, flag, id })).then(() => {
+        dispatch(fetchProductsFollowOrganization({ pageSize: 8, sortOrder: 'asc', pageNo: currentPage, search: search, flag, id })).then(() => {
             setTotalPages(totalPagesAPI);
         });
-    }, [dispatch, currentPage, totalPagesAPI, search]);
+    }, [dispatch, currentPage, totalPagesAPI, search, id]);
     const handleSortFieldChange = (e) => setSortField(e.target.value);
     const handleSortOrderChange = (e) => setSortOrder(e.target.value);
     const fetchNewProducts = () => {
-        dispatch(fetchProducts({ sortField: sortField, sortOrder: sortOrder, pageSize: 8, pageNo: 0, id }))
+        dispatch(fetchProductsFollowOrganization({ sortField: sortField, sortOrder: sortOrder, pageSize: 8, pageNo: 0, id }))
     }
 
     const handleOnClickFilter = () => {
@@ -46,6 +43,7 @@ const ProductList = () => {
         fetchNewProducts();
         setIsOpenFilter(false);
         setCurrentPage(0)
+        
     }
 
     const handleIncreasePage = () => {
@@ -69,12 +67,16 @@ const ProductList = () => {
         setCurrentPage(0)
     }
 
+    const toggleFilter = () => {
+        setIsOpenFilter(!isOpenFilter)
+    }
+
     return (
         <>
             <div className='mt-20'>
                 <div className='py-8 flex px-48'>
                     <h1 className=' italic text-3xl font-extrabold text-blue-900 flex'>
-                        <span className='ml-2'>Danh sách thuốc được cấp phép bởi {`${id}`}</span>
+                        <span className='ml-2'>Danh sách thuốc được cấp phép {id}</span>
                     </h1>
                 </div>
                 <div className='flex'>
@@ -138,8 +140,8 @@ const ProductList = () => {
                         </div>
 
                     </div>
+
                     
-                    <div><Link to={`/createproduct/${id}`}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới thuốc</button></Link></div>
                 </div>
                 <div className='w-11/12 mx-auto text-center'>
                     <h3 className='text-2xl font-medium text-blue-900 mb-6'>Thuốc được phê duyệt</h3>
@@ -148,8 +150,8 @@ const ProductList = () => {
                 <div className='mb-6 p-6 mt-4 grid grid-cols-4'>
                     {productListApi && productListApi.map((product) => (<div class="max-w-sm mt-4 bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto">
                         <div className="img-container">
-                            <Link to={`/productdetail/${product.id}`}>
-                                <img className="w-full h-56 rounded-lg rounded-b-none object-cover border border-b-1" src={product.image || `https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG`} alt="" />
+                            <Link to={`/productdetailforguest/${product.id}`}>
+                                <img className="w-full h-56 rounded-lg rounded-b-none object-cover border border-b-1" src={product.image? product.image: `https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG`} alt="product" />
                             </Link>
                         </div>
 
@@ -194,4 +196,4 @@ const ProductList = () => {
     )
 }
 
-export default ProductList
+export default ProductListGuest
