@@ -165,13 +165,13 @@ const EditProfile = () => {
       <div className='mt-28 mb-10 bg-slate-50 w-1/3 mx-auto shadow-2xl border-separate rounded-b-3xl'>
         <div className='bg-blue-900 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
         <div className='w-3/4 mx-auto mt-6'>
-          <label htmlFor='avatar'>
-            <div className='avatar-position mb-3 mt-3'>
+          <div className='text-center'>
+            <div className='mb-3 mt-3 ml-14'>
               <img
                 src={avatar || profileUpdate.avatar}
                 alt='Avatar Preview'
-                style={{ borderRadius: '50%', height: '30%', width: '30%', marginLeft: "35%" }}
-                className='logo object-cover'
+
+                className='logo object-cover rounded-full h-40 w-40'
               />
             </div>
             <input
@@ -182,7 +182,7 @@ const EditProfile = () => {
               className='avatar-input mb-5 ml-20'
               onChange={handleChangAvatar}
             />
-          </label>
+          </div>
           <div class="mb-3">
             <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Role:</label>
             <input type="text" name='roleName' disabled value={profileUpdate.roleName} class="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " />
