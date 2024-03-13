@@ -5,7 +5,7 @@ import DrugsData from "./drugManagement/drugSlice"
 import ProductsData from "./approvalProduct/productSlice";
 import ProductData from "./productManagement/ProductSlice";
 import ProductDataGuest from "./productManagement/productSliceForGuest/ProductForGuestSlice";
-import ProfileProductsData from "./profileProduct/profileProductSlice";
+import ProfileProduct from "./profileProduct/profileProductSlice";
 export default configureStore({
     reducer: {
         userlist: UsersData,
@@ -14,6 +14,6 @@ export default configureStore({
         productData: ProductsData,
         product: ProductData,
         guest: ProductDataGuest,
-        profileProduct: ProfileProductsData
+        profileProduct: ProfileProduct
     }
 })

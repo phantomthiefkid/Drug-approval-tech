@@ -17,7 +17,9 @@ const ProfileProductList = () => {
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  if (totalPages) {
+    console.log(totalPages)
+  }
   useEffect(() => {
     if (Array.isArray(profilesAPI)) {
       setProfileList([...profilesAPI])

@@ -1,8 +1,50 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios"
+
+const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/admin/profile-products/step-one"
+const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/admin/profile-products/step-two"
 
 const URL_PROFILE_PRODUCT_LIST = `https://fams-management.tech/admin/profile-products`
 const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products-details`
+export const createProfileProductStepOne = createAsyncThunk('createProfileProductStepOne', async (stepOne) => {
+  try {
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing Token');
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }
+    const response = await axios.post(URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_ONE, stepOne, config)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+})
+
+export const createProfileProductStepTwo = createAsyncThunk('createProfileProductStepTwo', async (stepTwo) => {
+  try {
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing Token');
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }
+    const response = await axios.post(URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO, stepTwo, config)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+})
 
 export const fetchProfileProducts = createAsyncThunk('fetchProfileProducts', async ({ pageNo, pageSize, search }) => {
   try {
@@ -50,23 +92,47 @@ export const fetchProfileProductsDetail = createAsyncThunk('fetchProfileProducts
   }
 })
 
-export const ProfileProductsData = createSlice({
+export const ProfileProduct = createSlice({
   name: 'profileProduct',
   initialState: {
+    dataCreate: {},
     isLoading: false,
-    data: [],
     isError: false,
+    data: [],
     totalPages: 0,
     profile: {},
     detail: {}
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProfileProducts.fulfilled, (state, action) => {
+    builder.addCase(createProfileProductStepOne.fulfilled, (state, action) => {
+      state.dataCreate = action.payload;
       state.isLoading = false;
       state.isError = false;
-      state.data = action.payload;
-      state.totalPages = action.payload.totalPages
     })
+      .addCase(createProfileProductStepOne.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(createProfileProductStepOne.rejected, (state, action) => {
+        state.isError = true
+      })
+      .addCase(createProfileProductStepTwo.fulfilled, (state, action) => {
+        state.dataCreate = action.payload;
+        state.isLoading = false;
+        state.isError = false;
+      })
+      .addCase(createProfileProductStepTwo.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(createProfileProductStepTwo.rejected, (state, action) => {
+        state.isError = true
+      })
+      .addCase(fetchProfileProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.data = action.payload;
+        console.log(action.payload.totalPages)
+        state.totalPages = action.payload.totalPages
+      })
       .addCase(fetchProfileProducts.rejected, (state) => {
         state.isError = true;
       })
@@ -87,4 +153,5 @@ export const ProfileProductsData = createSlice({
       })
   }
 })
-export default ProfileProductsData.reducer
+
+export default ProfileProduct.reducer
