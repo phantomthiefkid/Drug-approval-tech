@@ -19,6 +19,8 @@ import ProductListGuest from './commponents/Admin/ProductManagement/ProductGuest
 import ProductDetailGuest from './commponents/Admin/ProductManagement/ProductGuest/ProductDetailGuest';
 import Organization from './commponents/Admin/ProductManagement/Organization';
 import CreateProfileProduct from './commponents/Admin/ProfileProduct/CreateProfileProduct';
+import ProfileProductList from './commponents/Admin/ProfileProduct/ProfileProductList'
+import ProfileDetail from './commponents/Admin/ProfileProduct/ProfileDetail';
 function App() {
   return (
     <BrowserRouter>
@@ -41,6 +43,8 @@ function App() {
         <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
         <Route path='/productdetailforguest/:id' element={<ProductDetailGuest></ProductDetailGuest>}></Route>
         <Route path='/createprofileproduct' element={<CreateProfileProduct></CreateProfileProduct>}></Route>
+        <Route path='/profilelist' element={<ProfileProductList></ProfileProductList>}></Route>
+        <Route path='/profiledetail/:id' element={<ProfileDetail></ProfileDetail>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

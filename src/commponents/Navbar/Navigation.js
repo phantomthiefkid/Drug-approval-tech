@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Capsule, Sliders, Boxes, BoxArrowRight } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import '../../css/Navbar.css'
 import ModalLogin from '../Account/ModalLogin';
 import { getUserDataFromToken, getUserNameFromToken } from '../../redux/auth/loginSlice';
+import { viewProfile } from '../../redux/profile/ProfileSlice'
 
 const Navigation = () => {
   const [navbarBackground, setNavbarBackground] = useState('bg-blue-900 h-18');
@@ -16,6 +18,7 @@ const Navigation = () => {
   const token = localStorage.getItem('token');
   const navigate = useNavigate()
   const roleName = getUserDataFromToken()
+  const profileView = useSelector((state) => state.viewProfile.data);
 
   const handleScroll = () => {
     if (window.scrollY > 50) {
@@ -64,8 +67,8 @@ const Navigation = () => {
             </div></Link>
             </div>
             <div className='text-lg flex items-center'>
-              {roleName === 'SUPERADMIN' || roleName === 'ADMIN'? <Link to={'/organization'}><Capsule size={20}></Capsule>
-                <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>: <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
+              {roleName === 'SUPERADMIN' || roleName === 'ADMIN' ? <Link to={'/organization'}><Capsule size={20}></Capsule>
+                <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link> : <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>}
             </div>
             {(roleName === 'SUPERADMIN' || roleName === 'ADMIN') && (
@@ -83,6 +86,7 @@ const Navigation = () => {
                     <div className="py-2 w-full">
                       <Link to={`/userlist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí người dùng</button></Link>
                       <Link to={`/createprofileproduct`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí đơn hàng</button></Link>
+                      <Link to={`profilelist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí hồ sơ thuốc</button></Link>
                     </div>
                   </div>
                 )}
@@ -111,7 +115,7 @@ const Navigation = () => {
                 </div>
                 <div>
                   <Link to={`/viewprofile`} onClick={() => window.scrollTo(0, 0)}>
-                    <img className={`logo rounded-full ${image}`} src='https://images2.thanhnien.vn/528068263637045248/2024/1/27/den-vau-99-17063223334631232917099.jpg' alt='profile' />
+                    {/* <img className='rounded-full h-14 ml-2' src={profileView.avatar} alt={data.fullName} /> */}
                   </Link>
                 </div>
                 <div className='cursor-pointer hover:text-blue-500'><BoxArrowRight size={25} onClick={handleLogout}></BoxArrowRight></div>
