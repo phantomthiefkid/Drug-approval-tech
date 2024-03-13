@@ -40,12 +40,11 @@ const ViewProfile = () => {
         <div className='bg-blue-900 h-12 rounded-t-3xl'><h2 className='text-center pt-2 font-bold text-white text-xl'>Hồ sơ</h2></div>
         <div className='w-3/4 mx-auto mt-6'>
           <div className='text-center'>
-            <div className='avatar-position mb-5 mt-3 justify-center'>
+            <div className='mb-5 mt-3 ml-14'>
               <img
                 src={profileView.avatar}
                 alt='Avatar Preview'
-                style={{ borderRadius: '50%', height: '30%', width: '30%', marginLeft: "35%" }}
-                className='logo object-cover'
+                className='logo object-cover rounded-full h-40 w-40'
               />
             </div>
           </div>

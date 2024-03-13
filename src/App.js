@@ -18,7 +18,8 @@ import OrganizationGuest from './commponents/Admin/ProductManagement/ProductGues
 import ProductListGuest from './commponents/Admin/ProductManagement/ProductGuest/ProductListGuest';
 import ProductDetailGuest from './commponents/Admin/ProductManagement/ProductGuest/ProductDetailGuest';
 import Organization from './commponents/Admin/ProductManagement/Organization';
-
+import ProfileProductList from './commponents/Admin/ProfileProduct/ProfileProductList'
+import ProfileDetail from './commponents/Admin/ProfileProduct/ProfileDetail';
 function App() {
   return (
     <BrowserRouter>
@@ -40,6 +41,8 @@ function App() {
         <Route path='/updateproduct/:id' element={<UpdateProduct></UpdateProduct>}></Route>
         <Route path='/productdetail/:id' element={<ProductDetail></ProductDetail>}></Route>
         <Route path='/productdetailforguest/:id' element={<ProductDetailGuest></ProductDetailGuest>}></Route>
+        <Route path='/profilelist' element={<ProfileProductList></ProfileProductList>}></Route>
+        <Route path='/profiledetail/:id' element={<ProfileDetail></ProfileDetail>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>
