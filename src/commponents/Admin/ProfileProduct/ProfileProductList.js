@@ -17,9 +17,7 @@ const ProfileProductList = () => {
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  if (totalPages) {
-    console.log(totalPages)
-  }
+
   useEffect(() => {
     if (Array.isArray(profilesAPI)) {
       setProfileList([...profilesAPI])
@@ -36,8 +34,7 @@ const ProfileProductList = () => {
       if (response.payload.length === 0) {
         setCurrentPage(0);
       } else {
-        setApiData(response.payload);
-        // console.log("Hello: ", response.payload)
+        setApiData(response.payload.content);
 
       }
     })
@@ -113,7 +110,7 @@ const ProfileProductList = () => {
             </div>
           </form>
         </div>
-        <div><Link to={'/'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới hồ sơ thuốc</button></Link></div>
+        <div><Link to={'/createprofileproduct'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới hồ sơ thuốc</button></Link></div>
       </div>
 
       {Array.isArray(profileList) && profileList.map((profile, index) => (

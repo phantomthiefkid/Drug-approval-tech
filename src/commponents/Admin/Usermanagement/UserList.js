@@ -128,7 +128,7 @@ const UserList = () => {
     setSearch('')
     dispatch(fetchUsers({ pageSize: 8, pageNo: 0 }));
   };
-  console.log(usersAPI)
+
   const handleChangeStatus = (user) => {
     try {
       if (user.isActive === "Active") {
@@ -220,9 +220,8 @@ const UserList = () => {
                       <label htmlFor="roleName" className="block text-sm font-medium text-gray-700">Role Name</label>
                       <select value={roleName} onChange={handleRoleNameChange} id="roleName" className="mt-1 p-2 w-full border rounded-md bg-gray-100 focus:outline-none focus:ring focus:border-blue-300">
                         <option value="">Choose</option>
-                        <option value="SUPERADMIN">Super Admin</option>
                         <option value="ADMIN">Admin</option>
-                        <option value="USER">User</option>
+                        <option value="SECRETARY">Secretary</option>
                       </select>
                     </div>
 

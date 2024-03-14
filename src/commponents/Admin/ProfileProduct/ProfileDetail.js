@@ -11,7 +11,7 @@ const ProfileDetail = () => {
   const token = localStorage.getItem('token')
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
-  console.log(profileApi)
+  console.log("Check: ", profileApi)
   useEffect(() => {
     window.scrollTo(0, 0)
     dispatch(fetchProfileProductsDetail({ id }))
@@ -23,7 +23,7 @@ const ProfileDetail = () => {
       <div className='container mx-auto mt-28 mb-20'>
         <div className='flex items-center justify-between'>
           <Link to={'/profilelist'}>
-            <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-16 h-auto' />
+            <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-10 ml-4 h-auto' />
           </Link>
           <div className='text-center flex-grow'>
             <h1 className='text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 mb-6'>Chi tiết hồ sơ thuốc</h1>
@@ -33,9 +33,9 @@ const ProfileDetail = () => {
         <hr className='border-gray-300'></hr>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6'>
           <div className='w-full flex justify-center border-gray-200'>
-            {profileApi && profileApi.profileDetailList && profileApi.profileDetailList.map((detail) => (
-              <img className='max-w-lg rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={detail.productResponseDTO.image || 'https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG'} alt='Profile Image' />
-            ))}
+            {profileApi && profileApi.profileInformation && (
+              <img className='max-w-lg rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={profileApi.profileInformation.imageURL || 'https://cdn.tgdd.vn/Products/Images/10029/131161/eugica-hinh-2.jpg'} alt='Profile Image' />
+            )}
           </div>
           <div className=''>
             <div className='flex justify-between'>

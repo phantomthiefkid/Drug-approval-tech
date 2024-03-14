@@ -6,6 +6,9 @@ const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/
 
 const URL_PROFILE_PRODUCT_LIST = `https://fams-management.tech/admin/profile-products`
 const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products-details`
+
+const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/admin/profile-products/step-one"
+
 export const createProfileProductStepOne = createAsyncThunk('createProfileProductStepOne', async (stepOne) => {
   try {
 
@@ -28,7 +31,7 @@ export const createProfileProductStepOne = createAsyncThunk('createProfileProduc
 
 export const createProfileProductStepTwo = createAsyncThunk('createProfileProductStepTwo', async (stepTwo) => {
   try {
-
+    console.log("Hello CHeck: ", stepTwo)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
@@ -40,6 +43,29 @@ export const createProfileProductStepTwo = createAsyncThunk('createProfileProduc
       }
     }
     const response = await axios.post(URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO, stepTwo, config)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+})
+
+export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfileProductStepOne', async (stepOne) => {
+  try {
+    console.log("Check Id: ", stepOne)
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing Token');
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      params: {
+        profileId: stepOne.id
+      }
+    }
+    const response = await axios.put(URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE, stepOne, config)
     return response.data
   } catch (error) {
     throw error
@@ -130,7 +156,6 @@ export const ProfileProduct = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.data = action.payload;
-        console.log(action.payload.totalPages)
         state.totalPages = action.payload.totalPages
       })
       .addCase(fetchProfileProducts.rejected, (state) => {
@@ -150,6 +175,18 @@ export const ProfileProduct = createSlice({
       })
       .addCase(fetchProfileProductsDetail.rejected, (state) => {
         state.isError = true;
+      })
+    builder.addCase(updateProfileProductStepOneupdate.fulfilled, (state, action) => {
+      state.dataCreate = action.payload;
+
+      state.isLoading = false;
+      state.isError = false;
+    })
+      .addCase(updateProfileProductStepOneupdate.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(updateProfileProductStepOneupdate.rejected, (state, action) => {
+        state.isError = true
       })
   }
 })

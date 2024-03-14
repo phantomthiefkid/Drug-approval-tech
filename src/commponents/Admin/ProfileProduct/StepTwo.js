@@ -1,11 +1,47 @@
 import React, { useState, useEffect } from 'react'
 import { PlusCircle, XCircle, ArrowUp, ArrowDown } from 'react-bootstrap-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice'
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { createProfileProductStepTwo } from '../../../redux/profileProduct/profileProductSlice'
 const product_initial = {
+    labeller: '',
+    name: '',
+    route: '',
+    prescriptionName: '',
+    drugIngredients: [],
+    categoryId: -1,
+    manufactor: {
+        name: '',
+        company: '',
+        score: '',
+        source: '',
+        countryId: -1
+    },
+    authorities: [],
+    pharmacogenomic: {
+        indication: '',
+        pharmacodynamic: '',
+        mechanismOfAction: '',
+        asorption: '',
+        toxicity: ''
+    },
+    productAllergyDetail: {
+        detail: '',
+        summary: ''
+    },
+    contraindication: {
+        relationship: '',
+        value: ''
+    },
+    approvedByFDA: false,
+    approvedByANSM: false
+}
+
+const product_initial_err = {
     labeller: '',
     name: '',
     route: '',
@@ -58,9 +94,9 @@ const initial_data = {
     status: 'PENDING'
 }
 
-
 const StepTwo = ({ productTitle }) => {
     const [products, setProducts] = useState([product_initial])
+    
     const [stepTwo, setStepTwo] = useState(initial_data)
     const [drugIngredients, setDrugIngredients] = useState([drugIngredient_initial])
     const [authorities, setAuthorities] = useState([authorrities_initial])
@@ -69,6 +105,7 @@ const StepTwo = ({ productTitle }) => {
     const countriesAPI = useSelector((state) => state.productData.countries)
     const drugsAPI = useSelector((drug) => drug.drugData.data)
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     useEffect(() => {
         dispatch(fetchCategories())
         dispatch(fetchCountries())
@@ -230,36 +267,107 @@ const StepTwo = ({ productTitle }) => {
         setProducts(updatedProducts);
     }
 
-    const handleSubmit = () => {
+    const handleSaveAsDraftStepTwo = () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
         dataUpdate.profileId = productTitle
-       
-        dispatch(createProfileProductStepTwo(dataUpdate))
-        console.log("Check all: ", dataUpdate)
-        console.log("Check Id: ", productTitle)
+
+        console.log("Hello: ", dataUpdate)
+        const response = dispatch(createProfileProductStepTwo(dataUpdate))
+
+        if (response) {
+
+            toast.success('Lưu thành công!', { autoClose: 200 });
+            setTimeout(() => {
+                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+            }, 1000);
+            console.log("Lưu nháp thành công!!!")
+        } else {
+            console.log('Dữ liệu không tồn tại')
+        }
+
     }
-    console.log(products)
-    console.log(stepTwo)
+    const handleSavePendingToApproveStepTwo = () => {
+        const dataUpdate = { ...stepTwo }
+        dataUpdate.productList = [...products]
+        dataUpdate.profileId = productTitle
+        dataUpdate.status = 'PENDING TO APPROVE'
+        if (validateData(dataUpdate)) {
+            const response = dispatch(createProfileProductStepTwo(dataUpdate));
+
+            if (response) {
+                toast.success('Lưu thành công!', { autoClose: 200 });
+                console.log("Lưu nháp thành công!!!")
+            } else {
+                console.log('Dữ liệu không tồn tại')
+            }
+
+            setTimeout(() => {
+                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+            }, 1000);
+        }
+
+    }
+    //-------- Validation
+    const validateData = (dataUpdate) => {
+        // Kiểm tra xem có sản phẩm nào trong danh sách không
+        if (dataUpdate.productList.length === 0) {
+            toast.error('Danh sách sản phẩm không được trống!', { autoClose: 300 });
+            return false;
+        } 
+
+        // Kiểm tra từng sản phẩm
+        for (const product of dataUpdate.productList) {
+            // Kiểm tra các trường dữ liệu cần kiểm tra
+            if (!product.labeller.trim() || !product.name.trim()) {
+                toast.error('Tên nhãn hiệu và tên sản phẩm không được trống!', { autoClose: 300 });
+                return false;
+            }
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(product.labeller) || /[!@#$%^&*(),.?":{}|<>]/.test(product.name)) {
+                toast.error('Tên nhãn hiệu và tên sản phẩm không được chứa ký tự đặc biệt!', { autoClose: 200 });
+                return false;
+            }
+            if (!product.route.trim() || !product.prescriptionName.trim()) {
+                toast.error('Tên nhãn hiệu và tên sản phẩm không được trống!', { autoClose: 300 });
+                return false;
+            }
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(product.route) || /[!@#$%^&*(),.?":{}|<>]/.test(product.prescriptionName)) {
+                toast.error('Tên nhãn hiệu và tên sản phẩm không được chứa ký tự đặc biệt!', { autoClose: 200 });
+                return false;
+            }
+            // Thêm các kiểm tra khác nếu cần
+        }
+
+        // Kiểm tra các trường dữ liệu khác ở mức profile, nếu cần
+
+        return true;
+    };
     return (
         <div className='w-5/6 mb-5 mt-2 mx-auto h-auto min-h-96 border border-gray-200 shadow-xl'>
+            <ToastContainer></ToastContainer>
             <div className='p-5'>
 
                 {products.map((item, index) => (
 
-                    <div key={index} className="mb-6 border border-gray-300 p-5">
+                    <div key={index} className="mb-6 border border-gray-300 p-3">
                         <button className='w-full' onClick={() => toggleProductExpansion(index)}>
-                            <div key={index} className='bg-blue-600 mt-2 h-12 flex justify-items-center'>
-                                <h2 className='text-center w-5/6 pt-2 font-bold text-white text-xl'>Thuốc {index + 1}</h2>
-                                <div className='w-1/6 flex justify-end mt-3'>
-                                    <span className='text-white font-bold'>{expandedProducts[index] ? 'Thu gọn' : 'Hiện'}</span>
-                                    {expandedProducts[index] ? (
-                                        <ArrowUp className='text-white mr-2' size={25} />
-                                    ) : (
-                                        <ArrowDown className='text-white mr-2' size={25} />
-                                    )}
+                            <div key={index} className={`bg-blue-600 mt-2 ${expandedProducts[index] ? "rounded-t-2xl" : "rounded-2xl"} overflow-hidden`}>
+                                <button className='w-full flex justify-between items-center p-4 focus:outline-none text-white text-lg font-semibold'>
+                                    <h2>Thuốc {index + 1}</h2>
+                                    <div className='flex items-center'>
+                                        <span>{expandedProducts[index] ? 'Thu gọn' : 'Hiện'}</span>
+                                        {expandedProducts[index] ? (
+                                            <ArrowUp className='ml-2' size={20} />
+                                        ) : (
+                                            <ArrowDown className='ml-2' size={20} />
+                                        )}
+                                    </div>
+                                </button>
+                            </div>
 
-                                </div></div></button>
+
+
+                        </button>
                         <div className={`${!expandedProducts[index] && 'hidden'}`}>
                             <div className='grid grid-cols-12 gap-4 p-4'>
                                 <div className='col-span-5 py-8'>
@@ -525,17 +633,21 @@ const StepTwo = ({ productTitle }) => {
                             </div>
 
                         </div>
-                        <div className='flex justify-end'>
-
-                            <button
-                                type="button"
-                                onClick={() => handleDeleteProduct(index)}
-                                className={`mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center ${!expandedProducts[index] && 'hidden'}`}
-                            >
-                                <XCircle className="mr-1" size={20} />
-                                Xóa Thuốc
-                            </button>
+                        <div className='flex justify-end mt-2 space-x-4'>
+                            {expandedProducts[index] && (
+                                <button onClick={() => toggleProductExpansion(index)} className='bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-lg inline-flex items-center'>
+                                    Đóng
+                                </button>
+                            )}
+                            {expandedProducts[index] && (
+                                <button type="button" onClick={() => handleDeleteProduct(index)} className='bg-red-600 hover:bg-red-300 text-white font-bold py-2 px-3 rounded-lg inline-flex items-center'>
+                                    <XCircle className="mr-1" size={20} />
+                                    Xóa Thuốc
+                                </button>
+                            )}
                         </div>
+
+
                     </div>)
 
                 )}
@@ -546,13 +658,13 @@ const StepTwo = ({ productTitle }) => {
             </div>
             <div className='flex justify-end mr-6 gap-4 mt-3 mb-3'>
 
-                <button className="w-48 rounded-full text-red-600 mb-8 hover:scale-110 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 border border-gray-500 text-sm font-bold px-5 py-2.5 focus:z-10">
-                    Trở về
+                <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Lưu nháp
                 </button>
 
 
-                <button onClick={handleSubmit} type='submit' className='w-48 text-white mb-8 hover:scale-110 transition-transform duration-300 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-full text-sm px-5 py-2.5 text-center' >
-                    Lưu
+                <button onClick={handleSavePendingToApproveStepTwo} className='px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' >
+                    Tạo
                 </button>
 
 
