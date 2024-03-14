@@ -6,6 +6,9 @@ const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/
 
 const URL_PROFILE_PRODUCT_LIST = `https://fams-management.tech/admin/profile-products`
 const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products-details`
+
+const URL_ADMIN_PRODUCTS = `https://fams-management.tech/admin/products`
+
 export const createProfileProductStepOne = createAsyncThunk('createProfileProductStepOne', async (stepOne) => {
   try {
 
@@ -64,7 +67,7 @@ export const fetchProfileProducts = createAsyncThunk('fetchProfileProducts', asy
       }
     };
     const response = await axios.get(URL_PROFILE_PRODUCT_LIST, config);
-    return response.data;
+    return response.data.content;
   } catch (error) {
     throw error;
   }
@@ -92,6 +95,28 @@ export const fetchProfileProductsDetail = createAsyncThunk('fetchProfileProducts
   }
 })
 
+export const fetchProductsWithAdmin = createAsyncThunk('fetchProductsWithAdmin', async ({ id }) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing token');
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      params: {
+        id
+      }
+    };
+    const response = await axios.get(URL_ADMIN_PRODUCTS, config);
+    return response.data
+  } catch (error) {
+    throw error;
+  }
+})
+
 export const ProfileProduct = createSlice({
   name: 'profileProduct',
   initialState: {
@@ -101,7 +126,8 @@ export const ProfileProduct = createSlice({
     data: [],
     totalPages: 0,
     profile: {},
-    detail: {}
+    detail: {},
+    product: {}
   },
   extraReducers: (builder) => {
     builder.addCase(createProfileProductStepOne.fulfilled, (state, action) => {
@@ -150,6 +176,18 @@ export const ProfileProduct = createSlice({
       })
       .addCase(fetchProfileProductsDetail.rejected, (state) => {
         state.isError = true;
+      })
+
+    builder.addCase(fetchProductsWithAdmin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.product = action.payload
+    })
+      .addCase(fetchProductsWithAdmin.rejected, (state) => {
+        state.isError = true;
+      })
+      .addCase(fetchProductsWithAdmin.pending, (state) => {
+        state.isLoading = true;
       })
   }
 })
