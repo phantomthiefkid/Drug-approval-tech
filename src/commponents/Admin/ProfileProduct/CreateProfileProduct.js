@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
-import StepThree from './StepThree';
 
 const CreateProfileProduct = () => {
     const [productTitle, setProductTitle] = useState('');
-
-
     const [stepOneTag, setStepOneTag] = useState(true);
     const [stepTwoTag, setStepTwoTag] = useState(false);
-    const [stepThreeTag, setStepThreeTag] = useState(false);
+
 
     const handleNextStepOne = (title) => {
         setProductTitle(title);
         setStepOneTag(false);
         setStepTwoTag(true);
     };
-
+   
     const showStepOne = () => {
         setStepOneTag(true);
         setStepTwoTag(false);
-        setStepThreeTag(false);
+
     };
 
     const showStepTwo = () => {
         setStepOneTag(false);
         setStepTwoTag(true);
-        setStepThreeTag(false);
-    };
 
-    const showStepThree = () => {
-        setStepOneTag(false);
-        setStepTwoTag(false);
-        setStepThreeTag(true);
     };
 
     return (
@@ -45,32 +36,27 @@ const CreateProfileProduct = () => {
                 </div>
                 <div className="w-2/3 mx-auto px-6 mt-8 mb-8">
                     <div className="bg-gray-200 h-1 w-full rounded-full">
-                        <div className="bg-blue-500 h-1 rounded-full" style={{ width: '25%' }}></div>
+                        <div className="bg-blue-500 h-1 rounded-full" style={{ width: `${stepOneTag ? "0%" : "50%"}` }}></div>
                     </div>
                 </div>
                 <div className="flex justify-center w-5/6 mx-auto gap-2">
                     <button
-                        className={`btn ${stepOneTag ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} w-1/3 h-10 hover:bg-blue-600 hover:text-white`}
-                        onClick={showStepOne}
+                        className={`btn ${stepOneTag ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
+
                     >
                         Step One
                     </button>
                     <button
-                        className={`btn ${stepTwoTag ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} w-1/3 h-10 hover:bg-blue-600 hover:text-white`}
-                        onClick={showStepTwo}
+                        className={`btn ${stepTwoTag ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
+
                     >
                         Step Two
                     </button>
-                    <button
-                        className={`btn ${stepThreeTag ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} w-1/3 h-10 hover:bg-blue-600 hover:text-white`}
-                        onClick={showStepThree}
-                    >
-                        Step Three
-                    </button>
+
                 </div>
                 {stepOneTag && <StepOne onNext={handleNextStepOne} />}
                 {stepTwoTag && <StepTwo productTitle={productTitle} />}
-                {stepThreeTag && <StepThree />}
+
             </div>
         </>
     );
