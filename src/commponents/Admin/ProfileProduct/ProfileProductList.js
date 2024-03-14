@@ -14,6 +14,7 @@ const ProfileProductList = () => {
   const [profileList, setProfileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  console.log(totalPages)
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ const ProfileProductList = () => {
       if (response.payload.length === 0) {
         setCurrentPage(0);
       } else {
-        setApiData(response.payload.content);
+        setApiData(response.payload);
+        console.log("Hello: ", response.payload)
 
       }
     })
@@ -116,7 +118,7 @@ const ProfileProductList = () => {
       {Array.isArray(profileList) && profileList.map((profile, index) => (
         <Link to={`/profiledetail/${profile.profileId}`}>
           <div className='w-5/6 mx-auto flex bg-opacity-40 mb-5'>
-            <div className='w-full h-48 relative rounded-xl transition-transform duration-300 transform hover:scale-110 hover:shadow-2xl'>
+            <div className='w-full h-44 relative rounded-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-xl'>
               <div className='absolute inset-0 z-0 rounded-xl'></div>
               <div className='h-full z-10 border border-gray-300 transition-transform duration-300 transform rounded-xl items-center flex'>
                 <div className='ml-3'>
@@ -124,29 +126,27 @@ const ProfileProductList = () => {
                 </div>
                 <div className='ml-20'>
                   <div className='flex'>
-                    <div className='flex-grow flex-col'>
-                      <div className='mx-8'>
-                        <span className='font-bold text-lg'>Tiêu đề thuốc:</span> {profile.title}
-
+                    <div class='flex-grow flex-col'>
+                      <div class='mx-8 flex items-center'>
+                        <span class='font-bold text-2xl'>Tên hồ sơ:</span>
+                        <h2 class='ml-3 text-3xl text-transparent bg-clip-text bg-gradient-to-r bg-purple-900 font-bold'>{profile.title}</h2>
                       </div>
-                      <div className='mx-8 mt-8'>
-                        <span className='font-bold text-lg'>UpdatedBy:</span> {profile.updatedBy}
-                      </div>
-                    </div>
-                    <div className='flex flex-col'>
-                      <div className='mx-8'>
-                        <span className='font-bold text-lg'>CreatedBy:</span> {profile.createdBy}
-                      </div>
-                      <div className='mx-8 mt-8'>
-                        <span className='font-bold text-lg'>UpdateOn:</span> {profile.updatedOn}
-                      </div>
-                    </div>
-                    <div className='flex flex-col'>
-                      <div className='mx-8'>
-                        <span className='font-bold text-lg'>CreatedOn:</span> {profile.createdOn}
-                      </div>
-                      <div className='mx-8 mt-8'>
-                        <span className='font-bold text-lg'>Status:</span> {profile.status}
+                      <div className='mx-8 mt-8 flex justify-between w-full'>
+                        <div className='inline-block'>
+                          {profile.status === 'DRAFT' ? (
+                            <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
+                          ) : profile.status === 'PENDING TO APPROVE' ? (
+                            <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
+                          ) : profile.status === 'APPROVE' ? (
+                            <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>
+                          ) : (
+                            <p className="status">{profile.status}</p>
+                          )}
+                        </div>
+                        <div className='inline-block ml-auto border border-gray-100 p-2 rounded-md bg-sky-400 text-white'>
+                          <span className='font-bold text-xl justify-end mr-3'>CreatedOn:</span>
+                          <span>{profile.createdOn}</span>
+                        </div>
                       </div>
                     </div>
                   </div>

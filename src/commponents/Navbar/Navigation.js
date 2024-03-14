@@ -67,11 +67,11 @@ const Navigation = () => {
             </div></Link>
             </div>
             <div className='text-lg flex items-center'>
-              {roleName === 'SUPERADMIN' || roleName === 'ADMIN' ? <Link to={'/organization'}><Capsule size={20}></Capsule>
+              {roleName === 'ADMIN' ? <Link to={'/organization'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link> : <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>}
             </div>
-            {(roleName === 'SUPERADMIN' || roleName === 'ADMIN') && (
+            {(roleName === 'ADMIN') && (
               <div className='text-lg flex items-center'>
                 <Link to={'/druglist'}>
                   <Boxes className='mr-2' size={30}></Boxes>
@@ -115,7 +115,7 @@ const Navigation = () => {
                 </div>
                 <div>
                   <Link to={`/viewprofile`} onClick={() => window.scrollTo(0, 0)}>
-                    <img className='rounded-full h-14 ml-2' src={profileView?.avatar} alt={data.fullName} />
+                    <img className='rounded-full h-14 ml-2' src={data.avatar || 'https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg'} alt={data.fullName} />
                   </Link>
                 </div>
                 <div className='cursor-pointer hover:text-blue-500'><BoxArrowRight size={25} onClick={handleLogout}></BoxArrowRight></div>

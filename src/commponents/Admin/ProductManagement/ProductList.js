@@ -19,7 +19,7 @@ const ProductList = () => {
     const [search, setSearch] = useState('');
     const [flag, setFlag] = useState(false)
     const navigate = useNavigate();
-   
+
     const toggleFilter = () => {
         setIsOpenFilter(!isOpenFilter)
     }
@@ -138,7 +138,7 @@ const ProductList = () => {
                         </div>
 
                     </div>
-                    
+
                     <div><Link to={`/createproduct/${id}`}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 mt-8 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới thuốc</button></Link></div>
                 </div>
                 <div className='w-11/12 mx-auto text-center'>
@@ -149,7 +149,7 @@ const ProductList = () => {
                     {productListApi && productListApi.map((product) => (<div class="max-w-sm mt-4 bg-white rounded-lg shadow-xl col-span-1 w-11/12 mx-auto">
                         <div className="img-container">
                             <Link to={`/productdetail/${product.id}`}>
-                                <img className="w-full h-56 rounded-lg rounded-b-none object-cover border border-b-1" src={product.image || `https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG`} alt="" />
+                                <img className="w-full h-56 rounded-lg rounded-b-none object-cover border border-b-1" src={product.image || `https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg`} alt="" />
                             </Link>
                         </div>
 
