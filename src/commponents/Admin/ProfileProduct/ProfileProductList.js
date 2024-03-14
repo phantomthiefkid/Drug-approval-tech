@@ -137,7 +137,7 @@ const ProfileProductList = () => {
                         <div className='inline-block'>
                           {profile.status === 'DRAFT' ? (
                             <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
-                          ) : profile.status === 'PENDING' ? (
+                          ) : profile.status === 'PENDING TO APPROVE' ? (
                             <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : profile.status === 'APPROVE' ? (
                             <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>

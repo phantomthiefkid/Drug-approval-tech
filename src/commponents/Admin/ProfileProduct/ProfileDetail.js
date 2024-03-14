@@ -26,7 +26,6 @@ const ProfileDetail = () => {
     });
   };
 
-  console.log(profileApi.profileInformation.imageURL)
   return (
     <>
       <div className='container mx-auto mt-28 mb-20 '>
@@ -42,12 +41,12 @@ const ProfileDetail = () => {
           </div>
         </div>
 
-        <div className='w-5/6 h-auto border border-gray-200 shadow-xl ml-32'>
+        <div className='w-5/6 h-auto border border-gray-200 shadow-xl mx-auto'>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6'>
             <div className='w-5/6 flex justify-center border-gray-200'>
-              {profileApi && profileApi.profileInformation.map((detail, index) => (
-                <img key={index} className='max-w-lg rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={detail.profileInformation.imageURL || 'https://uicreative.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2020/01/23073244/company-profile-finance-product-services-1024x683.jpg'} alt='Profile Image' />
-              ))}
+              {profileApi && profileApi.profileInformation && (
+                <img className='max-w-md rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={profileApi.profileInformation.imageURL || 'https://uicreative.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2020/01/23073244/company-profile-finance-product-services-1024x683.jpg'} alt='Profile Image' />
+              )}
             </div>
             <div className=''>
               <div className='flex justify-between'>
@@ -67,8 +66,8 @@ const ProfileDetail = () => {
                       <div className='inline-block mr-5'>
                         {profileApi.profileInformation.status === 'DRAFT' ? (
                           <p className='status bg-sky-400 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
-                        ) : profileApi.profileInformation.status === 'PENDING' ? (
-                          <p className='status bg-red-500 text-white p-2 rounded text-2xl'>Status:{profileApi.profileInformation.status}  </p>
+                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' ? (
+                          <p className='status bg-red-500 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
                         ) : profileApi.profileInformation.status === 'APPROVE' ? (
                           <p className='status bg-green-500 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
                         ) : (
@@ -83,29 +82,31 @@ const ProfileDetail = () => {
             </div>
           </div>
           {profileApi && profileApi.profileDetailList && profileApi.profileDetailList.map((detail, index) => (
-            <div key={index} className='p-14 mt-5 w-5/6'>
+            <div key={index} className='p-14 mt-5 w-5/6 mx-auto '>
               <button className='w-full' onClick={() => toggleProductExpansion(index)}>
-                <div key={index} className=' h-28 relative rounded-xl transition-transform duration-300 '>
-                  <div className='h-full z-10 border border-gray-300 transition-transform duration-300 transform rounded-t-xl items-center flex'>
+
+                <div key={index} className=' h-28 relative rounded-xl transition-transform duration-300 hover:scale-100 shadow-xl '>
+                  <div className='h-full z-10 border border-gray-300 rounded-xl items-center flex'>
                     <div className='ml-3'>
-                      <img className={`logo`} src={detail.productResponseDTO.image || 'https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg'} alt='product' style={{ width: '80px', height: '80px' }} />
+                      <img className={`logo border border-gray-100 shadow-xl`} src={detail.productResponseDTO.image || 'https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg'} alt='product' style={{ width: '80px', height: '80px' }} />
                     </div>
                     <div className='flex ml-10'>
                       <div class='flex-grow flex-col'>
                         <div class='mx-6 flex items-center'>
-                          <span class='font-bold text-2xl'>{detail.productResponseDTO.name}</span>
-                          <div className='inline-block ml-36'>
+                          <span class='font-bold text-2xl text-amber-500'>{detail.productResponseDTO.name}</span>
+                          <span className='inline-block ml-44'>
                             {detail.status === 'DRAFT' ? (
-                              <p className='status bg-sky-400 text-white p-2 rounded text-2xl'>{detail.status}  </p>
+                              <p className='status bg-sky-400 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : detail.status === 'PENDING' ? (
-                              <p className='status bg-red-500 text-white p-2 rounded text-2xl'>{detail.status}  </p>
-                            ) : detail.status === 'APPROVE' ? (
-                              <p className='status bg-green-500 text-white p-2 rounded text-2xl'>{detail.status}  </p>
+                              <p className='status bg-red-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
+                            ) : detail.status === 'APPROVED' ? (
+                              <p className='status bg-green-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : (
-                              <p className=''>{detail.status}  </p>
+                              <p className='bg-pink-500 text-white p-2 rounded text-xl inline-block'>{detail.status}  </p>
                             )}
-                          </div>
-                          <div className='col-span-12 flex p-2 mt-4 ml-36'>
+                          </span>
+                          {/* {profileApi.profileInformation.status === 'APPROVED' ? ( */}
+                          <div className='col-span-12 flex p-2 mt-4 ml-24'>
                             <div className="flex items-center mb-4 w-2/3">
                               <input
                                 type="checkbox"
@@ -113,18 +114,19 @@ const ProfileDetail = () => {
                                 // checked={products[index].approvedByFDA}                                
                                 className="form-checkbox h-5 w-5 text-blue-500"
                               />
-                              <label htmlFor="approvedByFDA" className="ml-2 text-sm text-gray-700">Approved</label>
+                              <label htmlFor="approvedByFDA" className="ml-2 text-sm font-bold text-green-500">Approved</label>
                             </div>
-                            <div className="flex items-center ml-3 mb-4 w-2/3">
+                            <div className="flex items-center ml-5 mb-4 w-2/3">
                               <input
                                 type="checkbox"
                                 id="approvedByANSM"
                                 // checked={products[index].approvedByByANSM}
                                 className="form-checkbox h-5 w-5 text-blue-500"
                               />
-                              <label htmlFor="approvedByANSM" className="ml-2 text-sm text-gray-700">Rejected</label>
+                              <label htmlFor="approvedByANSM" className="ml-2 text-sm font-bold text-red-500">Rejected</label>
                             </div>
                           </div>
+                          {/* ) : null} */}
                         </div>
                       </div>
                     </div>
@@ -138,10 +140,11 @@ const ProfileDetail = () => {
                     </div>
                   </div>
                 </div>
+
               </button>
 
               <div className={`${!expandedProducts[index] && 'hidden'}`}>
-                <div className='mb-6 border border-gray-300 p-5' >
+                <div className='mb-6 border-b-2 border-l-2 border-r-2 border-gray-300 p-5'>
                   <div className='grid grid-cols-12 gap-4 p-4'>
                     <div className='col-span-5 py-8'>
                       <img className='w-5/6' src='https://vinmec-prod.s3.amazonaws.com/images/20220324_013008_431435_decolgen-nd.max-1800x1800.jpg' />
@@ -360,8 +363,8 @@ const ProfileDetail = () => {
                   </div>
                 </div>
               </div>
-              <div className='flex justify-end'>
-                <button>
+              <div className='flex justify-end mt-5'>
+                <button className='border border-gray-100 p-2 bg-green-500 text-white rounded-lg'>
                   Submit
                 </button>
               </div>
