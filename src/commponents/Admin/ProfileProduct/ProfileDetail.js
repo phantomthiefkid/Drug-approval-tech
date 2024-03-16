@@ -62,7 +62,7 @@ const ProfileDetail = () => {
       <div className='container mx-auto mt-28 mb-20 '>
         <div className='flex items-center justify-between'>
           <Link to={'/profilelist'}>
-            <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-12 h-auto' />
+            <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-10 ml-4 h-auto' />
           </Link>
           <div className='text-center flex-grow'>
             <h1 className='text-4xl font-bold text-blue-800 mb-6'>Chi tiết hồ sơ thuốc</h1>

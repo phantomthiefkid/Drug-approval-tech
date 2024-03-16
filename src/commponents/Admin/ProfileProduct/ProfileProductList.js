@@ -87,13 +87,13 @@ const ProfileProductList = () => {
             </div>
           </form>
         </div>
-        <div><Link to={'/'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới hồ sơ thuốc</button></Link></div>
+        <div><Link to={'/createprofileproduct'}><button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center ml-24 me-2 p-4 gap-2"><PlusCircle size={20}></PlusCircle> Thêm mới hồ sơ thuốc</button></Link></div>
       </div>
 
       {Array.isArray(profileList) && profileList.map((profile, index) => (
         <Link to={`/profiledetail/${profile.profileId}`}>
           <div className='w-5/6 mx-auto flex bg-opacity-40 mb-5'>
-            <div className='w-full h-44 relative rounded-xl transition-transform duration-300 transform hover:scale-110 hover:shadow-2xl'>
+            <div className='w-full h-44 relative rounded-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-xl'>
               <div className='absolute inset-0 z-0 rounded-xl'></div>
               <div className='h-full z-10 border border-gray-300 transition-transform duration-300 transform rounded-xl items-center flex'>
                 <div className='ml-3'>
