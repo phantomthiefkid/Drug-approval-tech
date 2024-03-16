@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice'
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { createProfileProductStepTwo } from '../../../redux/profileProduct/profileProductSlice'
+import { uploadFile } from '../../../redux/uploadFile/uploadFile';
 const product_initial = {
     labeller: '',
     name: '',
@@ -37,6 +38,7 @@ const product_initial = {
         relationship: '',
         value: ''
     },
+    imageURL: '',
     approvedByFDA: false,
     approvedByANSM: false
 }
@@ -71,6 +73,7 @@ const product_initial_err = {
         relationship: '',
         value: ''
     },
+    imageURL: '',
     approvedByFDA: false,
     approvedByANSM: false
 }
@@ -96,6 +99,7 @@ const initial_data = {
 
 const StepTwo = ({ productTitle }) => {
     const [products, setProducts] = useState([product_initial])
+    const [image, setImage] = useState([]);
     const [errorValidation, setErrorValidation] = useState([])
     const [stepTwo, setStepTwo] = useState(initial_data)
     const [drugIngredients, setDrugIngredients] = useState([drugIngredient_initial])
@@ -111,6 +115,33 @@ const StepTwo = ({ productTitle }) => {
         dispatch(fetchCountries())
         dispatch(fetchDrugs({}))
     }, [dispatch])
+
+    const handleImageChange = async (event, productIndex) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await dispatch(uploadFile(formData));
+            const url = response.payload;
+            console.log(url, response)
+            setProducts(prevProducts => {
+                const updatedProducts = [...prevProducts];
+                updatedProducts[productIndex] = {
+                    ...updatedProducts[productIndex],
+                    imageURL: url
+                };
+                return updatedProducts;
+            });
+            console.log(products[productIndex])
+        } catch (error) {
+            console.error('Lỗi khi tải lên hình ảnh:', error);
+        }
+    };
+
+
+
+
     //-------------------
     const handleAddNewProduct = () => {
         setProducts([...products, product_initial])
@@ -540,11 +571,11 @@ const StepTwo = ({ productTitle }) => {
             setErrorValidation([...errors])
         }
 
-        console.log("Check: ", errors);
         return isValid;
     };
 
 
+    console.log("Check: ", products);
 
     return (
         <div className='w-5/6 mb-5 mt-2 mx-auto h-auto min-h-96 border border-gray-200 shadow-xl'>
@@ -575,9 +606,25 @@ const StepTwo = ({ productTitle }) => {
                         <div className={`${!expandedProducts[index] && 'hidden'}`}>
                             <div className='grid grid-cols-12 gap-4 p-4'>
                                 <div className='col-span-5 py-8'>
-                                    <img className='w-5/6' src='https://vinmec-prod.s3.amazonaws.com/images/20220324_013008_431435_decolgen-nd.max-1800x1800.jpg' />
-
+                                    <input
+                                        type="file"
+                                        id={`fileUpload_${index}`} // Sử dụng id duy nhất cho mỗi input file
+                                        accept="image/*"
+                                        onChange={(event) => handleImageChange(event, index)}
+                                        className="hidden"
+                                    />
+                                    <label
+                                        htmlFor={`fileUpload_${index}`}
+                                        className="block w-full h-full cursor-pointer"
+                                    >
+                                        <img
+                                            className='w-5/6 cursor-pointer'
+                                            src={item.imageURL ? item.imageURL : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiaH4XnlaUWReFVAIftt0qvvd_Y_ieJWREjOCVsPUTxYW5-DI_8oGctr8rvffv4zdxSyE&usqp=CAU"}
+                                            alt="Preview"
+                                        />
+                                    </label>
                                 </div>
+
                                 <div className='col-span-7'>
                                     <div className='flex gap-4'>
                                         <div class="w-1/2">
