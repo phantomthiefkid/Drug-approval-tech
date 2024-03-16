@@ -10,7 +10,8 @@ import { toast, ToastContainer } from 'react-toastify';
 const DrugList = () => {
 
   const drugsAPI = useSelector((drug) => drug.drugData.data)
-  const [totalPages, setTotalPages] = useState(0);
+  // const [totalPages, setTotalPages] = useState(0);
+  const totalPagesAPI = useSelector((page) => page.drugData.data.totalPages)
   const dispatch = useDispatch();
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -37,6 +38,8 @@ const DrugList = () => {
 
   const itemsPerPage = 8
 
+  console.log("drugPage", totalPagesAPI)
+
   useEffect(() => {
     if (Array.isArray(drugsAPI)) {
       setDrugList([...drugsAPI])
@@ -54,11 +57,11 @@ const DrugList = () => {
     })).then((response) => {
       if (response.payload.content.length === 0) {
         setCurrentPage(0);
-        setTotalPages(0);
+        // setTotalPages(0);
       } else {
         setApiData(response.payload.content);
-        console.log("Hello: ", response.payload.totalPages)
-        setTotalPages(response.payload.totalPages);
+        console.log("Hello: ", response.payload.content)
+        // setTotalPages(response.payload.totalPages);
 
       }
     })
@@ -96,19 +99,17 @@ const DrugList = () => {
   }
 
   const handleIncreasePage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage((prev) => prev + 1);
-    }
+    setCurrentPage((prev) => prev + 1);
   };
 
   const handleDecreasePage = () => {
-    if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
-    }
+    setCurrentPage((prev) => prev - 1);
   };
 
   const handlePageChange = (page) => {
+
     setCurrentPage(page);
+
   };
 
   const toggleFilter = () => {
@@ -348,7 +349,7 @@ const DrugList = () => {
                       Previous
                     </button>
                   </li>
-                  {totalPages ? [...Array(totalPages).keys()].map((page) => (
+                  {totalPagesAPI ? [...Array(totalPagesAPI).keys()].map((page) => (
                     <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
                       <button
                         onClick={() => handlePageChange(page)}
@@ -358,7 +359,7 @@ const DrugList = () => {
                       </button>
                     </li>
                   )) : <div></div>}
-                  <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
+                  <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
                     <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
                       Next
                     </button>

@@ -35,9 +35,9 @@ const CreateDrug = () => {
   const token = localStorage.getItem('token')
   useEffect(() => {
     if (!token) {
-        navigate('/')
+      navigate('/')
     }
-}, [token])
+  }, [token])
   const getDataDrug = (e) => {
     setDrug({ ...drug, [e.target.name]: e.target.value })
   }
@@ -131,7 +131,7 @@ const CreateDrug = () => {
           <div className='bg-blue-600 mt-4 h-12 '><h2 className='text-center pt-2 font-bold text-white text-xl'>Hoạt chất</h2></div>
           <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
             <div className='col-span-5 py-12'>
-              <img className='border-2 rounded-xl' src={`${drugImage ? drugImage: "https://www.shutterstock.com/image-vector/no-image-available-picture-coming-600nw-2057829641.jpg"}`} alt='drug' />
+              <img className='border-2 rounded-xl' src={`${drugImage ? drugImage : "https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg"}`} alt='drug' />
             </div>
             <div className='col-span-7'>
               <div className='w-4/5'>
@@ -198,7 +198,7 @@ const CreateDrug = () => {
                 <Link to="/druglist">
                   <button
                     type="button"
-                    className="text-red-600 mb-8 hover:scale-x-125 transition-transform duration-300 bg-white hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 hover:text-white focus:z-10"
+                    className="text-red-600 mb-8 hover:scale-x-125 transition-transform duration-300 bg-white focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-500 text-sm font-medium px-5 py-2.5 h focus:z-10"
                   >
                     <u>
                       <b>Trở lại</b>

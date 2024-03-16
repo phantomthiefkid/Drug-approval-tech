@@ -23,7 +23,7 @@ const ProductDetail = () => {
         <hr className='border-gray-300'></hr>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mx-auto'>
           <div className='w-full flex justify-center border-gray-200'>
-            <img className='max-w-lg rounded-md border border-gray-300 shadow-lg hover:shadow-xl transition duration-300' src={productApi.image || 'https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG'} alt='Product Image' />
+            <img className='max-w-lg rounded-md border border-gray-300 shadow-lg hover:shadow-xl transition duration-300' src={productApi.image || 'https://img.freepik.com/free-vector/isometric-gastroenterology-composition-with-view-medication-with-tubes-pills-illustration_1284-63536.jpg'} alt='Product Image' />
           </div>
           <div className='max-w-2xl'>
             <div className='flex justify-between'>
@@ -108,7 +108,6 @@ const ProductDetail = () => {
                   </tbody>
                 </table>
               </div>
-
             </div>
             <div className='mt-4'>
               <h2 className='font-semibold mb-2 text-xl'>Chống chỉ định:</h2>

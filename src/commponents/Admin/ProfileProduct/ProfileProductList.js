@@ -6,21 +6,17 @@ import { fetchProfileProducts } from '../../../redux/profileProduct/profileProdu
 
 const ProfileProductList = () => {
 
-  const profilesAPI = useSelector((profile) => profile.profileProduct.data)
-  const totalPages = useSelector((state) => state.profileProduct.data.totalPages);
-  // const [totalPages, setTotalPages] = useState(0);
+  const profilesAPI = useSelector((profile) => profile.profileProduct.data.content)
+  const totalPagesAPI = useSelector((page) => page.profileProduct.data.totalPages);
   const [currentPage, setCurrentPage] = useState(0);
   const [apiData, setApiData] = useState([]);
   const [profileList, setProfileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  console.log(totalPages)
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  if (totalPages) {
-    console.log(totalPages)
-  }
+
   useEffect(() => {
     if (Array.isArray(profilesAPI)) {
       setProfileList([...profilesAPI])
@@ -34,43 +30,22 @@ const ProfileProductList = () => {
       search: searchTerm
 
     })).then((response) => {
-      if (response.payload.length === 0) {
+      if (response.payload.content.length === 0) {
         setCurrentPage(0);
       } else {
-        setApiData(response.payload);
-        console.log("Hello: ", response.payload)
-
+        setApiData(response.payload.content);
       }
     })
       .catch((error) => {
-        // Xử lý lỗi nếu có
         console.error('Error fetching users:', error);
       });
   }, [dispatch, currentPage, searchTerm]);
-
-  // console.log("pppp", totalPages)
 
   useEffect(() => {
     setProfileList([...apiData]);
   }, [apiData])
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
-  // const handleIncreasePage = () => {
-  //   if (currentPage < totalPages - 1) {
-  //     setCurrentPage((prev) => prev + 1);
-  //   }
-  // };
-
-  // const handleDecreasePage = () => {
-  //   if (currentPage > 0) {
-  //     setCurrentPage((prev) => prev - 1);
-  //   }
-  // };
-
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
 
   const handleIncreasePage = () => {
     setCurrentPage((prev) => prev + 1);
@@ -81,9 +56,7 @@ const ProfileProductList = () => {
   };
 
   const handlePageChange = (page) => {
-
     setCurrentPage(page);
-
   };
 
   useEffect(() => {
@@ -169,13 +142,13 @@ const ProfileProductList = () => {
                 Previous
               </button>
             </li>
-            {totalPages ? [...Array(totalPages).keys()].map((page) => (
+            {totalPagesAPI ? [...Array(totalPagesAPI).keys()].map((page) => (
               <li className={`page-item ${currentPage === page ? 'active' : ''}`}
                 key={page}>
                 <button onClick={() => handlePageChange(page)} class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}>{page + 1}</button>
               </li>
             )) : <div></div>}
-            <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
+            <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
               <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
 
                 Next
