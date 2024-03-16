@@ -22,6 +22,7 @@ import CreateProfileProduct from './commponents/Admin/ProfileProduct/CreateProfi
 import ProfileProductList from './commponents/Admin/ProfileProduct/ProfileProductList'
 import ProfileDetail from './commponents/Admin/ProfileProduct/ProfileDetail';
 import PasswordChange from './commponents/Account/PasswordChange';
+import UploadTest from './commponents/uploadTest';
 function App() {
   return (
     <BrowserRouter>
@@ -47,6 +48,7 @@ function App() {
         <Route path='/profilelist' element={<ProfileProductList></ProfileProductList>}></Route>
         <Route path='/profiledetail/:id' element={<ProfileDetail></ProfileDetail>}></Route>
         <Route path='/passwordchange/:email' element={<PasswordChange></PasswordChange>}></Route>
+        <Route path='/upload' element={<UploadTest></UploadTest>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

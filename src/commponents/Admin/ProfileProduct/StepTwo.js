@@ -13,13 +13,13 @@ const product_initial = {
     route: '',
     prescriptionName: '',
     drugIngredients: [],
-    categoryId: -1,
+    categoryId: 0,
     manufactor: {
         name: '',
         company: '',
         score: '',
         source: '',
-        countryId: -1
+        countryId: 0
     },
     authorities: [],
     pharmacogenomic: {
@@ -47,7 +47,7 @@ const product_initial_err = {
     route: '',
     prescriptionName: '',
     drugIngredients: [],
-    categoryId: -1,
+    categoryId: 1,
     manufactor: {
         name: '',
         company: '',
@@ -96,7 +96,7 @@ const initial_data = {
 
 const StepTwo = ({ productTitle }) => {
     const [products, setProducts] = useState([product_initial])
-    
+    const [errorValidation, setErrorValidation] = useState([])
     const [stepTwo, setStepTwo] = useState(initial_data)
     const [drugIngredients, setDrugIngredients] = useState([drugIngredient_initial])
     const [authorities, setAuthorities] = useState([authorrities_initial])
@@ -294,54 +294,258 @@ const StepTwo = ({ productTitle }) => {
         dataUpdate.status = 'PENDING TO APPROVE'
         if (validateData(dataUpdate)) {
             const response = dispatch(createProfileProductStepTwo(dataUpdate));
-
+            toast.success('Lưu thành công!', { autoClose: 200 })
             if (response) {
                 toast.success('Lưu thành công!', { autoClose: 200 });
-                console.log("Lưu nháp thành công!!!")
+                setTimeout(() => {
+                    navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+                }, 1000);
             } else {
                 console.log('Dữ liệu không tồn tại')
             }
 
-            setTimeout(() => {
-                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
-            }, 1000);
+
+
+        } else {
+            toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
         }
+        console.log(validateData(dataUpdate))
 
     }
-    //-------- Validation
     const validateData = (dataUpdate) => {
-        // Kiểm tra xem có sản phẩm nào trong danh sách không
+        const errors = JSON.parse(JSON.stringify(dataUpdate.productList));// Mảng lưu trữ thông tin lỗi
+        let isValid = true;
+        console.log("Before: ", dataUpdate)
         if (dataUpdate.productList.length === 0) {
-            toast.error('Danh sách sản phẩm không được trống!', { autoClose: 300 });
-            return false;
-        } 
-
-        // Kiểm tra từng sản phẩm
-        for (const product of dataUpdate.productList) {
-            // Kiểm tra các trường dữ liệu cần kiểm tra
-            if (!product.labeller.trim() || !product.name.trim()) {
-                toast.error('Tên nhãn hiệu và tên sản phẩm không được trống!', { autoClose: 300 });
-                return false;
-            }
-            if (/[!@#$%^&*(),.?":{}|<>]/.test(product.labeller) || /[!@#$%^&*(),.?":{}|<>]/.test(product.name)) {
-                toast.error('Tên nhãn hiệu và tên sản phẩm không được chứa ký tự đặc biệt!', { autoClose: 200 });
-                return false;
-            }
-            if (!product.route.trim() || !product.prescriptionName.trim()) {
-                toast.error('Tên nhãn hiệu và tên sản phẩm không được trống!', { autoClose: 300 });
-                return false;
-            }
-            if (/[!@#$%^&*(),.?":{}|<>]/.test(product.route) || /[!@#$%^&*(),.?":{}|<>]/.test(product.prescriptionName)) {
-                toast.error('Tên nhãn hiệu và tên sản phẩm không được chứa ký tự đặc biệt!', { autoClose: 200 });
-                return false;
-            }
-            // Thêm các kiểm tra khác nếu cần
+            isValid = false;
+            return isValid;
         }
 
-        // Kiểm tra các trường dữ liệu khác ở mức profile, nếu cần
+        dataUpdate.productList.forEach((product, index) => {
+            // Kiểm tra trường labeller
+            if (!product.labeller.trim()) {
+                errors[index].labeller = 'Tên nhãn hiệu không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.labeller)) {
+                errors[index].labeller = 'Tên nhãn hiệu không được có ký tự đặc biệt!!!';
+                isValid = false;
 
-        return true;
+            } else {
+                errors[index].labeller = '';
+            }
+
+            // Kiểm tra trường route
+            if (!product.route.trim()) {
+                errors[index].route = 'Đường dẫn không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.route)) {
+                errors[index].route = 'Đường dẫn không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].route = '';
+
+            }
+
+            // Kiểm tra trường prescriptionName
+            if (!product.prescriptionName.trim()) {
+                errors[index].prescriptionName = 'Tên đơn thuốc không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.prescriptionName)) {
+                errors[index].prescriptionName = 'Tên đơn thuốc không được có ký tự đặc biệt!!!';
+                isValid = false;
+
+            } else {
+                errors[index].prescriptionName = ''; // Gán giá trị rỗng khi không có ký tự đặc biệt
+
+            }
+
+            if (!product.name.trim()) {
+                errors[index].name = 'Tên đơn thuốc không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.name)) {
+                errors[index].name = 'Tên đơn thuốc không được có ký tự đặc biệt!!!';
+                isValid = false;
+
+            } else {
+                errors[index].name = ''; // Gán giá trị rỗng khi không có ký tự đặc biệt
+
+            }
+
+            if (product.categoryId === 0) {
+                isValid = false
+            }
+
+            if (!product.manufactor.name.trim()) {
+                errors[index].manufactor.name = 'Tên nhà sản xuất không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.manufactor.name)) {
+                errors[index].manufactor.name = 'Tên nhà sản xuất không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].manufactor.name = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.manufactor.company.trim()) {
+                errors[index].manufactor.company = 'Tên công ty không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.manufactor.company)) {
+                errors[index].manufactor.company = 'Tên công ty không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].manufactor.company = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.manufactor.score.trim()) {
+                errors[index].manufactor.score = 'Điểm số không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.manufactor.score)) {
+                errors[index].manufactor.score = 'Điểm số không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].manufactor.score = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.manufactor.source.trim()) {
+                errors[index].manufactor.source = 'Nguồn không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.manufactor.source)) {
+                errors[index].manufactor.source = 'Nguồn không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].manufactor.source = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (product.manufactor.countryId === 0) {
+                isValid = false
+            } else if (product.manufactor.countryId > 0) {
+
+            }
+
+            if (!product.contraindication.relationship.trim()) {
+                errors[index].contraindication.relationship = 'Mối liên hệ không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.contraindication.relationship)) {
+                errors[index].contraindication.relationship = 'Mối liên hệ không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].contraindication.relationship = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.contraindication.value.trim()) {
+                errors[index].contraindication.value = 'Giá không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.contraindication.value)) {
+                errors[index].contraindication.value = 'Giá trị không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].contraindication.value = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.productAllergyDetail.detail.trim()) {
+                errors[index].productAllergyDetail.detail = 'Chi tiết không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.productAllergyDetail.detail)) {
+                errors[index].productAllergyDetail.detail = 'Chi tiết không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].productAllergyDetail.detail = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (!product.productAllergyDetail.summary.trim()) {
+                errors[index].productAllergyDetail.summary = 'Mối liên hệ không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.productAllergyDetail.summary)) {
+                errors[index].productAllergyDetail.summary = 'Mối liên hệ không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].productAllergyDetail.summary = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            // Kiểm tra trường absorption
+            if (!product.pharmacogenomic.asorption || !product.pharmacogenomic.asorption.trim()) {
+                errors[index].pharmacogenomic.asorption = 'Thông tin về asorption không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.pharmacogenomic.asorption)) {
+                errors[index].pharmacogenomic.asorption = 'Thông tin về asorption không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].pharmacogenomic.asorption = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            // Kiểm tra trường indication
+            if (!product.pharmacogenomic.indication || !product.pharmacogenomic.indication.trim()) {
+                errors[index].pharmacogenomic.indication = 'Thông tin về indication không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.pharmacogenomic.indication)) {
+                errors[index].pharmacogenomic.indication = 'Thông tin về indication không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].pharmacogenomic.indication = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            // Kiểm tra trường mechanismOfAction
+            if (!product.pharmacogenomic.mechanismOfAction || !product.pharmacogenomic.mechanismOfAction.trim()) {
+                errors[index].pharmacogenomic.mechanismOfAction = 'Thông tin về mechanismOfAction không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.pharmacogenomic.mechanismOfAction)) {
+                errors[index].pharmacogenomic.mechanismOfAction = 'Thông tin về mechanismOfAction không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].pharmacogenomic.mechanismOfAction = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            // Kiểm tra trường pharmacodynamic
+            if (!product.pharmacogenomic.pharmacodynamic || !product.pharmacogenomic.pharmacodynamic.trim()) {
+                errors[index].pharmacogenomic.pharmacodynamic = 'Thông tin về pharmacodynamic không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.pharmacogenomic.pharmacodynamic)) {
+                errors[index].pharmacogenomic.pharmacodynamic = 'Thông tin về pharmacodynamic không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            // Kiểm tra trường toxicity
+            if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
+                errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được bỏ trống!!!';
+                isValid = false;
+            } else if (/[!@#$%^&*(),.?":{}|<>]/.test(product.pharmacogenomic.toxicity)) {
+                errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
+                isValid = false;
+            } else {
+                errors[index].pharmacogenomic.toxicity = ''; // Gán giá trị rỗng khi không có lỗi
+                ; // Đánh dấu là hợp lệ
+            }
+
+            if (product.indexIngredient?.length === 0) {
+                isValid = false
+                toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
+            }
+
+
+        });
+        if (!isValid) {
+            setErrorValidation([...errors])
+        }
+
+        console.log("Check: ", errors);
+        return isValid;
     };
+
+
+
     return (
         <div className='w-5/6 mb-5 mt-2 mx-auto h-auto min-h-96 border border-gray-200 shadow-xl'>
             <ToastContainer></ToastContainer>
@@ -378,12 +582,12 @@ const StepTwo = ({ productTitle }) => {
                                     <div className='flex gap-4'>
                                         <div class="w-1/2">
                                             <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Tên thuốc</label>
-                                            <input name='name' onChange={(e) => handleProductChange(index, 'name', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-
+                                            <input name='name' onChange={(e) => handleProductChange(index, 'name', e.target.value)} type="text" class={`bg-gray-50 border ${errorValidation[index]?.name ? "border-red-400" : 'border-gray-200'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
+                                            {/* { errorValidation[index] && errorValidation[index].name && (<span className='text-red-500'>{errorValidation[index].name}</span>)} */}
                                         </div>
                                         <div className='w-1/2'>
                                             <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Loại thuốc</label>
-                                            <select name='categoryId' onChange={(e) => handleProductChange(index, 'categoryId', e.target.value)} className='block w-full border border-gray-300 rounded-lg shadow-sm p-2 bg-gray-50' required>
+                                            <select name='categoryId' onChange={(e) => handleProductChange(index, 'categoryId', e.target.value)} className={`block w-full border ${errorValidation[index]?.categoryId === 0 ? "border-red-400" : "border-gray-300"} rounded-lg shadow-sm p-2 bg-gray-50`} required>
                                                 <option value=''>Chọn loại thuốc</option>
                                                 {categoriesAPI && categoriesAPI.map((cate) => (<option value={cate.id}>{cate.title}</option>))}
                                             </select>
@@ -392,16 +596,16 @@ const StepTwo = ({ productTitle }) => {
                                     </div>
                                     <div class="mb-2 w-full">
                                         <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Nhãn</label>
-                                        <input name='labeller' onChange={(e) => handleProductChange(index, 'labeller', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='labeller' onChange={(e) => handleProductChange(index, 'labeller', e.target.value)} type="text" class={`bg-gray-50 border ${errorValidation[index]?.labeller ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                     <div class="mb-2 w-full">
                                         <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Đường dẫn</label>
-                                        <input name='route' onChange={(e) => handleProductChange(index, 'route', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='route' onChange={(e) => handleProductChange(index, 'route', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.route ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
                                     </div>
                                     <div class="mb-2 w-full">
                                         <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">Tên đơn thuốc</label>
-                                        <input name='prescriptionName' onChange={(e) => handleProductChange(index, 'prescriptionName', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='prescriptionName' onChange={(e) => handleProductChange(index, 'prescriptionName', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.prescriptionName ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
                                     </div>
                                 </div>
                             </div>
@@ -466,13 +670,13 @@ const StepTwo = ({ productTitle }) => {
                                 <div className="flex gap-4">
                                     <div className='mb-3 w-2/5'>
                                         <label class="block mb-2 text-sm font-medium text-gray-900">Tên nhà sản xuất</label>
-                                        <input name='manufactor.name' onChange={(e) => handleProductChange(index, 'manufactor.name', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                                        <input name='manufactor.name' onChange={(e) => handleProductChange(index, 'manufactor.name', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.manufactor.name ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2`} />
 
                                     </div>
 
                                     <div class="mb-3 w-2/5">
                                         <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                                        <select onChange={(e) => handleProductChange(index, 'manufactor.countryId', e.target.value)} name='countryId' class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
+                                        <select onChange={(e) => handleProductChange(index, 'manufactor.countryId', e.target.value)} name='countryId' class={`block w-full mt-1 border ${errorValidation[index]?.manufactor.countryId === 0 ? "border-red-400" : "border-gray-300"} rounded-md shadow-sm p-2.5 bg-gray-50 text-sm`} required>
                                             <option value="">Chọn quốc gia</option>
                                             {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
                                         </select>
@@ -480,19 +684,19 @@ const StepTwo = ({ productTitle }) => {
                                     </div>
                                     <div className='mb-3 w-1/5'>
                                         <label class="block mb-2 text-sm font-medium text-gray-900">Điểm số</label>
-                                        <input name='manufactor.score' onChange={(e) => handleProductChange(index, 'manufactor.score', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                                        <input name='manufactor.score' onChange={(e) => handleProductChange(index, 'manufactor.score', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.manufactor.score ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2`} />
 
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
                                     <div className='mb-3 w-1/2'>
                                         <label class="block mb-2 text-sm font-medium text-gray-900">Nguồn</label>
-                                        <input name='manufactor.source' onChange={(e) => handleProductChange(index, 'manufactor.source', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                                        <input name='manufactor.source' onChange={(e) => handleProductChange(index, 'manufactor.source', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.manufactor.source ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2`} />
 
                                     </div>
                                     <div className='mb-3 w-1/2'>
                                         <label class="block mb-2 text-sm font-medium text-gray-900">Công ty</label>
-                                        <input name='manufactor.company' onChange={(e) => handleProductChange(index, 'manufactor.company', e.target.value)} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                                        <input name='manufactor.company' onChange={(e) => handleProductChange(index, 'manufactor.company', e.target.value)} type="text" class={`bg-gray-50 border  ${errorValidation[index]?.manufactor.company ? "border-red-400" : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2`} />
 
                                     </div>
                                 </div>
@@ -505,27 +709,27 @@ const StepTwo = ({ productTitle }) => {
                                 <div className='flex gap-4 w-full'>
                                     <div className='w-1/3'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Độc tính</label>
-                                        <input name='toxicity' onChange={(e) => handleProductChange(index, 'pharmacogenomic.toxicity', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='toxicity' onChange={(e) => handleProductChange(index, 'pharmacogenomic.toxicity', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.pharmacogenomic?.toxicity ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                     <div className='w-1/3'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Hấp thụ</label>
-                                        <input name='asorption' onChange={(e) => handleProductChange(index, 'pharmacogenomic.asorption', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='asorption' onChange={(e) => handleProductChange(index, 'pharmacogenomic.asorption', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.pharmacogenomic?.asorption ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                     <div className='w-1/3'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Dược lực học</label>
-                                        <input name='pharmacodynamic' onChange={(e) => handleProductChange(index, 'pharmacogenomic.pharmacodynamic', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='pharmacodynamic' onChange={(e) => handleProductChange(index, 'pharmacogenomic.pharmacodynamic', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.pharmacogenomic?.pharmacodynamic ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
                                     </div>
                                 </div>
                                 <div className='flex w-full gap-4'>
                                     <div className='w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Cơ chế hoạt động</label>
-                                        <textarea rows={3} name='mechanismOfAction' onChange={(e) => handleProductChange(index, 'pharmacogenomic.mechanismOfAction', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <textarea rows={3} name='mechanismOfAction' onChange={(e) => handleProductChange(index, 'pharmacogenomic.mechanismOfAction', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.pharmacogenomic?.mechanismOfAction ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
                                     </div>
                                     <div className='mb-3 w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Triệu chứng</label>
-                                        <textarea rows={3} name='indication' onChange={(e) => handleProductChange(index, 'pharmacogenomic.indication', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <textarea rows={3} name='indication' onChange={(e) => handleProductChange(index, 'pharmacogenomic.indication', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.pharmacogenomic?.indication ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                 </div>
@@ -535,12 +739,12 @@ const StepTwo = ({ productTitle }) => {
                                 <div className='flex gap-4'>
                                     <div className='mb-3 w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Chi tiết</label>
-                                        <textarea rows={2} name='productAllergyDetail.detail' onChange={(e) => handleProductChange(index, 'productAllergyDetail.detail', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <textarea rows={2} name='productAllergyDetail.detail' onChange={(e) => handleProductChange(index, 'productAllergyDetail.detail', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.productAllergyDetail?.detail ? 'border-red-500' : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                     <div className='mb-3 w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Tóm tắt về dị ứng thuốc</label>
-                                        <textarea rows={2} name='productAllergyDetail.summary' onChange={(e) => handleProductChange(index, 'productAllergyDetail.summary', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <textarea rows={2} name='productAllergyDetail.summary' onChange={(e) => handleProductChange(index, 'productAllergyDetail.summary', e.target.value)} type="text" className={`bg-gray-50 border  ${errorValidation[index]?.productAllergyDetail?.summary ? 'border-red-500' : "border-gray-300"}  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                 </div>
@@ -550,12 +754,12 @@ const StepTwo = ({ productTitle }) => {
                                 <div className='flex gap-4'>
                                     <div className='mb-3 w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Mối liên hệ</label>
-                                        <input name='contraindication.relationship' onChange={(e) => handleProductChange(index, 'contraindication.relationship', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='contraindication.relationship' onChange={(e) => handleProductChange(index, 'contraindication.relationship', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.contraindication?.relationship ? 'border-red-500' : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                     <div className='mb-3 w-1/2'>
                                         <label className="block mb-2 text-sm font-medium text-gray-900">Giá trị</label>
-                                        <input name='contraindication.value' onChange={(e) => handleProductChange(index, 'contraindication.value', e.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input name='contraindication.value' onChange={(e) => handleProductChange(index, 'contraindication.value', e.target.value)} type="text" className={`bg-gray-50 border ${errorValidation[index]?.contraindication?.value ? 'border-red-500' : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`} />
 
                                     </div>
                                 </div>
