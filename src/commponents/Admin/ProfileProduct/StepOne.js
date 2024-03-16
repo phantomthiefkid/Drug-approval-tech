@@ -4,6 +4,7 @@ import { createProfileProductStepOne, updateProfileProductStepOneupdate } from '
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { uploadFile } from '../../../redux/uploadFile/uploadFile';
 const StepOne = ({ onNext }) => {
     const [title, setTitle] = useState();
     const [error, setError] = useState(false)
@@ -11,7 +12,7 @@ const StepOne = ({ onNext }) => {
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
     const handleSubmitStepOnePending = async () => {
-        const stepOne = { title: title, status: 'PENDING' };
+        const stepOne = { title: title, status: 'PENDING', imgURL: '' };
         if (title) {
             const response = await dispatch(createProfileProductStepOne(stepOne));
             if (response) {
@@ -27,23 +28,55 @@ const StepOne = ({ onNext }) => {
 
     };
 
+    const convertFileUpload = async (file) => {
+
+
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await dispatch(uploadFile(formData))
+        return response.payload
+
+
+
+    }
+
+
     const handleImageChange = (event) => {
         const file = event.target.files[0]
         setImage(file)
     };
 
     const handleSaveAsDraft = async () => {
-        const stepOne = { title: title, status: 'DRAFT' };
+        const stepOne = { title: title, status: 'DRAFT', imageURL: '' };
         if (title) {
-            const response = await dispatch(createProfileProductStepOne(stepOne))
+            if (image) {
+                const url = await convertFileUpload(image)
+                console.log("Url: ", url)
 
-            if (response) {
-                toast.success('Lưu thành công!', { autoClose: 200 });
-                setTimeout(() => {
-                    navigate('/profilelist');
-                }, 1000);
+                if (url) {
+                    stepOne.imageURL = url
+                    const response = await dispatch(createProfileProductStepOne(stepOne))
+
+                    if (response) {
+                        toast.success('Lưu thành công!', { autoClose: 200 });
+                        setTimeout(() => {
+                            navigate('/profilelist');
+                        }, 1000);
+                    } else {
+                        toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
+                    }
+                }
             } else {
-                toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
+                const response = await dispatch(createProfileProductStepOne(stepOne))
+
+                if (response) {
+                    toast.success('Lưu thành công!', { autoClose: 200 });
+                    setTimeout(() => {
+                        navigate('/profilelist');
+                    }, 1000);
+                } else {
+                    toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
+                }
             }
         } else {
             setError(true)
@@ -65,9 +98,9 @@ const StepOne = ({ onNext }) => {
                 </h1>
             </div>
             <div class="relative mx-auto">
-                <input  onChange={handleImageChange} type="file" accept="image/*" class="hidden" id="image-upload" />
+                <input onChange={handleImageChange} type="file" accept="image/*" class="hidden" id="image-upload" />
                 <label for="image-upload" className="cursor-pointer mb-2 block mx-auto">
-                <img src={image ? URL.createObjectURL(image) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiaH4XnlaUWReFVAIftt0qvvd_Y_ieJWREjOCVsPUTxYW5-DI_8oGctr8rvffv4zdxSyE&usqp=CAU"} alt="Upload Image" className="object-cover mx-auto rounded-full w-52 border border-gray-300 hover:border-blue-500" />
+                    <img src={image ? URL.createObjectURL(image) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiaH4XnlaUWReFVAIftt0qvvd_Y_ieJWREjOCVsPUTxYW5-DI_8oGctr8rvffv4zdxSyE&usqp=CAU"} alt="Upload Image" className="object-cover mx-auto rounded-lg w-64 border border-gray-300 hover:border-blue-500" />
                 </label>
                 <p class="text-sm text-gray-500 text-center">Click để tải lên hình ảnh</p>
             </div>

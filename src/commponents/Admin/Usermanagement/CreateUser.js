@@ -151,9 +151,8 @@ const CreateUser = () => {
               <select id='role' name='roleID' value={users.roleID} onChange={getUserData} onBlur={() => handleValidation('roleID')}
                 className={`drop-shadow-md w-96 h-8 mt-3 mb-3 form-select ${errors.role ? 'is-invalid' : ''}`}>
                 <option>Select one</option>
-                <option value="1">Super Admin</option>
-                <option value="2">Admin</option>
-                <option value="3">User</option>
+                <option value="1">Admin</option>
+                <option value="2">Secretary</option>
               </select>
               {errors.roleID && <div className="invalid-feedback text-red-500">{errors.roleID}</div>}
             </li>

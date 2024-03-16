@@ -10,7 +10,6 @@ const URL_CREATE_USER = "https://fams-management.tech/auth/register";
 
 export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search }) => {
   try {
-    console.log(pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing token');
