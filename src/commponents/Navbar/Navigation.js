@@ -15,10 +15,26 @@ const Navigation = () => {
   const handleOnClose = () => setShowModalLogin(false);
   const data = getUserNameFromToken();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenProfile, setIsOpenProfile] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate()
+  const dispatch = useDispatch();
   const roleName = getUserDataFromToken()
+  const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
   const profileView = useSelector((state) => state.viewProfile.data);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (email) {
+          await dispatch(viewProfile(email));
+        }
+      } catch (error) {
+        console.error('Error fetching profile', error);
+      }
+    }
+    fetchData();
+  }, [dispatch, email]);
 
   const handleScroll = () => {
     if (window.scrollY > 50) {
@@ -35,6 +51,10 @@ const Navigation = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  const toggleDropdownProfile = () => {
+    setIsOpenProfile(!isOpenProfile)
+  }
 
   const toggleCloseDropdown = () => {
     setIsOpen(false)
@@ -71,7 +91,7 @@ const Navigation = () => {
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link> : <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>}
             </div>
-            {(roleName === 'ADMIN') && (
+            {(roleName === 'ADMIN' || roleName === 'SECRETARY') && (
               <div className='text-lg flex items-center'>
                 <Link to={'/druglist'}>
                   <Boxes className='mr-2' size={30}></Boxes>
@@ -79,13 +99,15 @@ const Navigation = () => {
                 </Link>
               </div>
             )}
-            {roleName && roleName === 'ADMIN' && (
+            {(roleName === 'SECRETARY' || roleName === 'ADMIN') && (
               <div onClick={toggleDropdown} className='text-lg w-full flex items-center hover:text-yellow-300'><Sliders className='mr-2' size={20} /><button><p className='w-20'>Quản lí</p></button>
                 {isOpen && (
                   <div className="absolute w-44 top-14 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-2 w-full">
-                      <Link to={`/userlist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí người dùng</button></Link>
-
+                      {roleName && roleName === 'ADMIN' && (
+                        <Link to={`/userlist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí người dùng</button></Link>
+                      )}
+                      <Link to={`/createprofileproduct`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí đơn hàng</button></Link>                   
                       <Link to={`profilelist`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900'>Quản lí hồ sơ thuốc</button></Link>
                     </div>
                   </div>
@@ -111,12 +133,20 @@ const Navigation = () => {
             {token ? (
               <div className='flex items-center'>
                 <div className='items-center text-wrap hover:text-yellow-300'>
-                  <Link to={`/viewprofile`}>{data.fullName} </Link>
+                  {data.fullName}
                 </div>
                 <div>
-                  <Link to={`/viewprofile`} onClick={() => window.scrollTo(0, 0)}>
-                    <img className='rounded-full h-14 ml-2' src={data.avatar || 'https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg'} alt={data.fullName} />
-                  </Link>
+                  <div onClick={toggleDropdownProfile} className='relative'>
+                    <img className='rounded-full h-14 ml-2' src={data.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'} alt={data.fullName} />
+                    {isOpenProfile && (
+                      <div className="absolute w-32 top-14 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-2 w-full">
+                          <Link to={`/passwordchange/${email}`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900' onClick={() => window.scrollTo(0, 0)}>Đổi mật khẩu</button></Link>
+                          <Link to={`/viewprofile`}><button className='block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900' onClick={() => window.scrollTo(0, 0)}>Hồ sơ</button></Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className='cursor-pointer hover:text-blue-500'><BoxArrowRight size={25} onClick={handleLogout}></BoxArrowRight></div>
               </div>

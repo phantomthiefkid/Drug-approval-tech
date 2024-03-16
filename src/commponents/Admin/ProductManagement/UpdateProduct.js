@@ -11,7 +11,7 @@ import { fetchProductDetail } from '../../../redux/productManagement/ProductSlic
 const UpdateProduct = () => {
   const countriesAPI = useSelector((state) => state.productData.countries);
   const categoriesAPI = useSelector((state) => state.productData.categories);
-  const drugsAPI = useSelector((drug) => drug.drugData.data)
+  const drugsAPI = useSelector((drug) => drug.drugData.data.content)
   const { id } = useParams();
   const productApi = useSelector((product) => product.product.detail)
 

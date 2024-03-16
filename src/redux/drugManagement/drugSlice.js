@@ -25,7 +25,7 @@ export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSi
       }
     };
     const response = await axios.get(URL_DRUGLIST, config);
-    return response.data.content;
+    return response.data;
   } catch (error) {
     throw error;
   }

@@ -42,7 +42,7 @@ const ViewProfile = () => {
           <div className='text-center'>
             <div className='mb-5 mt-3 ml-14'>
               <img
-                src={profileView.avatar}
+                src={profileView.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'}
                 alt='Avatar Preview'
                 className='logo object-cover rounded-full h-40 w-40'
               />
