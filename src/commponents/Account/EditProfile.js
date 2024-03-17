@@ -124,28 +124,24 @@ const EditProfile = () => {
           ...profileUpdate,
           file: selectedFile,
         };
-        const resultUpload = await dispatch(uploadImage(dataToUpload));
+        await dispatch(uploadImage(dataToUpload));
 
-        if (uploadImage.fulfilled.match(resultUpload)) {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Cập nhật hồ sơ thành công!',
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            Navigate('/viewprofile');
-          });
-        } else {
-          throw new Error('Failed to upload image');
-        }
+        Swal.fire({
+          title: 'Success!',
+          text: 'Cập nhật hồ sơ thành công!',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          Navigate('/viewprofile');
+        });
       } else {
         throw new Error('Failed to update profile');
       }
     } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: `Failed to update profile: ${error.message || 'Unknown error'}`,
+        text: ` ${error.message || 'Unknown error'}`,
         icon: 'error',
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'OK',
@@ -168,7 +164,7 @@ const EditProfile = () => {
           <div className='text-center'>
             <div className='mb-3 mt-3 ml-14'>
               <img
-                src={avatar || profileUpdate.avatar}
+                src={avatar || profileUpdate.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'}
                 alt='Avatar Preview'
 
                 className='logo object-cover rounded-full h-40 w-40'

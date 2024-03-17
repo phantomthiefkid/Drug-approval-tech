@@ -9,6 +9,8 @@ const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-p
 
 const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/admin/profile-products/step-one"
 const URL_ADMIN_PRODUCTS = `https://fams-management.tech/admin/products`
+const URL_PROCESS_PROFILE = `https://fams-management.tech/admin/profile-products/process`
+const URL_SUBMISSION = `https://fams-management.tech/admin/profile-products/submission`
 
 export const createProfileProductStepOne = createAsyncThunk('createProfileProductStepOne', async (stepOne) => {
   try {
@@ -89,7 +91,7 @@ export const fetchProfileProducts = createAsyncThunk('fetchProfileProducts', asy
       }
     };
     const response = await axios.get(URL_PROFILE_PRODUCT_LIST, config);
-    return response.data.content;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -139,6 +141,52 @@ export const fetchProductsWithAdmin = createAsyncThunk('fetchProductsWithAdmin',
   }
 })
 
+export const processProfile = createAsyncThunk('processProfile', async ({ id }) => {
+  console.log(id);
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing token');
+    }
+    const params = new URLSearchParams();
+    params.append('profileId', id);
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+    };
+
+    const response = await axios.post(`${URL_PROCESS_PROFILE}?${params.toString()}`, null, config);
+    console.log(params.toString())
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const submissionStatus = createAsyncThunk('submissionStatus', async ({ id }) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing token');
+    }
+    const params = new URLSearchParams();
+    params.append('profileId', id);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }
+    const response = await axios.post(`URL_SUBMISSION ?${params.toString()}`, null, config)
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+})
+
 export const ProfileProduct = createSlice({
   name: 'profileProduct',
   initialState: {
@@ -149,7 +197,8 @@ export const ProfileProduct = createSlice({
     totalPages: 0,
     profile: {},
     detail: {},
-    product: {}
+    process: {},
+    submission: {}
   },
   extraReducers: (builder) => {
     builder.addCase(createProfileProductStepOne.fulfilled, (state, action) => {
@@ -222,7 +271,32 @@ export const ProfileProduct = createSlice({
       .addCase(fetchProductsWithAdmin.pending, (state) => {
         state.isLoading = true;
       })
+
+    builder.addCase(processProfile.fulfilled, (state, action) => {
+      state.process = action.payload;
+      state.isLoading = false;
+      state.isError = false;
+    })
+      .addCase(processProfile.rejected, (state) => {
+        state.isError = true;
+      })
+      .addCase(processProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+
+    builder.addCase(submissionStatus.fulfilled, (state, action) => {
+      state.submission = action.payload;
+      state.isLoading = false;
+      state.isError = false;
+    })
+      .addCase(submissionStatus.rejected, (state) => {
+        state.isError = true;
+      })
+      .addCase(submissionStatus.pending, (state) => {
+        state.isLoading = true;
+      })
   }
+
 })
 
 export default ProfileProduct.reducer

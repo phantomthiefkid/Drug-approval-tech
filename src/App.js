@@ -23,7 +23,7 @@ import ProfileProductList from './commponents/Admin/ProfileProduct/ProfileProduc
 import ProfileDetail from './commponents/Admin/ProfileProduct/ProfileDetail';
 import PasswordChange from './commponents/Account/PasswordChange';
 import UploadTest from './commponents/uploadTest';
-import SelectEmailComponent from './shared/SelectEmailComponent';
+
 
 function App() {
   return (
@@ -51,7 +51,6 @@ function App() {
         <Route path='/profiledetail/:id' element={<ProfileDetail></ProfileDetail>}></Route>
         <Route path='/passwordchange/:email' element={<PasswordChange></PasswordChange>}></Route>
         <Route path='/upload' element={<UploadTest></UploadTest>}></Route>
-        <Route path='/test' element={<SelectEmailComponent></SelectEmailComponent>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

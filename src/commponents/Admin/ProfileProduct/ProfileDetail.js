@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { PencilSquare, PlusCircle, XCircle, ArrowUp, ArrowDown } from 'react-bootstrap-icons'
+import { PencilSquare, ArrowUp, ArrowDown, Command } from 'react-bootstrap-icons'
+import Swal from 'sweetalert2';
 
-import { fetchProfileProductsDetail, fetchProductsWithAdmin } from '../../../redux/profileProduct/profileProductSlice'
+import { fetchProfileProductsDetail, processProfile, submissionStatus } from '../../../redux/profileProduct/profileProductSlice'
 
 const ProfileDetail = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = localStorage.getItem('token')
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
   console.log("Check: ", profileApi)
   const [expandedProducts, setExpandedProducts] = useState({});
+
   useEffect(() => {
     window.scrollTo(0, 0)
     dispatch(fetchProfileProductsDetail({ id }))
-      .then(() => { console.log(profileApi) })
   }, [dispatch, id])
 
   const toggleProductExpansion = (index) => {
@@ -25,6 +25,37 @@ const ProfileDetail = () => {
       [index]: !expandedProducts[index]
     });
   };
+
+  const handleProcess = async (event) => {
+    event.preventDefault();
+    try {
+      if (profileApi?.profileInformation?.profileId) {
+        await dispatch(processProfile({ id: profileApi.profileInformation.profileId }));
+        Swal.fire({
+          title: 'Success!',
+          text: 'Thay đổi trạng thái hồ sơ thành công!',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          dispatch(fetchProfileProductsDetail({ id }))
+        });
+      } else {
+        throw new Error('Profile ID is missing or invalid');
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: `Failed to process profile: ${error.message || 'Unknown error'}`,
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+
+  // console.log('--->', profileApi)
+  // console.log('process', processProfile)
 
   return (
     <>
@@ -36,7 +67,7 @@ const ProfileDetail = () => {
             </Link>
           </div>
           <div className='text-center flex-grow'>
-            <h1 className='text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 mb-6'>Chi tiết hồ sơ thuốc</h1>
+            <h1 className='text-4xl font-bold text-blue-800 mb-6'>Chi tiết hồ sơ thuốc</h1>
           </div>
           {profileApi && profileApi.profileInformation && (profileApi.profileInformation.status === 'DRAFT' || profileApi.profileInformation.status === 'PENDING TO PROCCED') && (
             <div className="flex-shrink-0 ml-auto">
@@ -57,11 +88,16 @@ const ProfileDetail = () => {
               )}
             </div>
             <div className=''>
-              <div className='flex justify-between'>
+              <div className='flex'>
                 {profileApi && profileApi.profileInformation && (
                   <h2 className=' mb-4 text-3xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 hover:to-yellow-500 font-bold'>{profileApi.profileInformation.title}</h2>
                 )}
-
+                {profileApi && profileApi.profileInformation && profileApi.profileInformation.status === 'PENDING TO APPROVE' ? (
+                  <button onClick={handleProcess} className='flex items-center bg-rose-600 border border-gray-200 text-lg p-2 rounded-full text-white ml-28'>
+                    <Command className="mr-2" />
+                    PROCESS PROFILE
+                  </button>
+                ) : null}
               </div>
               {profileApi && profileApi.profileInformation && (
                 <div>
@@ -70,27 +106,26 @@ const ProfileDetail = () => {
                   <p className='mb-5'><span className='font-semibold text-lg'>Updated By:</span> {profileApi.profileInformation.updatedBy}  </p>
                   <p className='mb-5'><span className='font-semibold text-lg'>Updated On:</span> {profileApi.profileInformation.updatedOn}  </p>
                   <div>
-                    {profileApi && profileApi.profileInformation && (
+                    <div>
                       <div className='inline-block mr-5'>
                         {profileApi.profileInformation.status === 'DRAFT' ? (
-                          <p className='status bg-sky-400 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
-                        ) : profileApi.profileInformation.status === 'PENDING TO PROCCED' ? (
-                          <p className='status bg-red-500 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
+                          <p className='status bg-sky-400 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
+                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || 'PENDING TO PROCEED' || 'PENDING TO SYSTEM' ? (
+                          <p className='status bg-red-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : profileApi.profileInformation.status === 'APPROVE' ? (
-                          <p className='status bg-green-500 text-white p-2 rounded text-2xl'>Status: {profileApi.profileInformation.status}  </p>
+                          <p className='status bg-green-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : (
                           <p className=''>{profileApi.profileInformation.status}  </p>
                         )}
                       </div>
-                    )}
-                    <button className='bg-rose-600 border border-gray-200 text-lg inline-block p-2 rounded-full text-white'>PROCESS PROFILE</button>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           </div>
           {profileApi && profileApi.profileDetailList && profileApi.profileDetailList.map((detail, index) => (
-            <div key={index} className='p-14 mt-5 w-5/6 mx-auto '>
+            <div key={index} className='mb-10 mt-10 w-5/6 mx-auto '>
               <button className='w-full' onClick={() => toggleProductExpansion(index)}>
 
                 <div key={index} className=' h-28 relative rounded-xl transition-transform duration-300 hover:scale-100 shadow-xl '>
@@ -105,36 +140,36 @@ const ProfileDetail = () => {
                           <span className='inline-block ml-44'>
                             {detail.status === 'DRAFT' ? (
                               <p className='status bg-sky-400 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'PENDING' ? (
+                            ) : detail.status === 'REJECTED BY SYSTEM' ? (
                               <p className='status bg-red-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'APPROVED' ? (
+                            ) : detail.status === 'APPROVED BY SYSTEM' ? (
                               <p className='status bg-green-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : (
                               <p className='bg-pink-500 text-white p-2 rounded text-xl inline-block'>{detail.status}  </p>
                             )}
                           </span>
-                          {/* {profileApi.profileInformation.status === 'APPROVED' ? ( */}
-                          <div className='col-span-12 flex p-2 mt-4 ml-24'>
-                            <div className="flex items-center mb-4 w-2/3">
-                              <input
-                                type="checkbox"
-                                id="approvedByFDA"
-                                // checked={products[index].approvedByFDA}                                
-                                className="form-checkbox h-5 w-5 text-blue-500"
-                              />
-                              <label htmlFor="approvedByFDA" className="ml-2 text-sm font-bold text-green-500">Approved</label>
+                          {profileApi.profileInformation.status === 'PROCESSING' && detail.status === 'APPROVED BY SYSTEM' ? (
+                            <div className='col-span-12 flex p-2 mt-4 ml-24'>
+                              <div className="flex items-center mb-4 w-2/3">
+                                <input
+                                  type="checkbox"
+                                  id="approvedByFDA"
+                                  // checked={products[index].approvedByFDA}                                
+                                  className="form-checkbox h-5 w-5 text-blue-500"
+                                />
+                                <label htmlFor="approvedByFDA" className="ml-2 text-sm font-bold text-green-500">Approved</label>
+                              </div>
+                              <div className="flex items-center ml-5 mb-4 w-2/3">
+                                <input
+                                  type="checkbox"
+                                  id="approvedByANSM"
+                                  // checked={products[index].approvedByByANSM}
+                                  className="form-checkbox h-5 w-5 text-blue-500"
+                                />
+                                <label htmlFor="approvedByANSM" className="ml-2 text-sm font-bold text-red-500">Rejected</label>
+                              </div>
                             </div>
-                            <div className="flex items-center ml-5 mb-4 w-2/3">
-                              <input
-                                type="checkbox"
-                                id="approvedByANSM"
-                                // checked={products[index].approvedByByANSM}
-                                className="form-checkbox h-5 w-5 text-blue-500"
-                              />
-                              <label htmlFor="approvedByANSM" className="ml-2 text-sm font-bold text-red-500">Rejected</label>
-                            </div>
-                          </div>
-                          {/* ) : null} */}
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -148,7 +183,6 @@ const ProfileDetail = () => {
                     </div>
                   </div>
                 </div>
-
               </button>
 
               <div className={`${!expandedProducts[index] && 'hidden'}`}>
@@ -161,94 +195,81 @@ const ProfileDetail = () => {
                       <div className='flex gap-4'>
                         <div class="w-1/2">
                           <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Tên thuốc</label>
-                          <input name='name' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                          <input disabled name='name' type="text" value={detail.productResponseDTO.name} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         </div>
                         <div className='w-1/2'>
                           <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Loại thuốc</label>
-                          <select name='categoryId' className='block w-full border border-gray-300 rounded-lg shadow-sm p-2 bg-gray-50' required>
-                            <option value=''>Chọn loại thuốc</option>
-                            {/* {categoriesAPI && categoriesAPI.map((cate) => (<option value={cate.id}>{cate.title}</option>))} */}
-                          </select>
-
+                          <input disabled name='name' type="text" value={detail.productResponseDTO.category.title} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         </div>
                       </div>
                       <div class="mb-2 w-full">
                         <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Nhãn</label>
-                        <input name='labeller' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='labeller' value={detail.productResponseDTO.labeller} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div class="mb-2 w-full">
                         <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Đường dẫn</label>
-                        <input name='route' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='route' value={detail.productResponseDTO.route} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div class="mb-2 w-full">
                         <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">Tên đơn thuốc</label>
-                        <input name='prescriptionName' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='prescriptionName' value={detail.productResponseDTO.prescriptionName} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                     </div>
                   </div>
                   <div className='gap-4 p-4'>
-                    <div className="mb-6 border border-gray-300 p-5 w-full">
-                      <div className='flex gap-6'>
-                        <h3 className="text-sm mb-2 font-bold">Thành phần hoạt chất </h3>
-                        <div className="relative px-6" id="customSelect">
-
-                          <form class="max-w-sm mx-auto">
-                            <label for="drugId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                            <select class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
-                              <option selected>Chọn hoạt chất</option>
-
-                            </select>
-                          </form>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-4 mt-4">
-                        <div>
-                          <label className="block mb-2 text-sm font-medium text-gray-900">Nồng độ</label>
-                          <input name='strength' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                        </div>
-                        <div>
-                          <label className="block mb-2 text-sm font-medium text-gray-900">Chỉ số nồng độ</label>
-                          <input name='strengthNumber' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                        </div>
-                        <div>
-                          <label className="block mb-2 text-sm font-medium text-gray-900">Đơn vị nồng độ</label>
-                          <input name='strengthUnit' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block mb-2 text-sm font-medium text-gray-900">Thông tin lâm sàng</label>
-                        <textarea name='clinicallyRelevant' rows={3} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+                    <div className=''>
+                      <p className='font-bold text-2xl mb-6'>Thành phần hoạt chất:</p>
+                      <div className='overflow-x-auto'>
+                        <table className='min-w-full divide-y divide-gray-200 border-none'>
+                          <thead className='bg-gray-300'>
+                            <tr>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>Tên</th>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>Nồng độ</th>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>Số nồng độ</th>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>Đơn vị nồng độ</th>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider '>Thông tin lâm sàng</th>
+                            </tr>
+                          </thead>
+                          <tbody className='bg-white divide-y divide-gray-200'>
+                            {detail.productResponseDTO.drugIngredients.map((drug, drugIndex) => (
+                              <tr key={drugIndex} className='bg-gray-50 hover:bg-slate-100'>
+                                <td className='px-6 py-4 whitespace-nowrap'>{drug.name}</td>
+                                <td className='px-6 py-4 whitespace-nowrap'>{drug.strength}</td>
+                                <td className='px-6 py-4 whitespace-nowrap'>{drug.strengthNumber}</td>
+                                <td className='px-6 py-4 whitespace-nowrap'>{drug.strengthUnit}</td>
+                                <td className='px-6 py-4 whitespace-nowrap'>{drug.clinicallyRelevant}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
+
                   <div class="mb-5 border border-gray-300 p-5">
                     <h3 className='text-lg mb-2 w-full font-bold'>Nhà sản xuất</h3>
                     <div className="flex gap-4">
                       <div className='mb-3 w-2/5'>
                         <label class="block mb-2 text-sm font-medium text-gray-900">Tên nhà sản xuất</label>
-                        <input name='manufactor.name' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                        <input disabled name='manufactor.name' value={detail.productResponseDTO.manufactor.name} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                       </div>
-
                       <div class="mb-3 w-2/5">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                        <select name='countryId' class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
-                          <option value="">Chọn quốc gia</option>
-                        </select>
+                        <input disabled name='name' type="text" value={detail.productResponseDTO.manufactor.countryName} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div className='mb-3 w-1/5'>
                         <label class="block mb-2 text-sm font-medium text-gray-900">Điểm số</label>
-                        <input name='manufactor.score' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                        <input disabled name='manufactor.score' value={detail.productResponseDTO.manufactor.score} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                       </div>
                     </div>
                     <div className="flex gap-4">
                       <div className='mb-3 w-1/2'>
                         <label class="block mb-2 text-sm font-medium text-gray-900">Nguồn</label>
-                        <input name='manufactor.source' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                        <input disabled name='manufactor.source' value={detail.productResponseDTO.manufactor.source} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                       </div>
                       <div className='mb-3 w-1/2'>
                         <label class="block mb-2 text-sm font-medium text-gray-900">Công ty</label>
-                        <input name='manufactor.company' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
+                        <input disabled name='manufactor.company' value={detail.productResponseDTO.manufactor.company} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" />
                       </div>
                     </div>
                   </div>
@@ -257,28 +278,26 @@ const ProfileDetail = () => {
                     <div className='flex gap-4 w-full'>
                       <div className='w-1/3'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Độc tính</label>
-                        <input name='toxicity' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-
+                        <input disabled name='toxicity' value={detail.productResponseDTO.pharmacogenomic.toxicity} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div className='w-1/3'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Hấp thụ</label>
-                        <input name='asorption' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='asorption' value={detail.productResponseDTO.pharmacogenomic.asorption} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
                       </div>
                       <div className='w-1/3'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Dược lực học</label>
-                        <input name='pharmacodynamic' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='pharmacodynamic' value={detail.productResponseDTO.pharmacogenomic.pharmacodynamic} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                     </div>
                     <div className='flex w-full gap-4'>
                       <div className='w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Cơ chế hoạt động</label>
-                        <textarea rows={3} name='mechanismOfAction' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <textarea rows={3} disabled name='mechanismOfAction' value={detail.productResponseDTO.pharmacogenomic.mechanismOfAction} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div className='mb-3 w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Triệu chứng</label>
-                        <textarea rows={3} name='indication' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-
+                        <textarea rows={3} disabled name='indication' value={detail.productResponseDTO.pharmacogenomic.indication} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                     </div>
                   </div>
@@ -287,13 +306,11 @@ const ProfileDetail = () => {
                     <div className='flex gap-4'>
                       <div className='mb-3 w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Chi tiết</label>
-                        <textarea rows={2} name='productAllergyDetail.detail' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-
+                        <textarea rows={2} disabled name='productAllergyDetail.detail' value={detail.productResponseDTO.productAllergyDetail.detail} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                       <div className='mb-3 w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Tóm tắt về dị ứng thuốc</label>
-                        <textarea rows={2} name='productAllergyDetail.summary' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-
+                        <textarea rows={2} disabled name='productAllergyDetail.summary' value={detail.productResponseDTO.productAllergyDetail.summary} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                       </div>
                     </div>
                   </div>
@@ -302,78 +319,72 @@ const ProfileDetail = () => {
                     <div className='flex gap-4'>
                       <div className='mb-3 w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Mối liên hệ</label>
-                        <input name='contraindication.relationship' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='contraindication.relationship' value={detail.productResponseDTO.contraindication.relationship} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
                       </div>
                       <div className='mb-3 w-1/2'>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Giá trị</label>
-                        <input name='contraindication.value' type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <input disabled name='contraindication.value' value={detail.productResponseDTO.contraindication.value} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
                       </div>
                     </div>
                   </div>
                   <div className='col-span-12'>
-                    <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
-                    {/* {authorities.map((authority, indexAut) => ( */}
-                    <div className="mb-4 flex border border-gray-300 p-5">
-                      <div className="mb-2 w-1/2">
-
-                        <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
-                        <input
-                          required
-                          type="text"
-                          // id={`certificateName${index}`}
-                          name="certificateName"
-
-                          className="md:w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                        />
+                    <div className='mt-4'>
+                      <h2 className='font-bold mb-2 text-2xl'>Cơ quan chứng nhận:</h2>
+                      <div className='overflow-x-auto'>
+                        <table className='min-w-full divide-y divide-gray-200'>
+                          <thead className='bg-gray-300'>
+                            <tr>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Tên chứng nhận</th>
+                              <th scope='col' className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Quốc gia</th>
+                            </tr>
+                          </thead>
+                          <tbody className='bg-white divide-y divide-gray-200'>
+                            {detail.productResponseDTO.authorities.map((authority, authorityIndex) => (
+                              <tr key={authorityIndex} className='bg-gray-50 hover:bg-slate-100'>
+                                <td className='px-6 py-4 whitespace-nowrap'>{authority.certificateName}</td>
+                                <td className='px-6 py-4 whitespace-nowrap'>{authority.countryName}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                      <div className="mb-3 w-1/4">
-
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                        <select class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
-                          <option value="">Chọn quốc gia</option>
-
-                        </select>
-                      </div>
-
                     </div>
-                    {/* )} */}
                   </div>
+
                   <div className='col-span-12 flex p-2 mt-4'>
                     <div className='w-1/3'> <h2 className="text-2xl w-full font-bold mb-4">Tổ chức quản lí dược</h2></div>
                     <div className="flex items-center mb-4 w-1/3">
                       <input
                         type="checkbox"
                         id="approvedByFDA"
-                        // checked={products[index].approvedByFDA}
-                        // onChange={(e) => handleProductChange(index, 'approvedByFDA', e.target.checked)}
+                        checked={detail.productResponseDTO.approvedByFDA}
                         className="form-checkbox h-5 w-5 text-blue-500"
-
                       />
                       <label htmlFor="approvedByFDA" className="ml-2 text-sm text-gray-700">Approved by FDA</label>
                     </div>
-
                     <div className="flex items-center mb-4 w-1/3">
                       <input
                         type="checkbox"
                         id="approvedByANSM"
-                        // checked={products[index].approvedByByANSM}
+                        checked={detail.productResponseDTO.approvedByANSM}
                         className="form-checkbox h-5 w-5 text-blue-500"
-                      // onChange={(e) => handleProductChange(index, 'approvedByANSM', e.target.checked)}
                       />
                       <label htmlFor="approvedByANSM" className="ml-2 text-sm text-gray-700">Approved by ANSM</label>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='flex justify-end mt-5'>
-                <button className='border border-gray-100 p-2 bg-green-500 text-white rounded-lg'>
-                  Submit
-                </button>
-              </div>
             </div>
           ))}
+          {profileApi && profileApi.profileInformation && profileApi.profileInformation.status === 'PROCESSING' ? (
+            <div className='flex justify-end mt-5 mb-5 mr-28'>
+              <button className='border border-gray-100 p-2 bg-blue-500 text-white rounded-lg text-xl'>
+                Submit
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </>

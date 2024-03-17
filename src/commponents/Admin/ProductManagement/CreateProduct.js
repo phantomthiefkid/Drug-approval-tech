@@ -82,7 +82,7 @@ const drugIngredient_initial = {
 const CreateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories)
   const countriesAPI = useSelector((state) => state.productData.countries)
-  const drugsAPI = useSelector((drug) => drug.drugData.data)
+  const drugsAPI = useSelector((drug) => drug.drugData.data.content)
   const [productCreate, setProductCreate] = useState(product_initial)
   const [productError, setProductError] = useState(product_err_initial)
   const [selectedFile, setSelectedFile] = useState(null);
@@ -106,21 +106,16 @@ const CreateProduct = () => {
   const handleAddIngredient = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
-  // useEffect(() => {
-  //   if (responseId && selectedFile) {
-  //     dispatch(uploadFileProduct({ file: selectedFile, ApprovalProductID: responseId }));
-  //   }
-  // }, [selectedFile, responseId, dispatch]);
 
   useEffect(() => {
     if (responseId && selectedFile) {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId })).then(() => {
-          console.log("Thanh cong!")
-        });
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId })).then(() => {
+        console.log("Thanh cong!")
+      });
     }
-}, [responseId, selectedFile]);
+  }, [responseId, selectedFile]);
 
   const handleChangeIngredient = (index, event) => {
     const { name, value } = event.target;
@@ -440,7 +435,7 @@ const CreateProduct = () => {
       }
       return isValid
     }
-    
+
 
     if (handleValidationDrugIgredient(drugIngredients).length === 0 && !handleValidation(productCreate)) {
       productCreate.drugIngredients = drugIngredients
@@ -455,7 +450,7 @@ const CreateProduct = () => {
       // });
       try {
         const resultAction = await dispatch(createProducts(productCreate));
-  
+
         if (createProducts.fulfilled.match(resultAction)) {
           Swal.fire({
             title: 'Success!',
@@ -480,12 +475,12 @@ const CreateProduct = () => {
       }
       // dispatch(createProducts(productCreate)).then(() => {
       //   setProductCreated(true);
-        // if (responseId || selectedFile) {
-        //   const formData = new FormData();
-        //   formData.append('image', selectedFile);
+      // if (responseId || selectedFile) {
+      //   const formData = new FormData();
+      //   formData.append('image', selectedFile);
 
-        //   dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId }));
-        // }
+      //   dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId }));
+      // }
       // });
 
 
