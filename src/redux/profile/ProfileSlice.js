@@ -17,7 +17,7 @@ export const viewProfile = createAsyncThunk('viewProfile', async (email, { rejec
         Authorization: `Bearer ${token}`
       }
     });
-    // console.log('Profile data:', response.data);
+    console.log('Profile data:', response.data);
     return response.data;
   } catch (error) {
     console.log('Error in viewProfile:', error);

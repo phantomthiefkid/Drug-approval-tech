@@ -82,7 +82,8 @@ const StepTwo = ({ productTitle }) => {
     const [expandedProducts, setExpandedProducts] = useState({});
     const categoriesAPI = useSelector((state) => state.productData.categories)
     const countriesAPI = useSelector((state) => state.productData.countries)
-    const drugsAPI = useSelector((drug) => drug.drugData.data)
+    const drugsAPI = useSelector((drug) => drug.drugData.data.content)
+    console.log(drugsAPI)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {
