@@ -83,7 +83,6 @@ const StepTwo = ({ productTitle }) => {
     const categoriesAPI = useSelector((state) => state.productData.categories)
     const countriesAPI = useSelector((state) => state.productData.countries)
     const drugsAPI = useSelector((drug) => drug.drugData.data.content)
-    console.log(drugsAPI)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {
@@ -94,8 +93,9 @@ const StepTwo = ({ productTitle }) => {
     }, [dispatch])
 
     const handleEmailChange = (event) => {
+        console.log("Check mail: ", event.target.value)
         setSelectedEmail(event.target.value);
-      };
+    };
 
     const handleImageChange = async (event, productIndex) => {
         const file = event.target.files[0];
@@ -274,7 +274,7 @@ const StepTwo = ({ productTitle }) => {
 
         // Cập nhật lại sản phẩm trong mảng products
         updatedProducts[indexProduct] = productToUpdate;
-
+        console.log("Check 1: ", updatedProducts)
         // Cập nhật state với các sản phẩm đã được cập nhật
         setProducts(updatedProducts);
     }
@@ -284,7 +284,7 @@ const StepTwo = ({ productTitle }) => {
         dataUpdate.productList = [...products]
         dataUpdate.profileId = productTitle
 
-        console.log("Hello: ", dataUpdate)
+
         const response = dispatch(createProfileProductStepTwo(dataUpdate))
 
         if (response) {
@@ -299,7 +299,39 @@ const StepTwo = ({ productTitle }) => {
         }
 
     }
-    const handleSavePendingToApproveStepTwo = () => {
+    // const handleSavePendingToApproveStepTwo = () => {
+    //     const dataUpdate = { ...stepTwo }
+    //     dataUpdate.productList = [...products]
+    //     dataUpdate.profileId = productTitle
+    //     dataUpdate.status = 'PENDING TO APPROVE'
+    //     const updatedDataSend = {
+    //         ...dataSend,
+    //         email: selectedEmail,
+    //         content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
+    //     };
+    //     if (validateData(dataUpdate)) {
+    //         console.log("Check: ", dataUpdate)
+    //         const response = dispatch(createProfileProductStepTwo(dataUpdate));
+    //         toast.success('Lưu thành công!', { autoClose: 200 })
+    //         if (response) {
+    //             dispatch(sendMailAdmin(updatedDataSend));
+    //             toast.success('Lưu thành công!', { autoClose: 200 });
+    //             setTimeout(() => {
+    //                 navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+    //             }, 1000);
+    //         } else {
+    //             console.log('Dữ liệu không tồn tại')
+    //         }
+
+
+
+    //     } else {
+    //         toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
+    //     }
+    //     console.log(validateData(dataUpdate))
+
+    // }
+    const handleSavePendingToApproveStepTwo = async () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
         dataUpdate.profileId = productTitle
@@ -308,28 +340,26 @@ const StepTwo = ({ productTitle }) => {
             ...dataSend,
             email: selectedEmail,
             content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
-          };
+        };
         if (validateData(dataUpdate)) {
-            const response = dispatch(createProfileProductStepTwo(dataUpdate));
-            toast.success('Lưu thành công!', { autoClose: 200 })
-            if (response) {
-                dispatch(sendMailAdmin(updatedDataSend));
+            console.log("Check mail: ", updatedDataSend)
+            try {
+                await dispatch(createProfileProductStepTwo(dataUpdate));
+                toast.success('Lưu thành công!', { autoClose: 200 });
+                await dispatch(sendMailAdmin(updatedDataSend));
                 toast.success('Lưu thành công!', { autoClose: 200 });
                 setTimeout(() => {
                     navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
                 }, 1000);
-            } else {
-                console.log('Dữ liệu không tồn tại')
+            } catch (error) {
+                console.log('Có lỗi xảy ra khi gửi email:', error);
             }
-
-
-
         } else {
             toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
         }
         console.log(validateData(dataUpdate))
-
     }
+    
     const validateData = (dataUpdate) => {
         const errors = JSON.parse(JSON.stringify(dataUpdate.productList));// Mảng lưu trữ thông tin lỗi
         let isValid = true;
@@ -532,10 +562,9 @@ const StepTwo = ({ productTitle }) => {
                 isValid = false;
             } else {
                 errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
-                ; // Đánh dấu là hợp lệ
+                ; 
             }
-
-            // Kiểm tra trường toxicity
+            
             if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được bỏ trống!!!';
                 isValid = false;
@@ -543,8 +572,8 @@ const StepTwo = ({ productTitle }) => {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
                 isValid = false;
             } else {
-                errors[index].pharmacogenomic.toxicity = ''; // Gán giá trị rỗng khi không có lỗi
-                ; // Đánh dấu là hợp lệ
+                errors[index].pharmacogenomic.toxicity = ''; 
+               
             }
 
             if (product.indexIngredient?.length === 0) {
@@ -565,8 +594,8 @@ const StepTwo = ({ productTitle }) => {
     return (
         <>
             <form class="max-w-sm mx-auto">
-                <select class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option onChange={handleEmailChange} value={selectedEmail} selected>Chọn người duyệt</option>
+                <select onChange={handleEmailChange} value={selectedEmail}  class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>Chọn người duyệt</option>
                     {emailAdmin && emailAdmin.map((item, index) => (<option value={item.email}>{item.fullname}</option>))}
                 </select>
             </form>

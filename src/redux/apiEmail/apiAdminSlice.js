@@ -27,7 +27,7 @@ export const getEmailAdmin = createAsyncThunk('getAdmin', async () => {
 export const sendMailAdmin = createAsyncThunk('sendMailAdmin', async (dataSend) => {
     try {
         const token = localStorage.getItem('token');
-        console.log("check: ", dataSend)
+        console.log("check: ", dataSend.email)
         if (!token) {
             throw new Error('Missing token');
         }
