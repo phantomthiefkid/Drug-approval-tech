@@ -6,6 +6,7 @@ import ProductsData from "./approvalProduct/productSlice";
 import ProductData from "./productManagement/ProductSlice";
 import ProductDataGuest from "./productManagement/productSliceForGuest/ProductForGuestSlice";
 import ProfileProduct from "./profileProduct/profileProductSlice";
+import getEmailAdmin from "./apiEmail/apiAdminSlice";
 import LoginSlice from "./auth/loginSlice"
 export default configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export default configureStore({
         product: ProductData,
         guest: ProductDataGuest,
         profileProduct: ProfileProduct,
+        getAdmin: getEmailAdmin ,
         login: LoginSlice
     }
 })

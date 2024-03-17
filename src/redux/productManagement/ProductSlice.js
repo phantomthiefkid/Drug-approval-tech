@@ -16,7 +16,6 @@ const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/stora
 
 export const uploadFileProduct = createAsyncThunk('upload', async ({ file, ApprovalProductID }) => {
     try {
-        console.log("Redux", ApprovalProductID, file)
         const token = localStorage.getItem('token');
         const config = {
             headers: {
