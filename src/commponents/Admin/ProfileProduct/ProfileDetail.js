@@ -11,8 +11,8 @@ const ProfileDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
-  console.log(profileApi)
   const [expandedProducts, setExpandedProducts] = useState({});
+  const [radioChecked, setRadioChecked] = useState();
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -54,8 +54,69 @@ const ProfileDetail = () => {
     }
   };
 
-  // console.log('--->', profileApi)
-  // console.log('process', processProfile)
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault()
+  //   try {
+  //     Object.entries(radioChecked).forEach(([profileDetailId, status]) => {
+  //       dispatch(submissionStatus({ id: profileDetailId, status }));
+  //     });
+  //     Swal.fire({
+  //       title: 'Success!',
+  //       text: 'Thay đổi trạng thái sản phẩm thành công!',
+  //       icon: 'success',
+  //       confirmButtonColor: '#3085d6',
+  //       confirmButtonText: 'OK',
+  //     }).then(() => {
+  //       // Sau khi cập nhật thành công, fetch lại chi tiết hồ sơ để cập nhật UI
+  //       dispatch(fetchProfileProductsDetail({ id }));
+  //     });
+  //   } catch (error) {
+  //     Swal.fire({
+  //       title: 'Error!',
+  //       text: `Failed to update product status: ${error.message || 'Unknown error'}`,
+  //       icon: 'error',
+  //       confirmButtonColor: '#3085d6',
+  //       confirmButtonText: 'OK',
+  //     });
+  //   }
+  // };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const dataArray = [];
+      Object.entries(radioChecked).forEach(([profileDetailId, status]) => {
+        dataArray.push({ profileDetailId, status });
+      });
+      await dispatch(submissionStatus({ profileId: profileApi.profileInformation.profileId, data: dataArray }));
+      Swal.fire({
+        title: 'Success!',
+        text: 'Thay đổi trạng thái thuốc thành công!',
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+      }).then(() => {
+        Navigate('/profilelist')
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: `Failed to change product status: ${error.message || 'Unknown error'}`,
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+
+  const handleRadioChange = (profileDetailId, status) => {
+    setRadioChecked({
+      ...radioChecked,
+      [profileDetailId]: status
+    });
+  };
+
+  console.log(radioChecked)
 
   return (
     <>
@@ -118,7 +179,7 @@ const ProfileDetail = () => {
           </div>
           {profileApi && profileApi.profileDetailList && profileApi.profileDetailList.map((detail, index) => (
             <div key={index} className='mb-10 mt-10 w-5/6 mx-auto '>
-              <button className='w-full' onClick={() => toggleProductExpansion(index)}>
+              <button className='w-full' >
 
                 <div key={index} className=' h-28 relative rounded-xl transition-transform duration-300 hover:scale-100 shadow-xl '>
                   <div className='h-full z-10 border border-gray-300 rounded-xl items-center flex'>
@@ -132,9 +193,9 @@ const ProfileDetail = () => {
                           <span className='inline-block ml-44'>
                             {detail.status === 'DRAFT' ? (
                               <p className='status bg-sky-400 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'REJECTED BY SYSTEM' ? (
+                            ) : detail.status === 'REJECTED' ? (
                               <p className='status bg-red-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'APPROVED BY SYSTEM' ? (
+                            ) : detail.status === 'APPROVED BY SYSTEM' || 'APPROVED' ? (
                               <p className='status bg-green-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : (
                               <p className='bg-pink-500 text-white p-2 rounded text-xl inline-block'>{detail.status}  </p>
@@ -144,29 +205,34 @@ const ProfileDetail = () => {
                             <div className='col-span-12 flex p-2 mt-4 ml-24'>
                               <div className="flex items-center mb-4 w-2/3">
                                 <input
-                                  type="checkbox"
-                                  id="approvedByFDA"
-                                  // checked={products[index].approvedByFDA}                                
-                                  className="form-checkbox h-5 w-5 text-blue-500"
+                                  type="radio"
+                                  id={`approved-${detail.profileDetailId}`}
+                                  name={`status-${detail.profileDetailId}`}
+                                  value="APPROVED"
+                                  checked={radioChecked && radioChecked[detail.profileDetailId] === 'APPROVED'}
+                                  onChange={() => handleRadioChange(detail.profileDetailId, 'APPROVED')}
+                                  className="form-radio h-5 w-5 text-blue-500"
                                 />
-                                <label htmlFor="approvedByFDA" className="ml-2 text-sm font-bold text-green-500">Approved</label>
+                                <label htmlFor={`approved-${detail.profileDetailId}`} className="ml-2 text-sm font-bold text-green-500">Approved</label>
                               </div>
-                              <div className="flex items-center ml-5 mb-4 w-2/3">
-                                <input
-                                  type="checkbox"
-                                  id="approvedByANSM"
-                                  // checked={products[index].approvedByByANSM}
-                                  className="form-checkbox h-5 w-5 text-blue-500"
-                                />
-                                <label htmlFor="approvedByANSM" className="ml-2 text-sm font-bold text-red-500">Rejected</label>
-                              </div>
+                              <input
+                                type="radio"
+                                id={`rejected-${detail.profileDetailId}`}
+                                name={`status-${detail.profileDetailId}`}
+                                value="REJECTED"
+                                checked={radioChecked && radioChecked[detail.profileDetailId] === 'REJECTED'}
+                                onChange={() => handleRadioChange(detail.profileDetailId, 'REJECTED')}
+                                className="form-radio h-5 w-5 text-blue-500 ml-4"
+                              />
+                              <label htmlFor={`approved-${detail.profileDetailId}`} className="ml-2 text-sm font-bold text-red-500">Rejected</label>
                             </div>
+
                           ) : null}
                         </div>
                       </div>
                     </div>
                     <div className='w-1/6 flex justify-end mt-3'>
-                      <span className=' font-bold'>{expandedProducts[index] ? 'Thu gọn' : 'Hiện'}</span>
+                      <span className=' font-bold' onClick={() => toggleProductExpansion(index)}>{expandedProducts[index] ? 'Thu gọn' : 'Hiện'}</span>
                       {expandedProducts[index] ? (
                         <ArrowUp className='' size={25} />
                       ) : (
@@ -372,7 +438,7 @@ const ProfileDetail = () => {
           ))}
           {profileApi && profileApi.profileInformation && profileApi.profileInformation.status === 'PROCESSING' ? (
             <div className='flex justify-end mt-5 mb-5 mr-28'>
-              <button className='border border-gray-100 p-2 bg-blue-500 text-white rounded-lg text-xl'>
+              <button onClick={handleSubmit} className='border border-gray-100 p-2 bg-blue-500 text-white rounded-lg text-xl'>
                 Submit
               </button>
             </div>

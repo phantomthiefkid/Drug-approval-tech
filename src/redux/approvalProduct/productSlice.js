@@ -4,7 +4,7 @@ import axios from "axios";
 const URL_COUNTRIES = `https://fams-management.tech/public/countries`
 const URL_CATEGORIES = `https://fams-management.tech/public/categories`
 const URL_CREATE_PRODUCT = `https://fams-management.tech/admin/approval-products`
-const URL_UPDATE_PRODUCT = `https://fams-management.tech/admin/approval-products`
+const URL_UPDATE_PRODUCT = `https://fams-management.tech/admin/approval-products?id=`
 
 export const fetchCountries = createAsyncThunk('fetchCountries', async () => {
   try {
@@ -76,11 +76,11 @@ export const updateProducts = createAsyncThunk('updateProducts', async (ProductD
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      params: {
-        id: ProductData.id
-      }
+      // params: {
+      //   id: ProductData.id
+      // }
     };
-    const response = await axios.put(URL_UPDATE_PRODUCT, ProductData, config);
+    const response = await axios.put(URL_UPDATE_PRODUCT + `${ProductData.id}`, ProductData, config);
     return response.data;
   } catch (error) {
     throw error;
