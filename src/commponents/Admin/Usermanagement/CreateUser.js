@@ -28,19 +28,20 @@ const CreateUser = () => {
   const handleValidationEmail = async (field) => {
     if (field === 'email') {
       const email = users.email.trim();
-      const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com)$/;
+      const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com|fpt\.edu\.vn)$/; // Thêm lựa chọn cho domain fpt.edu.vn
       if (!email) {
         setErrors({ ...errors, email: 'This field is required' });
       } else if (!emailPattern.test(email)) {
         setErrors({
           ...errors,
-          email: 'Invalid email format (must be @gmail.com)',
+          email: 'Invalid email format (must be @gmail.com or @fpt.edu.vn)',
         });
       } else {
         setErrors({ ...errors, email: '' });
       }
     }
-  }
+}
+
 
   const [imageSrc, setImageSrc] = useState(null);
 

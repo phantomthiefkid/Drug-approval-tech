@@ -34,6 +34,7 @@ export const createProfileProductStepOne = createAsyncThunk('createProfileProduc
 
 export const createProfileProductStepTwo = createAsyncThunk('createProfileProductStepTwo', async (stepTwo) => {
   try {
+    console.log("Check step 2: ", stepTwo)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
