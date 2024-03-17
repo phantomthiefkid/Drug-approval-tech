@@ -34,7 +34,7 @@ export const createProfileProductStepOne = createAsyncThunk('createProfileProduc
 
 export const createProfileProductStepTwo = createAsyncThunk('createProfileProductStepTwo', async (stepTwo) => {
   try {
-    console.log("Hello CHeck: ", stepTwo)
+    console.log("Check step 2: ", stepTwo)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
@@ -54,7 +54,6 @@ export const createProfileProductStepTwo = createAsyncThunk('createProfileProduc
 
 export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfileProductStepOne', async (stepOne) => {
   try {
-    console.log("Check Id: ", stepOne)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
@@ -263,6 +262,7 @@ export const ProfileProduct = createSlice({
   extraReducers: (builder) => {
     builder.addCase(createProfileProductStepOne.fulfilled, (state, action) => {
       state.dataCreate = action.payload;
+      console.log("Redux: ", action.payload)
       state.isLoading = false;
       state.isError = false;
     })

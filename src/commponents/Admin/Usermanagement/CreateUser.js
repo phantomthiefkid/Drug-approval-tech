@@ -28,19 +28,30 @@ const CreateUser = () => {
   const handleValidationEmail = async (field) => {
     if (field === 'email') {
       const email = users.email.trim();
-      const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com)$/;
+      const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com|fpt\.edu\.vn)$/; // Thêm lựa chọn cho domain fpt.edu.vn
       if (!email) {
         setErrors({ ...errors, email: 'This field is required' });
       } else if (!emailPattern.test(email)) {
         setErrors({
           ...errors,
-          email: 'Invalid email format (must be @gmail.com)',
+          email: 'Invalid email format (must be @gmail.com or @fpt.edu.vn)',
         });
       } else {
         setErrors({ ...errors, email: '' });
       }
     }
-  }
+}
+
+
+  const [imageSrc, setImageSrc] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    setImageSrc(file)
+
+
+  };
 
   useEffect(() => {
     if (!token) {
@@ -140,7 +151,19 @@ const CreateUser = () => {
         <div>
           <ul className='item-menu flex justify-center'>
             <li>
-              <img className='logo mb-8 w-20 h-20 border' src='./langtu.jpg' alt='profile'></img>
+              <div className='w-full mx-auto'>
+                <img
+                src={imageSrc ? URL.createObjectURL(imageSrc) : 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'}
+                alt="profile"
+                className="w-44 h-32 border mb-4 mx-auto"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="mb-4 w-full"
+              />
+              </div>
             </li>
           </ul>
           {/* <form onSubmit={handleSub9mit}> */}

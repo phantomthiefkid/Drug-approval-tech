@@ -106,11 +106,6 @@ const CreateProduct = () => {
   const handleAddIngredient = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
-  // useEffect(() => {
-  //   if (responseId && selectedFile) {
-  //     dispatch(uploadFileProduct({ file: selectedFile, ApprovalProductID: responseId }));
-  //   }
-  // }, [selectedFile, responseId, dispatch]);
 
   useEffect(() => {
     if (responseId && selectedFile) {

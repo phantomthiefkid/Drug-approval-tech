@@ -40,7 +40,7 @@ export default function ModalLogin({ visible, onClose }) {
 
 
   const handleValidationEmail = () => {
-    const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com)$/;
+    const emailPattern = /^[\w-]+(\.[\w-]+)*@(gmail\.com|fpt\.edu\.vn)$/;
 
     if (!email) {
       toast.error('An email is required!');

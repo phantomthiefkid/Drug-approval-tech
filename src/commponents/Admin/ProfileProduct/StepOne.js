@@ -7,16 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { uploadFile } from '../../../redux/uploadFile/uploadFile';
 const StepOne = ({ onNext }) => {
     const [title, setTitle] = useState();
+
     const [error, setError] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
     const handleSubmitStepOnePending = async () => {
-        const stepOne = { title: title, status: 'PENDING', imgURL: '' };
+        const stepOne = { title: title, status: 'PENDING TO PROCEED', imgURL: '' };
         if (title) {
             const response = await dispatch(createProfileProductStepOne(stepOne));
             if (response) {
                 toast.success('Hoàn thành bước 1', { autoClose: 200 })
+                console.log("Check step 1: ", response.payload)
                 setTimeout(() => {
                     const id = response.payload.id;
                     onNext(id);
@@ -30,16 +32,11 @@ const StepOne = ({ onNext }) => {
 
     const convertFileUpload = async (file) => {
 
-
         const formData = new FormData();
         formData.append('file', file);
         const response = await dispatch(uploadFile(formData))
         return response.payload
-
-
-
     }
-
 
     const handleImageChange = (event) => {
         const file = event.target.files[0]
@@ -83,7 +80,6 @@ const StepOne = ({ onNext }) => {
         }
 
     };
-
 
     const handleOnChange = (e) => {
         setTitle(e.target.value);

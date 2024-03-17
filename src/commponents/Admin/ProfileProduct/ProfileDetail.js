@@ -11,6 +11,7 @@ const ProfileDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
+  console.log("Check: ", profileApi)
   const [expandedProducts, setExpandedProducts] = useState({});
   const [radioChecked, setRadioChecked] = useState();
 
@@ -54,33 +55,6 @@ const ProfileDetail = () => {
     }
   };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault()
-  //   try {
-  //     Object.entries(radioChecked).forEach(([profileDetailId, status]) => {
-  //       dispatch(submissionStatus({ id: profileDetailId, status }));
-  //     });
-  //     Swal.fire({
-  //       title: 'Success!',
-  //       text: 'Thay đổi trạng thái sản phẩm thành công!',
-  //       icon: 'success',
-  //       confirmButtonColor: '#3085d6',
-  //       confirmButtonText: 'OK',
-  //     }).then(() => {
-  //       // Sau khi cập nhật thành công, fetch lại chi tiết hồ sơ để cập nhật UI
-  //       dispatch(fetchProfileProductsDetail({ id }));
-  //     });
-  //   } catch (error) {
-  //     Swal.fire({
-  //       title: 'Error!',
-  //       text: `Failed to update product status: ${error.message || 'Unknown error'}`,
-  //       icon: 'error',
-  //       confirmButtonColor: '#3085d6',
-  //       confirmButtonText: 'OK',
-  //     });
-  //   }
-  // };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -121,18 +95,26 @@ const ProfileDetail = () => {
   return (
     <>
       <div className='container mx-auto mt-28 mb-20 '>
-        <div className='flex items-center justify-between'>
-          <Link to={'/profilelist'}>
-            <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-10 ml-4 h-auto' />
-          </Link>
+        <div className='flex items-center justify-between w-5/6 mx-auto'>
+          <div>
+            <Link to={'/profilelist'}>
+              <img src='https://cdn-icons-png.freepik.com/512/2099/2099190.png' alt='back' className='w-10 ml-4 h-auto' />
+            </Link>
+          </div>
           <div className='text-center flex-grow'>
             <h1 className='text-4xl font-bold text-blue-800 mb-6'>Chi tiết hồ sơ thuốc</h1>
           </div>
-          <div className="flex-shrink-0">
-            <button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center p-4 gap-2"><PencilSquare size={20}></PencilSquare> Chỉnh sửa hồ sơ thuốc</button>
-          </div>
-        </div>
+          {profileApi && profileApi.profileInformation && (profileApi.profileInformation.status === 'DRAFT' || profileApi.profileInformation.status === 'PENDING TO PROCCED') && (
+            <div className="flex-shrink-0 ml-auto">
+              <Link to={`/updateprofileproduct/${id}`}>
+                <button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center p-4 gap-2">
+                  <PencilSquare size={20}></PencilSquare> Chỉnh sửa hồ sơ thuốc
+                </button>
+              </Link>
+            </div>
+          )}
 
+        </div>
         <div className='w-5/6 h-auto border border-gray-200 shadow-xl mx-auto'>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6'>
             <div className='w-5/6 flex justify-center border-gray-200'>

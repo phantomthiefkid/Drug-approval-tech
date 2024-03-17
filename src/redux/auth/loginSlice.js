@@ -14,9 +14,6 @@ export const loginApi = (email, password) => {
 export const passwordChange = createAsyncThunk(
   'auth/passwordChange',
   async ({ email, currentPassword, newPassword }, { rejectWithValue }) => {
-    console.log('email', email)
-    console.log('currentPassword', currentPassword)
-    console.log('newPassword', newPassword)
 
     try {
       const token = localStorage.getItem('token');
@@ -61,6 +58,27 @@ export const getUserDataFromToken = () => {
   } catch (error) {
     console.error('Error decoding or parsing token:', error.message);
   }
+  return null;
+};
+
+export const getEmailFromToken = () => {
+  const token = localStorage.getItem('token');
+
+  try {
+    if (token) {
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload);
+      const data = JSON.parse(decodedPayload);
+
+
+      if (data && data.sub) {
+        return data.sub;
+      }
+    }
+  } catch (error) {
+    console.error('Error decoding or parsing token:', error.message);
+  }
+
   return null;
 };
 
