@@ -562,10 +562,9 @@ const StepTwo = ({ productTitle }) => {
                 isValid = false;
             } else {
                 errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
-                ; // Đánh dấu là hợp lệ
+                ; 
             }
-
-            // Kiểm tra trường toxicity
+            
             if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được bỏ trống!!!';
                 isValid = false;
@@ -573,8 +572,8 @@ const StepTwo = ({ productTitle }) => {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
                 isValid = false;
             } else {
-                errors[index].pharmacogenomic.toxicity = ''; // Gán giá trị rỗng khi không có lỗi
-                ; // Đánh dấu là hợp lệ
+                errors[index].pharmacogenomic.toxicity = ''; 
+               
             }
 
             if (product.indexIngredient?.length === 0) {
