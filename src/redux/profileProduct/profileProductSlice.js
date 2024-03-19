@@ -52,8 +52,9 @@ export const createProfileProductStepTwo = createAsyncThunk('createProfileProduc
   }
 })
 
-export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfileProductStepOne', async (stepOne) => {
+export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfileProductStepOne', async ({ dataUpdate, id }) => {
   try {
+console.log("haha", dataUpdate, id)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
@@ -64,10 +65,11 @@ export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfile
         'Authorization': `Bearer ${token}`
       },
       params: {
-        profileId: stepOne.id
+        profileId: id
       }
     }
-    const response = await axios.put(URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE, stepOne, config)
+    console.log("Check: ", dataUpdate)
+    const response = await axios.put(URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE, dataUpdate, config)
     return response.data
   } catch (error) {
     throw error
@@ -309,7 +311,6 @@ export const ProfileProduct = createSlice({
       })
     builder.addCase(updateProfileProductStepOneupdate.fulfilled, (state, action) => {
       state.dataCreate = action.payload;
-
       state.isLoading = false;
       state.isError = false;
     })

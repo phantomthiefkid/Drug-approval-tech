@@ -104,7 +104,7 @@ const ProfileDetail = () => {
           <div className='text-center flex-grow'>
             <h1 className='text-4xl font-bold text-blue-800 mb-6'>Chi tiết hồ sơ thuốc</h1>
           </div>
-          {profileApi && profileApi.profileInformation && (profileApi.profileInformation.status === 'DRAFT' || profileApi.profileInformation.status === 'PENDING TO PROCCED') && (
+          {profileApi && profileApi.profileInformation && (profileApi.profileInformation.status === 'DRAFT' || profileApi.profileInformation.status === 'PENDING TO PROCEED') && (
             <div className="flex-shrink-0 ml-auto">
               <Link to={`/updateprofileproduct/${id}`}>
                 <button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center p-4 gap-2">
