@@ -17,7 +17,7 @@ const StepOne = ({ onNext }) => {
         if (title) {
             const response = await dispatch(createProfileProductStepOne(stepOne));
             if (response) {
-                toast.success('Hoàn thành bước 1', { autoClose: 200 })
+                toast.success('Hoàn thành bước một', { autoClose: 200 })
                 console.log("Check step 1: ", response.payload)
                 setTimeout(() => {
                     const id = response.payload.id;
@@ -49,15 +49,15 @@ const StepOne = ({ onNext }) => {
             if (image) {
                 const url = await convertFileUpload(image)
                 console.log("Url: ", url)
-
+    
                 if (url) {
                     stepOne.imageURL = url
                     const response = await dispatch(createProfileProductStepOne(stepOne))
-
+    
                     if (response) {
                         toast.success('Lưu thành công!', { autoClose: 200 });
                         setTimeout(() => {
-                            navigate('/profilelist');
+                            navigate(`/updateprofileproduct/${response.payload.id}`);
                         }, 1000);
                     } else {
                         toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
@@ -65,11 +65,11 @@ const StepOne = ({ onNext }) => {
                 }
             } else {
                 const response = await dispatch(createProfileProductStepOne(stepOne))
-
+    
                 if (response) {
                     toast.success('Lưu thành công!', { autoClose: 200 });
                     setTimeout(() => {
-                        navigate('/profilelist');
+                        navigate(`/updateprofileproduct/${response.payload.id}`);
                     }, 1000);
                 } else {
                     toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
@@ -78,8 +78,8 @@ const StepOne = ({ onNext }) => {
         } else {
             setError(true)
         }
-
     };
+    
 
     const handleOnChange = (e) => {
         setTitle(e.target.value);

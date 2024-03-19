@@ -69,8 +69,7 @@ const initial_data = {
     productList: [],
     status: 'PENDING TO PROCEED'
 }
-
-const StepTwo = ({ productTitle }) => {
+const CreateKeepStepTwo = ({ id }) => {
     const [products, setProducts] = useState([product_initial])
     const emailAdmin = useSelector((state) => state.getAdmin.data)
     const [selectedEmail, setSelectedEmail] = useState('')
@@ -282,7 +281,7 @@ const StepTwo = ({ productTitle }) => {
     const handleSaveAsDraftStepTwo = () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = productTitle
+        dataUpdate.profileId = id
 
 
         const response = dispatch(createProfileProductStepTwo(dataUpdate))
@@ -291,7 +290,7 @@ const StepTwo = ({ productTitle }) => {
 
             toast.success('Lưu thành công!', { autoClose: 200 });
             setTimeout(() => {
-                navigate(`/updateprofileproduct/${productTitle}`); // Chuyển hướng sang '/profilelist'
+                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
             }, 1000);
             console.log("Lưu nháp thành công!!!", response)
         } else {
@@ -334,7 +333,7 @@ const StepTwo = ({ productTitle }) => {
     const handleSavePendingToApproveStepTwo = async () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = productTitle
+        dataUpdate.profileId = id.id
         dataUpdate.status = 'PENDING TO APPROVE'
         const updatedDataSend = {
             ...dataSend,
@@ -350,7 +349,7 @@ const StepTwo = ({ productTitle }) => {
                
                 setTimeout(() => {
                     navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
-                }, 1000);
+                }, 500);
             } catch (error) {
                 console.log('Có lỗi xảy ra khi gửi email:', error);
             }
@@ -946,4 +945,4 @@ const StepTwo = ({ productTitle }) => {
     )
 }
 
-export default StepTwo
+export default CreateKeepStepTwo
