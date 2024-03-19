@@ -169,26 +169,84 @@ export const processProfile = createAsyncThunk('processProfile', async ({ id }) 
   }
 });
 
-export const submissionStatus = createAsyncThunk('submissionStatus', async ({ id }) => {
+// export const submissionStatus = createAsyncThunk('submissionStatus', async ({ profileId, data }) => {
+//   console.log(data)
+//   // console.log(status)
+//   console.log(profileId)
+
+//   try {
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//       throw new Error('Missing token');
+//     }
+//     const config = {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       },
+//       params: {
+//         profileId,
+//         data
+//       }
+//     }
+//     const response = await axios.post(URL_SUBMISSION, { data, profileId }, config)
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// })
+
+// export const submissionStatus = createAsyncThunk('submissionStatus', async ({ profileId, data }) => {
+//   console.log(profileId);
+//   console.log(data);
+
+//   try {
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//       throw new Error('Missing token');
+//     }
+//     const config = {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       }
+//     };
+//     const queryParams = new URLSearchParams();
+//     queryParams.append('profileId', profileId);
+//     data.forEach(({ profileDetailId, status }, index) => {
+//       queryParams.append(`data[${index}][profileDetailId]`, profileDetailId);
+//       queryParams.append(`data[${index}][status]`, status);
+//     });
+//     const response = await axios.post(`${URL_SUBMISSION}?${queryParams.toString()}`, {}, config);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// });
+
+export const submissionStatus = createAsyncThunk('submissionStatus', async ({ profileId, data }) => {
+  console.log(profileId);
+  console.log(data);
+
   try {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing token');
     }
-    const params = new URLSearchParams();
-    params.append('profileId', id);
     const config = {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    }
-    const response = await axios.post(`URL_SUBMISSION ?${params.toString()}`, null, config)
+    };
+    const queryParams = new URLSearchParams();
+    queryParams.append('profileId', profileId);
+    const response = await axios.post(`${URL_SUBMISSION}?${queryParams.toString()}`, data, config);
     return response.data;
   } catch (error) {
     throw error;
   }
-})
+});
 
 export const ProfileProduct = createSlice({
   name: 'profileProduct',

@@ -11,6 +11,7 @@ const ViewProfile = () => {
   const dispatch = useDispatch();
   const profileView = useSelector((state) => state.viewProfile.data);
   const navigate = useNavigate();
+  console.log('check mail', email)
   useEffect(() => {
     if (!token) {
       navigate('/')

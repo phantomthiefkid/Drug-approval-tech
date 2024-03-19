@@ -63,8 +63,25 @@ const UpdateProduct = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    setProductUpdate(productApi)
-  }, [productApi])
+    if (productApi && productApi.authorities) {
+      const updatedProduct = { ...productApi };
+      updatedProduct.authorities = updatedProduct.authorities.map(authority => {
+        const { countryName, ...rest } = authority;
+        return rest;
+      });
+      if (updatedProduct.productAdministrationDTO) {
+        updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
+        delete updatedProduct.productAdministrationDTO;
+      }
+      const categoryId = updatedProduct.category.id;
+      const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
+      delete updatedProductWithCategoryId.category;
+
+      setProductUpdate(updatedProductWithCategoryId);
+    } else {
+      setProductUpdate(productApi);
+    }
+  }, [productApi]);
 
   const [drugIngredients, setDrugIngredients] = useState([
     { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }
@@ -267,6 +284,8 @@ const UpdateProduct = () => {
         }
       });
   }
+
+  console.log('updateproduct', productUpdate)
 
   return (
     <>
