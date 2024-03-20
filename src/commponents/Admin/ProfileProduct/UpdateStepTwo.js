@@ -690,9 +690,9 @@ const UpdateStepTwo = () => {
         </div>
         <div className='flex justify-end mr-6 gap-4 mt-3 mb-3'>
 
-          <button onClick={handlSaveAsDraft} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+          {/* <button onClick={handlSaveAsDraft} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
             Lưu nháp
-          </button>
+          </button> */}
 
 
           <button onClick={handleUpdateFinish} className='px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' >

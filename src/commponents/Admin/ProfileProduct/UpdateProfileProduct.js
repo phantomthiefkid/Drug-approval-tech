@@ -36,6 +36,7 @@ const UpdateProfileProduct = () => {
         setProductTitle(title);
         setStepOneTag(false);
         setStepTwoTag(true);
+        setStepTwoUpdate(false)
     }
 
     // Extracting title and imageURL
@@ -63,17 +64,17 @@ const UpdateProfileProduct = () => {
 
                 <div className="flex justify-center w-5/6 mx-auto gap-2">
                     <button
-                        className={`btn ${stepOneTag ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
+                        className={`btn ${stepOneTag ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105`}
                     >
                         Step One
                     </button>
                     <button
-                        className={`btn ${stepTwoUpdate ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
+                        className={`btn ${stepTwoTag ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105`}
                     >
                         Step Two
                     </button>
-
                 </div>
+
                 {/* Passing title and imageURL to UpdateStepOne */}
                 {stepOneTag && <UpdateStepOne onNext={handleNextStepOne}></UpdateStepOne>}
                 {stepTwoTag && <CreateKeepStepTwo productTitle={productTitle} id={id}></CreateKeepStepTwo>}
