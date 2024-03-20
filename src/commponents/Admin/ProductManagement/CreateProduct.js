@@ -10,11 +10,10 @@ const product_initial = {
   labeller: '',
   name: '',
   route: '',
-  administrationId: 1,
+  administrationId: '',
   prescriptionName: '',
   drugIngredients: [],
   categoryId: -1,
-  administrationId: 1,
   manufactor: {
     name: '',
     company: '',
@@ -491,9 +490,6 @@ const CreateProduct = () => {
       setDrugIngredientsError(handleValidationDrugIgredient(drugIngredients))
     }
   };
-
-
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
@@ -526,7 +522,7 @@ const CreateProduct = () => {
 
   }
 
-  console.log(selectedFile);
+  console.log(productCreate);
   return (
     <>
       <div className='mt-20 mb-16'>
@@ -542,7 +538,7 @@ const CreateProduct = () => {
             <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
               <div className='col-span-5 py-8'>
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="large_size">Upload image</label>
-                <input onChange={handleFileChange} class="block w-full text-lg text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="large_size" type="file"></input>
+                <input onChange={handleFileChange} class="block w-full text-lg text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none" id="large_size" type="file"></input>
                 {selectedFile && (
                   <img className='border-2 rounded-xl mt-4' src={URL.createObjectURL(selectedFile)} alt='drug' />
                 )}
@@ -561,12 +557,18 @@ const CreateProduct = () => {
                       {productError.labeller && (<span className='text-red-600'>{productError.labeller}</span>)}
                     </div>
                   </div>
-                  <div className='flex gap-4'>
-                    <div class="mb-3 w-2/3">
-                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Đường dẫn</label>
-                      <input onChange={handleOnChange} name='route' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                      {productError.route && (<span className='text-red-600'>{productError.route}</span>)}
+                  <div className='flex gap-4 justify-between'>
+                    <div className='mb-3 w-1/3'>
+                      <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Chọn cơ sở dược</label>
+                      <select name='administrationId' onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50' required>
+                        <option value=''>Chọn cơ sở</option>
+                        <option value='1'>FDA</option>
+                        <option value='2'>ANSM</option>
+                        <option value='3'>DAV</option>
+                      </select>
+
                     </div>
+
                     <div className='mb-3 w-1/3'>
                       <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Loại thuốc</label>
                       <select name='categoryId' onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50' required>
@@ -576,7 +578,11 @@ const CreateProduct = () => {
                       {productError.categoryId && productError.categoryId !== -1 && (<span className='text-red-600'>{productError.categoryId}</span>)}
                     </div>
                   </div>
-
+                  <div class="mb-3 w-full">
+                    <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Đường dẫn</label>
+                    <input onChange={handleOnChange} name='route' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    {productError.route && (<span className='text-red-600'>{productError.route}</span>)}
+                  </div>
                   <div class="mb-3 w-full">
                     <label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">Tên đơn thuốc</label>
                     <input onChange={handleOnChange} name='prescriptionName' type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
