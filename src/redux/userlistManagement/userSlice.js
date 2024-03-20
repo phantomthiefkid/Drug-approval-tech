@@ -7,6 +7,7 @@ const FIND_USER_BY_EMAIL_URL = "https://fams-management.tech/admin/users/email";
 const ACTIVE_USER_URL = "https://fams-management.tech/admin/users/activate";
 const DEACTIVATE_USER_URL = "https://fams-management.tech/admin/users/deactivate";
 const URL_CREATE_USER = "https://fams-management.tech/auth/register";
+const URL_IMAGE = "https://fams-management.tech/api/storage/uploadFile"
 
 export const fetchUsers = createAsyncThunk('fetchUsers', async ({ pageSize, pageNo, sortField, sortOrder, roleName, status, gender, search }) => {
   try {
@@ -166,6 +167,36 @@ export const createUser = createAsyncThunk('createUser', async (userData, { reje
 });
 
 
+export const uploadFile = createAsyncThunk("uploadFile", async (importImage, { rejectWithValue }) => {
+  // console.log("reduxxxx", importImage)
+  try {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      return rejectWithValue('Missing token');
+    }
+    const formData = new FormData()
+    formData.append('file', importImage.file);
+
+    console.log("->>>>>>>>>", importImage.file)
+    const urlWithParams = `${URL_IMAGE}`
+
+    const response = await axios.post(urlWithParams, formData, {
+      headers: {
+        "Content-Type": `multipart/form-data`,
+        Authorization: `Bearer ${token}`
+      },
+    })
+    if (response.status === 200) {
+      console.log("---->", response.data)
+      return response.data;
+    } else {
+      return rejectWithValue('Request failed with status code ' + response.status);
+    }
+  } catch (error) {
+    return rejectWithValue('Request failed with an error: ' + error.message);
+  }
+})
+
 export const UsersData = createSlice({
   name: 'userData',
   initialState: {
@@ -231,7 +262,20 @@ export const UsersData = createSlice({
       state.isError = true;
 
     });
-
+    builder
+      .addCase(uploadFile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = action.payload;
+        state.isError = false;
+      })
+      .addCase(uploadFile.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(uploadFile.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      });
   }
 })
 

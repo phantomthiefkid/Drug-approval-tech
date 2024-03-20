@@ -6,7 +6,7 @@ import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons'
 
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { fetchCategories, fetchCountries, updateProducts } from '../../../redux/approvalProduct/productSlice';
-import { fetchProductDetail } from '../../../redux/productManagement/ProductSlice';
+import { fetchProductDetail, uploadFileProduct } from '../../../redux/productManagement/ProductSlice';
 
 const UpdateProduct = () => {
   const countriesAPI = useSelector((state) => state.productData.countries);
@@ -14,7 +14,8 @@ const UpdateProduct = () => {
   const drugsAPI = useSelector((drug) => drug.drugData.data.content)
   const { id } = useParams();
   const productApi = useSelector((product) => product.product.detail)
-
+  const responseId = useSelector((state) => state.productData.product.id)
+  const [selectedFile, setSelectedFile] = useState(null);
   const [productUpdate, setProductUpdate] = useState({
     labeller: '',
     name: '',
@@ -22,6 +23,7 @@ const UpdateProduct = () => {
     route: '',
     drugIngredients: [],
     category: -1,
+    image: '',
     manufactor: {
       name: '',
       company: '',
@@ -55,6 +57,29 @@ const UpdateProduct = () => {
     dispatch(fetchCountries())
     dispatch(fetchDrugs({}))
   }, [dispatch])
+
+
+  useEffect(() => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      dispatch(uploadFileProduct({ file: formData, ApprovalProductID: id })).then((response) => {
+        setProductUpdate(prevState => ({
+          ...prevState,
+          image: URL.createObjectURL(selectedFile)
+        }));
+        console.log("Upload image thành công!");
+      }).catch((error) => {
+        console.error("Lỗi khi upload hình ảnh:", error);
+      });
+    }
+  }, [id, selectedFile, dispatch]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file); // Set the selected file
+  };
+
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -295,7 +320,11 @@ const UpdateProduct = () => {
             <div className='bg-blue-600 mt-2 h-12'><h2 className='text-center pt-2 font-bold text-white text-xl'>Chỉnh sửa thông tin thuốc</h2></div>
             <form className='py-10 w-5/6 mx-auto grid grid-cols-12 gap-8'>
               <div className='col-span-5 py-8'>
-                <img className='border-2 rounded-xl' src={productUpdate.image || 'https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_pk/pakistan_product/panadol-regular/408x300-panadol-regular.png?auto=formathttps://vastovers.com/image/cache/catalog/Anagelsic%20/113-700x700.JPG'} alt='drug' />
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="large_size">Upload image</label>
+                {productUpdate.image && (
+                  <img className='border-2 rounded-xl mt-4' src={productUpdate.image} alt='drug' />
+                )}
+                <input onChange={handleFileChange} className="block w-full text-lg text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none mt-10" id="large_size" type="file"></input>
               </div>
               <div className='col-span-7'>
                 <div className='w-full'>

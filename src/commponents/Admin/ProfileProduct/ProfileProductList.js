@@ -12,6 +12,7 @@ const ProfileProductList = () => {
   const [apiData, setApiData] = useState([]);
   const [profileList, setProfileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const visiblePageRange = 2;
 
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
@@ -97,7 +98,7 @@ const ProfileProductList = () => {
               <div className='absolute inset-0 z-0 rounded-xl'></div>
               <div className='h-full z-10 border border-gray-300 transition-transform duration-300 transform rounded-xl items-center flex'>
                 <div className='ml-3'>
-                  <img className={`logo`} src='https://images2.thanhnien.vn/528068263637045248/2024/1/27/den-vau-99-17063223334631232917099.jpg' alt='profile' style={{ width: '130px', height: '130px' }} />
+                  <img className={`logo`} src={profile.imageURL || 'https://images2.thanhnien.vn/528068263637045248/2024/1/27/den-vau-99-17063223334631232917099.jpg'} alt='profile' style={{ width: '130px', height: '130px' }} />
                 </div>
                 <div className='ml-20'>
                   <div className='flex'>
@@ -108,9 +109,9 @@ const ProfileProductList = () => {
                       </div>
                       <div className='mx-8 mt-8 flex justify-between w-full'>
                         <div className='inline-block'>
-                          {profile.status === 'DRAFT' ? (
+                          {profile.status === 'DRAFT' || profile.status === 'CLOSED' ? (
                             <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
-                          ) : profile.status === 'PENDING TO APPROVE' ? (
+                          ) : profile.status === 'PENDING TO APPROVE' || profile.status === 'PENDING' ? (
                             <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : profile.status === 'APPROVE' ? (
                             <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>
@@ -134,6 +135,7 @@ const ProfileProductList = () => {
           </div>
         </Link>
       ))}
+
       <div className='mb-6 flex justify-center'>
         <nav aria-label="">
           <ul class="flex items-center -space-x-px h-10 text-base">
@@ -150,7 +152,6 @@ const ProfileProductList = () => {
             )) : <div></div>}
             <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
               <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
-
                 Next
               </button>
             </li>

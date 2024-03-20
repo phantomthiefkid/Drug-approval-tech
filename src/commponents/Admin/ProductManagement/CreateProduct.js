@@ -526,7 +526,7 @@ const CreateProduct = () => {
 
   }
 
-
+  console.log(selectedFile);
   return (
     <>
       <div className='mt-20 mb-16'>

@@ -328,12 +328,8 @@ const DrugList = () => {
                             <div className='mt-1'><Trash3Fill size={15} color="red"></Trash3Fill></div>Xoá
                           </button>
                         </div>) : (<div className="py-1">
-
                           <div className='mt-1 text-center'>  <i>Đã vô hiệu hóa</i></div>
-
                         </div>)}
-
-
                       </div>
                     )}
                   </td>

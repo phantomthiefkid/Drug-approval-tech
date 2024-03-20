@@ -15,6 +15,7 @@ const URL_ADMIN_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/admin/appro
 const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/storage/approval-products'
 
 export const uploadFileProduct = createAsyncThunk('upload', async ({ file, ApprovalProductID }) => {
+    console.log(file)
     try {
         const token = localStorage.getItem('token');
         const config = {

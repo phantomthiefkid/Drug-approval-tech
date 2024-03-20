@@ -5,7 +5,6 @@ const URL_UPLOAD = "https://fams-management.tech/api/storage/uploadFile"
 
 export const uploadFile = createAsyncThunk('uploadFile', async (file) => {
     try {
-        console.log("Check file: ", file)
         const token = localStorage.getItem('token');
         const config = {
             headers: {
