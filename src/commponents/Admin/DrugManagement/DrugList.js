@@ -288,9 +288,7 @@ const DrugList = () => {
               </thead>
               <tbody>
                 {Array.isArray(drugList) && drugList.map((drug, index) => (<tr class="odd:bg-white odd:dark:bg-blue-50 even:bg-gray-50 even:dark:bg-white  dark:border-gray-700">
-                  {selectedDrugDetail && (
-                    <ModalDetailDrug onClose={handleOnClose} isOpenDetail={showModalDetailDrug} drug={selectedDrugDetail} />
-                  )}
+
                   <>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center">
                       {index + 1 + currentPage * itemsPerPage}
@@ -366,6 +364,9 @@ const DrugList = () => {
           </div>
         </div>
         <ModalUpdateDrug isOpen={showModal} toggleModal={toggleModal} drug={selectedDrug} onUpdateSuccess={handleUpdateSuccess} />
+        {selectedDrugDetail && (
+          <ModalDetailDrug onClose={handleOnClose} isOpenDetail={showModalDetailDrug} drug={selectedDrugDetail} />
+        )}
       </div>
     </>
   )
