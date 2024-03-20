@@ -175,7 +175,7 @@ const ProfileDetail = () => {
                           <span className='inline-block ml-44'>
                             {detail.status === 'DRAFT' ? (
                               <p className='status bg-sky-400 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'REJECTED' ? (
+                            ) : detail.status === 'REJECTED BY SYSTEM' ? (
                               <p className='status bg-red-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : detail.status === 'APPROVED BY SYSTEM' || 'APPROVED' ? (
                               <p className='status bg-green-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
