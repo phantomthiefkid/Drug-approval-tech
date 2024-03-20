@@ -90,7 +90,7 @@ const CreateKeepStepTwo = ({ id }) => {
         dispatch(fetchDrugs({}))
         dispatch(getEmailAdmin({}))
     }, [dispatch])
-
+console.log("Check Id: ", id.id)
     const handleEmailChange = (event) => {
         console.log("Check mail: ", event.target.value)
         setSelectedEmail(event.target.value);
@@ -281,16 +281,16 @@ const CreateKeepStepTwo = ({ id }) => {
     const handleSaveAsDraftStepTwo = () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = id
+        dataUpdate.profileId = parseInt(id.id)
 
-
+        console.log("Sasve draft step 2: ", dataUpdate)
         const response = dispatch(createProfileProductStepTwo(dataUpdate))
 
         if (response) {
 
             toast.success('Lưu thành công!', { autoClose: 200 });
             setTimeout(() => {
-                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+                navigate(`/profiledetail/${parseInt(id.id)}`); // Chuyển hướng sang '/profilelist'
             }, 1000);
             console.log("Lưu nháp thành công!!!", response)
         } else {
@@ -346,7 +346,7 @@ const CreateKeepStepTwo = ({ id }) => {
                 await dispatch(createProfileProductStepTwo(dataUpdate));
                 toast.success('Lưu thành công!', { autoClose: 200 });
                 await dispatch(sendMailAdmin(updatedDataSend));
-               
+
                 setTimeout(() => {
                     navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
                 }, 500);
@@ -358,7 +358,7 @@ const CreateKeepStepTwo = ({ id }) => {
         }
         console.log(validateData(dataUpdate))
     }
-    
+
     const validateData = (dataUpdate) => {
         const errors = JSON.parse(JSON.stringify(dataUpdate.productList));// Mảng lưu trữ thông tin lỗi
         let isValid = true;
@@ -561,7 +561,7 @@ const CreateKeepStepTwo = ({ id }) => {
                 isValid = false;
             } else {
                 errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
-                ; 
+                ;
             }
 
             if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
@@ -571,8 +571,8 @@ const CreateKeepStepTwo = ({ id }) => {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
                 isValid = false;
             } else {
-                errors[index].pharmacogenomic.toxicity = ''; 
-               
+                errors[index].pharmacogenomic.toxicity = '';
+
             }
 
             if (product.indexIngredient?.length === 0) {
@@ -593,7 +593,7 @@ const CreateKeepStepTwo = ({ id }) => {
     return (
         <>
             <form class="max-w-sm mx-auto">
-                <select onChange={handleEmailChange} value={selectedEmail}  class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select onChange={handleEmailChange} value={selectedEmail} class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Chọn người duyệt</option>
                     {emailAdmin && emailAdmin.map((item, index) => (<option value={item.email}>{item.fullname}</option>))}
                 </select>

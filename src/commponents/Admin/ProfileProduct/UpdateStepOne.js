@@ -58,7 +58,7 @@ const UpdateStepOne = ({ onNext }) => {
                 console.log("Co hinh khong", url)
                 if (url) {
                     dataUpdate.imageURL = url
-                    const response = await dispatch(updateProfileProductStepOneupdate({dataUpdate: dataUpdate, id: id}))
+                    const response = await dispatch(updateProfileProductStepOneupdate({ dataUpdate: dataUpdate, id: id }))
                     console.log(dataUpdate)
                     if (response) {
                         toast.success('Lưu nháp thành công!', { autoClose: 200 });
@@ -67,10 +67,10 @@ const UpdateStepOne = ({ onNext }) => {
                     }
                 }
             } else {
-                const response = await dispatch(updateProfileProductStepOneupdate({dataUpdate: dataUpdate, id: id}))
+                const response = await dispatch(updateProfileProductStepOneupdate({ dataUpdate: dataUpdate, id: id }))
                 if (response) {
                     toast.success('Lưu thành công!', { autoClose: 200 });
-                    
+
                 } else {
                     toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
                 }
@@ -79,6 +79,7 @@ const UpdateStepOne = ({ onNext }) => {
     };
 
     const handleUpdatePendingStepOne = async () => {
+        console.log("???")
         if (dataUpdate.title) {
             if (image) {
                 const url = await convertFileUpload(image);
@@ -95,6 +96,18 @@ const UpdateStepOne = ({ onNext }) => {
                     } else {
                         toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
                     }
+                }
+            } else {
+                dataUpdate.status = "PENDING TO PROCEED"
+                const response = await dispatch(updateProfileProductStepOneupdate({ dataUpdate: dataUpdate, id: id }))
+                console.log(dataUpdate)
+                if (response) {
+                    toast.success('Hoành thành bước một!', { autoClose: 200 });
+                    setTimeout(() => {
+                        onNext(id);
+                    }, 1000);
+                } else {
+                    toast.error('Đã có lỗi xảy ra!', { autoClose: 200 });
                 }
             }
         }

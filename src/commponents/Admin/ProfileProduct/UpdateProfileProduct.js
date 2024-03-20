@@ -23,9 +23,11 @@ const UpdateProfileProduct = () => {
             if (detailProfile.status === 'DRAFT') {
                 setStepOneTag(true);
                 setStepTwoTag(false);
+                setStepTwoUpdate(false);
             } else if (detailProfile.status === 'PENDING TO PROCEED') {
                 setStepOneTag(false);
-                setStepTwoTag(true);
+                setStepTwoTag(false);
+                setStepTwoUpdate(true);
             }
         }
     }, [detailProfile])
@@ -62,13 +64,11 @@ const UpdateProfileProduct = () => {
                 <div className="flex justify-center w-5/6 mx-auto gap-2">
                     <button
                         className={`btn ${stepOneTag ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
-                        onClick={() => { setStepOneTag(true); setStepTwoTag(false); }}
                     >
                         Step One
                     </button>
                     <button
-                        className={`btn ${stepTwoTag ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
-                        onClick={() => { setStepOneTag(false); setStepTwoTag(true); }}
+                        className={`btn ${stepTwoUpdate ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-700'} w-1/3 h-10`}
                     >
                         Step Two
                     </button>
@@ -77,6 +77,7 @@ const UpdateProfileProduct = () => {
                 {/* Passing title and imageURL to UpdateStepOne */}
                 {stepOneTag && <UpdateStepOne onNext={handleNextStepOne}></UpdateStepOne>}
                 {stepTwoTag && <CreateKeepStepTwo productTitle={productTitle} id={id}></CreateKeepStepTwo>}
+                {stepTwoUpdate && <UpdateStepTwo></UpdateStepTwo>}
             </div>
         </>
     )
