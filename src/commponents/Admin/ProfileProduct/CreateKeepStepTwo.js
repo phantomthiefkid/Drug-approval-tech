@@ -90,7 +90,7 @@ const CreateKeepStepTwo = ({ id }) => {
         dispatch(fetchDrugs({}))
         dispatch(getEmailAdmin({}))
     }, [dispatch])
-
+console.log("Check Id: ", id.id)
     const handleEmailChange = (event) => {
         console.log("Check mail: ", event.target.value)
         setSelectedEmail(event.target.value);
@@ -281,16 +281,16 @@ const CreateKeepStepTwo = ({ id }) => {
     const handleSaveAsDraftStepTwo = () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = id
+        dataUpdate.profileId = parseInt(id.id)
 
-
+        console.log("Sasve draft step 2: ", dataUpdate)
         const response = dispatch(createProfileProductStepTwo(dataUpdate))
 
         if (response) {
 
             toast.success('Lưu thành công!', { autoClose: 200 });
             setTimeout(() => {
-                navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+                navigate(`/profiledetail/${parseInt(id.id)}`); // Chuyển hướng sang '/profilelist'
             }, 1000);
             console.log("Lưu nháp thành công!!!", response)
         } else {
@@ -341,12 +341,12 @@ const CreateKeepStepTwo = ({ id }) => {
             content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
         };
         if (validateData(dataUpdate)) {
-            console.log("Check mail: ", updatedDataSend)
+            console.log("true")
             try {
                 await dispatch(createProfileProductStepTwo(dataUpdate));
                 toast.success('Lưu thành công!', { autoClose: 200 });
                 await dispatch(sendMailAdmin(updatedDataSend));
-               
+
                 setTimeout(() => {
                     navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
                 }, 500);
@@ -356,9 +356,8 @@ const CreateKeepStepTwo = ({ id }) => {
         } else {
             toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
         }
-        console.log(validateData(dataUpdate))
     }
-    
+
     const validateData = (dataUpdate) => {
         const errors = JSON.parse(JSON.stringify(dataUpdate.productList));// Mảng lưu trữ thông tin lỗi
         let isValid = true;
@@ -561,7 +560,7 @@ const CreateKeepStepTwo = ({ id }) => {
                 isValid = false;
             } else {
                 errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
-                ; 
+                ;
             }
 
             if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
@@ -571,13 +570,18 @@ const CreateKeepStepTwo = ({ id }) => {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
                 isValid = false;
             } else {
-                errors[index].pharmacogenomic.toxicity = ''; 
-               
+                errors[index].pharmacogenomic.toxicity = '';
+
             }
 
             if (product.indexIngredient?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
+            }
+
+            if (product.authorities?.length === 0) {
+                isValid = false
+                toast.error('Thông tin về cơ quan có thẩm quyền không được trống!!!', { autoClose: 1000 })
             }
 
 
@@ -593,7 +597,7 @@ const CreateKeepStepTwo = ({ id }) => {
     return (
         <>
             <form class="max-w-sm mx-auto">
-                <select onChange={handleEmailChange} value={selectedEmail}  class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select onChange={handleEmailChange} value={selectedEmail} class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Chọn người duyệt</option>
                     {emailAdmin && emailAdmin.map((item, index) => (<option value={item.email}>{item.fullname}</option>))}
                 </select>
@@ -929,9 +933,9 @@ const CreateKeepStepTwo = ({ id }) => {
                 </div>
                 <div className='flex justify-end mr-6 gap-4 mt-3 mb-3'>
 
-                    <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    {/* <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         Lưu nháp
-                    </button>
+                    </button> */}
 
 
                     <button onClick={handleSavePendingToApproveStepTwo} className='px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' >

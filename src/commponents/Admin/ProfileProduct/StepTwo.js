@@ -93,7 +93,6 @@ const StepTwo = ({ productTitle }) => {
     }, [dispatch])
 
     const handleEmailChange = (event) => {
-        console.log("Check mail: ", event.target.value)
         setSelectedEmail(event.target.value);
     };
 
@@ -105,7 +104,6 @@ const StepTwo = ({ productTitle }) => {
         try {
             const response = await dispatch(uploadFile(formData));
             const url = response.payload;
-            console.log(url, response)
             setProducts(prevProducts => {
                 const updatedProducts = [...prevProducts];
                 updatedProducts[productIndex] = {
@@ -114,14 +112,11 @@ const StepTwo = ({ productTitle }) => {
                 };
                 return updatedProducts;
             });
-            console.log(products[productIndex])
+
         } catch (error) {
             console.error('Lỗi khi tải lên hình ảnh:', error);
         }
     };
-
-
-
 
     //-------------------
     const handleAddNewProduct = () => {
@@ -219,63 +214,34 @@ const StepTwo = ({ productTitle }) => {
     };
     //-------------------
     const handleOnChangeIngredient = (indexProduct, indexIngredient, field, value) => {
-        // Sao chép mảng products
         const updatedProducts = [...products];
-
-        // Lấy sản phẩm cần cập nhật
         const productToUpdate = { ...updatedProducts[indexProduct] };
-
-        // Sao chép mảng drugIngredients của sản phẩm
         const updatedIngredients = [...productToUpdate.drugIngredients];
-
-        // Kiểm tra nếu field là "drugId", ép giá trị về kiểu number
         if (field === "drugId") {
-            value = parseInt(value); // Ép về kiểu number
+            value = parseInt(value);
         }
-
-        // Cập nhật giá trị của trường field cho thành phần hoạt chất tại chỉ số indexIngredient
         updatedIngredients[indexIngredient] = {
             ...updatedIngredients[indexIngredient],
             [field]: value
         };
-
-        // Cập nhật mảng drugIngredients của sản phẩm sau khi đã thay đổi giá trị
         productToUpdate.drugIngredients = updatedIngredients;
-
-        // Cập nhật lại sản phẩm trong mảng products
         updatedProducts[indexProduct] = productToUpdate;
-
-        // Cập nhật state với các sản phẩm đã được cập nhật
         setProducts(updatedProducts);
     };
 
     const handleOnChangeAuthorities = (indexProduct, indexAuthorities, field, value) => {
         const updatedProducts = [...products];
-
-        // Lấy sản phẩm cần cập nhật
         const productToUpdate = { ...updatedProducts[indexProduct] };
-
-        // Sao chép mảng drugIngredients của sản phẩm
         const updateAuthorities = [...productToUpdate.authorities];
-
-        // Kiểm tra nếu field là "drugId", ép giá trị về kiểu number
         if (field === "countryId") {
-            value = parseInt(value); // Ép về kiểu number
+            value = parseInt(value);
         }
-
-        // Cập nhật giá trị của trường field cho thành phần hoạt chất tại chỉ số indexIngredient
         updateAuthorities[indexAuthorities] = {
             ...updateAuthorities[indexAuthorities],
             [field]: value
         };
-
-        // Cập nhật mảng drugIngredients của sản phẩm sau khi đã thay đổi giá trị
         productToUpdate.authorities = updateAuthorities;
-
-        // Cập nhật lại sản phẩm trong mảng products
         updatedProducts[indexProduct] = productToUpdate;
-        console.log("Check 1: ", updatedProducts)
-        // Cập nhật state với các sản phẩm đã được cập nhật
         setProducts(updatedProducts);
     }
 
@@ -283,54 +249,25 @@ const StepTwo = ({ productTitle }) => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
         dataUpdate.profileId = productTitle
+        if (dataUpdate.productList.length !== 0) {
+            const response = dispatch(createProfileProductStepTwo(dataUpdate))
 
+            if (response) {
 
-        const response = dispatch(createProfileProductStepTwo(dataUpdate))
-
-        if (response) {
-
-            toast.success('Lưu thành công!', { autoClose: 200 });
-            setTimeout(() => {
-                navigate(`/updateprofileproduct/${productTitle}`); // Chuyển hướng sang '/profilelist'
-            }, 1000);
-            console.log("Lưu nháp thành công!!!", response)
+                toast.success('Lưu thành công!', { autoClose: 200 });
+                setTimeout(() => {
+                    navigate(`/profilelist`); // Chuyển hướng sang '/profilelist'
+                }, 1000);
+            } else {
+                console.log('Dữ liệu không tồn tại')
+            }
         } else {
-            console.log('Dữ liệu không tồn tại')
+            toast.error('Phải tạo ít nhất một sản phẩm!', { autoClose: 200 });
         }
 
+
     }
-    // const handleSavePendingToApproveStepTwo = () => {
-    //     const dataUpdate = { ...stepTwo }
-    //     dataUpdate.productList = [...products]
-    //     dataUpdate.profileId = productTitle
-    //     dataUpdate.status = 'PENDING TO APPROVE'
-    //     const updatedDataSend = {
-    //         ...dataSend,
-    //         email: selectedEmail,
-    //         content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
-    //     };
-    //     if (validateData(dataUpdate)) {
-    //         console.log("Check: ", dataUpdate)
-    //         const response = dispatch(createProfileProductStepTwo(dataUpdate));
-    //         toast.success('Lưu thành công!', { autoClose: 200 })
-    //         if (response) {
-    //             dispatch(sendMailAdmin(updatedDataSend));
-    //             toast.success('Lưu thành công!', { autoClose: 200 });
-    //             setTimeout(() => {
-    //                 navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
-    //             }, 1000);
-    //         } else {
-    //             console.log('Dữ liệu không tồn tại')
-    //         }
 
-
-
-    //     } else {
-    //         toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
-    //     }
-    //     console.log(validateData(dataUpdate))
-
-    // }
     const handleSavePendingToApproveStepTwo = async () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
@@ -342,14 +279,14 @@ const StepTwo = ({ productTitle }) => {
             content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
         };
         if (validateData(dataUpdate)) {
-            console.log("Check mail: ", updatedDataSend)
+
             try {
                 await dispatch(createProfileProductStepTwo(dataUpdate));
                 toast.success('Lưu thành công!', { autoClose: 200 });
                 await dispatch(sendMailAdmin(updatedDataSend));
-               
+
                 setTimeout(() => {
-                    navigate('/profilelist'); // Chuyển hướng sang '/profilelist'
+                    navigate(`/profilelist`);
                 }, 1000);
             } catch (error) {
                 console.log('Có lỗi xảy ra khi gửi email:', error);
@@ -357,13 +294,11 @@ const StepTwo = ({ productTitle }) => {
         } else {
             toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
         }
-        console.log(validateData(dataUpdate))
     }
-    
+
     const validateData = (dataUpdate) => {
-        const errors = JSON.parse(JSON.stringify(dataUpdate.productList));// Mảng lưu trữ thông tin lỗi
+        const errors = JSON.parse(JSON.stringify(dataUpdate.productList));
         let isValid = true;
-        console.log("Before: ", dataUpdate)
         if (dataUpdate.productList.length === 0) {
             isValid = false;
             return isValid;
@@ -562,7 +497,7 @@ const StepTwo = ({ productTitle }) => {
                 isValid = false;
             } else {
                 errors[index].pharmacogenomic.pharmacodynamic = ''; // Gán giá trị rỗng khi không có lỗi
-                ; 
+                ;
             }
 
             if (!product.pharmacogenomic.toxicity || !product.pharmacogenomic.toxicity.trim()) {
@@ -572,15 +507,18 @@ const StepTwo = ({ productTitle }) => {
                 errors[index].pharmacogenomic.toxicity = 'Thông tin về toxicity không được có ký tự đặc biệt!!!';
                 isValid = false;
             } else {
-                errors[index].pharmacogenomic.toxicity = ''; 
-               
+                errors[index].pharmacogenomic.toxicity = '';
+
             }
 
             if (product.indexIngredient?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
             }
-
+            if (product.authorities?.length === 0) {
+                isValid = false
+                toast.error('Thông tin về cơ quan có thẩm quyền không được trống!!!', { autoClose: 1000 })
+            }
 
         });
         if (!isValid) {
@@ -594,7 +532,7 @@ const StepTwo = ({ productTitle }) => {
     return (
         <>
             <form class="max-w-sm mx-auto">
-                <select onChange={handleEmailChange} value={selectedEmail}  class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select onChange={handleEmailChange} value={selectedEmail} class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Chọn người duyệt</option>
                     {emailAdmin && emailAdmin.map((item, index) => (<option value={item.email}>{item.fullname}</option>))}
                 </select>
@@ -930,9 +868,9 @@ const StepTwo = ({ productTitle }) => {
                 </div>
                 <div className='flex justify-end mr-6 gap-4 mt-3 mb-3'>
 
-                    <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    {/* <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         Lưu nháp
-                    </button>
+                    </button> */}
 
 
                     <button onClick={handleSavePendingToApproveStepTwo} className='px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' >
