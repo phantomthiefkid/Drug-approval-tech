@@ -8,10 +8,11 @@ const URL_PROFILE_PRODUCT_LIST = `https://fams-management.tech/admin/profile-pro
 const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products-details`
 
 const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/admin/profile-products/step-one"
+const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/admin/profile-products/step-two"
 const URL_ADMIN_PRODUCTS = `https://fams-management.tech/admin/products`
 const URL_PROCESS_PROFILE = `https://fams-management.tech/admin/profile-products/process`
 const URL_SUBMISSION = `https://fams-management.tech/admin/profile-products/submission`
-
+const URL_PROFILE_PRODUCT_DETAIL_UPDATE_STEP_TWO = 'https://fams-management.tech/admin/profile-products-details-update-step-two'
 export const createProfileProductStepOne = createAsyncThunk('createProfileProductStepOne', async (stepOne) => {
   try {
 
@@ -54,7 +55,7 @@ export const createProfileProductStepTwo = createAsyncThunk('createProfileProduc
 
 export const updateProfileProductStepOneupdate = createAsyncThunk('updateProfileProductStepOne', async ({ dataUpdate, id }) => {
   try {
-console.log("haha", dataUpdate, id)
+    console.log("haha", dataUpdate, id)
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Missing Token');
@@ -70,6 +71,27 @@ console.log("haha", dataUpdate, id)
     }
     console.log("Check: ", dataUpdate)
     const response = await axios.put(URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE, dataUpdate, config)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+})
+
+export const updateProfileProductStepTwo = createAsyncThunk('updateProfileProductStepOne', async (stepTwo) => {
+  try {
+    console.log("haha", stepTwo)
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Missing Token');
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }
+   
+    const response = await axios.put(URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_TWO, stepTwo, config)
     return response.data
   } catch (error) {
     throw error
@@ -248,6 +270,32 @@ export const submissionStatus = createAsyncThunk('submissionStatus', async ({ pr
   }
 });
 
+export const getDetailStepTwo = createAsyncThunk('getDetailStepTwo', async ({id}) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Missing token');
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      params: {
+        profileId: id
+      }
+    };
+
+    const response = await axios.get(URL_PROFILE_PRODUCT_DETAIL_UPDATE_STEP_TWO, config);
+    console.log("Redux: ", response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
 export const ProfileProduct = createSlice({
   name: 'profileProduct',
   initialState: {
@@ -259,7 +307,8 @@ export const ProfileProduct = createSlice({
     profile: {},
     detail: {},
     process: {},
-    submission: {}
+    submission: {},
+    stepTwo: {}
   },
   extraReducers: (builder) => {
     builder.addCase(createProfileProductStepOne.fulfilled, (state, action) => {
@@ -353,6 +402,17 @@ export const ProfileProduct = createSlice({
         state.isError = true;
       })
       .addCase(submissionStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+    .addCase(getDetailStepTwo.fulfilled, (state, action) => {
+      state.stepTwo = action.payload;
+      state.isLoading = false;
+      state.isError = false;
+    })
+      .addCase(getDetailStepTwo.rejected, (state) => {
+        state.isError = true;
+      })
+      .addCase(getDetailStepTwo.pending, (state) => {
         state.isLoading = true;
       })
   }
