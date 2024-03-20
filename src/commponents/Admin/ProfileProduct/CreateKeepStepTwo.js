@@ -341,7 +341,7 @@ console.log("Check Id: ", id.id)
             content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
         };
         if (validateData(dataUpdate)) {
-            console.log("Check mail: ", updatedDataSend)
+            console.log("true")
             try {
                 await dispatch(createProfileProductStepTwo(dataUpdate));
                 toast.success('Lưu thành công!', { autoClose: 200 });
@@ -356,7 +356,6 @@ console.log("Check Id: ", id.id)
         } else {
             toast.error('Vui lòng điền đủ các trường!!!', { autoClose: 1500 })
         }
-        console.log(validateData(dataUpdate))
     }
 
     const validateData = (dataUpdate) => {
@@ -578,6 +577,11 @@ console.log("Check Id: ", id.id)
             if (product.indexIngredient?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
+            }
+
+            if (product.authorities?.length === 0) {
+                isValid = false
+                toast.error('Thông tin về cơ quan có thẩm quyền không được trống!!!', { autoClose: 1000 })
             }
 
 
@@ -929,9 +933,9 @@ console.log("Check Id: ", id.id)
                 </div>
                 <div className='flex justify-end mr-6 gap-4 mt-3 mb-3'>
 
-                    <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    {/* <button onClick={handleSaveAsDraftStepTwo} className="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:text-white hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         Lưu nháp
-                    </button>
+                    </button> */}
 
 
                     <button onClick={handleSavePendingToApproveStepTwo} className='px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' >
