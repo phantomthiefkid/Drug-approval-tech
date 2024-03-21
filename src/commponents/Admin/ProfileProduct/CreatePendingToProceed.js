@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { PlusCircle, XCircle, ArrowUp, ArrowDown } from 'react-bootstrap-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice'
@@ -69,8 +69,7 @@ const initial_data = {
     productList: [],
     status: 'PENDING TO PROCEED'
 }
-
-const StepTwo = ({ productTitle }) => {
+const CreatePendingToProceed = () => {
     const [products, setProducts] = useState([product_initial])
     const emailAdmin = useSelector((state) => state.getAdmin.data)
     const [selectedEmail, setSelectedEmail] = useState('')
@@ -85,8 +84,7 @@ const StepTwo = ({ productTitle }) => {
     const drugsAPI = useSelector((drug) => drug.drugData.data.content)
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const [auth, setAuth] = useState(false)
-    const [drug, setDrug] = useState(false)
+    const {id} = useParams();
     useEffect(() => {
         dispatch(fetchCategories())
         dispatch(fetchCountries())
@@ -250,7 +248,7 @@ const StepTwo = ({ productTitle }) => {
     const handleSaveAsDraftStepTwo = () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = productTitle
+        dataUpdate.profileId = id
         if (dataUpdate.productList.length !== 0) {
             const response = dispatch(createProfileProductStepTwo(dataUpdate))
 
@@ -266,14 +264,12 @@ const StepTwo = ({ productTitle }) => {
         } else {
             toast.error('Phải tạo ít nhất một sản phẩm!', { autoClose: 200 });
         }
-
-
     }
 
     const handleSavePendingToApproveStepTwo = async () => {
         const dataUpdate = { ...stepTwo }
         dataUpdate.productList = [...products]
-        dataUpdate.profileId = productTitle
+        dataUpdate.profileId = id
         dataUpdate.status = 'PENDING TO APPROVE'
         const updatedDataSend = {
             ...dataSend,
@@ -516,12 +512,10 @@ const StepTwo = ({ productTitle }) => {
             if (product.indexIngredient?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
-                setDrug(true)
             }
             if (product.authorities?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về cơ quan có thẩm quyền không được trống!!!', { autoClose: 1000 })
-                setAuth(true);
             }
 
         });
@@ -530,10 +524,34 @@ const StepTwo = ({ productTitle }) => {
         }
         return isValid;
     };
-
     return (
         <>
-            <form class="max-w-sm mx-auto">
+            <div className='mt-20'>
+                <div className='py-8 flex px-48'>
+                    <h1 className='italic text-3xl font-extrabold text-blue-900 flex'>
+                        <span className='ml-2'>Tạo hồ sơ sản phẩm</span>
+                    </h1>
+                </div>
+                <div className="w-2/3 mx-auto px-6 mt-8 mb-8 relative">
+                    <div className="bg-gray-200 h-1 w-full rounded-full">
+                        <div className="bg-blue-500 h-1 rounded-full" style={{ width: "66%" }}></div>
+                        <div className="absolute left-0 top-0 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 w-4 h-4 rounded-full hover:bg-blue-700 hover:scale-125 transition duration-300" style={{ left: "66%" }}></div>
+                    </div>
+                </div>
+
+                <div className="flex justify-center w-5/6 mx-auto gap-6">
+                    <button
+                        className='btn bg-gray-200 text-gray-700 w-1/3 h-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105'
+                    >
+                        Step One
+                    </button>
+                    <button
+                        className='btn bg-blue-500 text-white hover:bg-blue-700 w-1/3 h-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105'
+                    >
+                        Step Two
+                    </button>
+                </div>
+                <form class="max-w-sm mx-auto">
                 <select onChange={handleEmailChange} value={selectedEmail} class="bg-gray-50 mt-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Chọn người duyệt</option>
                     {emailAdmin && emailAdmin.map((item, index) => (<option value={item.email}>{item.fullname}</option>))}
@@ -618,7 +636,7 @@ const StepTwo = ({ productTitle }) => {
                                     </div>
                                 </div>
                                 <div className='gap-4 p-4'>
-                                    {drugIngredients && drugIngredients.map((drug, indexInge) => (<div key={index} className={`mb-6 border p-5 w-full ${drug ? 'border border-red-600' : 'border-gray-300'}`}>
+                                    {drugIngredients && drugIngredients.map((drug, indexInge) => (<div key={index} className="mb-6 border border-gray-300 p-5 w-full">
                                         <div className='flex gap-6'>
                                             <h3 className="text-sm mb-2 font-bold">Thành phần hoạt chất {index + 1}</h3>
                                             <div className="relative px-6" id="customSelect">
@@ -775,7 +793,7 @@ const StepTwo = ({ productTitle }) => {
                                 <div className='col-span-12'>
                                     <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
                                     {authorities.map((authority, indexAut) => (
-                                        <div key={index} className={`mb-4 w-full flex p-5 ${auth ? "border border-red-600" : "border border-gray-300"}`}>
+                                        <div key={index} className="mb-4 w-full flex border border-gray-300 p-5">
                                             <div className="mb-2 w-full">
 
                                                 <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
@@ -884,8 +902,9 @@ const StepTwo = ({ productTitle }) => {
 
                 </div>
             </div>
+            </div>
         </>
     )
 }
 
-export default StepTwo
+export default CreatePendingToProceed
