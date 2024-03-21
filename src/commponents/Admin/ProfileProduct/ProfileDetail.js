@@ -113,6 +113,15 @@ const ProfileDetail = () => {
               </Link>
             </div>
           )}
+          {profileApi && profileApi.profileInformation && (profileApi.profileInformation.status === 'PENDING TO PROCEED') && (
+            <div className="flex-shrink-0 ml-auto">
+              <Link to={`/creatependingtoproceed/${id}`}>
+                <button type="button" className="text-white flex bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm py-2.5 text-center p-4 gap-2">
+                  <PencilSquare size={20}></PencilSquare> Chỉnh sửa hồ sơ thuốc
+                </button>
+              </Link>
+            </div>
+          )}
 
         </div>
         <div className='w-5/6 h-auto border border-gray-200 shadow-xl mx-auto'>

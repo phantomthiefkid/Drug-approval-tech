@@ -82,7 +82,7 @@ const Navigation = () => {
           <div className='item-menu flex gap-12 items-center'>
             <div> <Link to={`/`}><div>
               <div className='flex justify-center items-center'>
-                <img className=' mt-2' src='./logo.png' /><span className='text-gray-300 w-full text-sm font-medium'>DRUG APPROVAL</span></div>
+                <img className=' mt-2' src='https://s3.ap-northeast-1.amazonaws.com/nguyentan/1711041066763-Remove-bg.ai_1711041054996.png' /><span className='text-gray-300 w-full text-sm font-medium'>DRUG APPROVAL</span></div>
 
             </div></Link>
             </div>
@@ -127,7 +127,7 @@ const Navigation = () => {
               <div className=''>
                 <span><button><i> Ngôn ngữ </i></button></span>
               </div>
-              <div><img className={`logo ${image}`} src='./vietnam.png' alt='Drug bank' /></div>
+              <div><img className={`logo ${image}`} src='https://s3.ap-northeast-1.amazonaws.com/nguyentan/1711041313754-Remove-bg.ai_1711041268395.png' alt='Drug bank' /></div>
             </div>
             {token ? (
               <div className='flex items-center'>
