@@ -111,7 +111,7 @@ const ProfileProductList = () => {
                         <div className='inline-block'>
                           {profile.status === 'DRAFT' || profile.status === 'CLOSED' ? (
                             <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
-                          ) : profile.status === 'PENDING TO APPROVE' || profile.status === 'PENDING' ?   (
+                          ) : profile.status === 'PENDING TO APPROVE' || profile.status === 'PENDING' || profile.status === 'PENDING TO PROCEED' ? (
                             <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : profile.status === 'APPROVE' ? (
                             <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>
@@ -137,29 +137,6 @@ const ProfileProductList = () => {
           </div>
         </Link>
       ))}
-
-      {/* <div className='mb-6 flex justify-center'>
-        <nav aria-label="">
-          <ul class="flex items-center -space-x-px h-10 text-base">
-            <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
-              <button onClick={handleDecreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
-                Previous
-              </button>
-            </li>
-            {totalPagesAPI ? [...Array(totalPagesAPI).keys()].map((page) => (
-              <li className={`page-item ${currentPage === page ? 'active' : ''}`}
-                key={page}>
-                <button onClick={() => handlePageChange(page)} class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}>{page + 1}</button>
-              </li>
-            )) : <div></div>}
-            <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
-              <button onClick={handleIncreasePage} class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div> */}
 
       <div className='mb-6 flex justify-center'>
         <nav aria-label="">

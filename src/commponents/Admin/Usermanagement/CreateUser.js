@@ -185,7 +185,7 @@ const CreateUser = () => {
             {errors.empty && <div className="text-red-500 mb-3">{errors.empty}</div>}
             <label for="base-input" class="block mb-2 text-lg  font-medium text-gray-900">Role:</label>
             <select id='role' name='roleID' value={users.roleID} onChange={getUserData} onBlur={() => handleValidation('roleID')}
-              className={`drop-shadow-md w-96 h-8 mt-3 mb-3 form-select ${errors.role ? 'is-invalid' : ''}`}>
+              className={`block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50 ${errors.role ? 'is-invalid' : ''}`}>
               <option>Select one</option>
               <option value="1">Admin</option>
               <option value="2">Secretary</option>
