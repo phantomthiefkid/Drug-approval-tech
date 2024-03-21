@@ -34,6 +34,7 @@ export const fetchDrugs = createAsyncThunk('fetchDrugs', async ({ pageNo, pageSi
 export const createDrugs = createAsyncThunk('drugs/createDrug', async (DrugData, { rejectWithValue }) => {
 
   try {
+    console.log("Drug Data: " ,DrugData)
     const token = localStorage.getItem('token');
     if (!token) {
       return rejectWithValue('No authentication token found');

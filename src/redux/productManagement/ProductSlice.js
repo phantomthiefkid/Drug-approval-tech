@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_PRODUCT_DETAIL = 'https://fams-management.tech/admin/approval-products-detail'
+const URL_PRODUCT_DETAIL = 'https://fams-management.tech/admin/approval-products/'
 const URL_PRODUCT_APPROVAL = 'https://fams-management.tech/public/approval-products'
 const URL_ADMIN_PRODUCT_APPROVAL = 'https://fams-management.tech/admin/approval-products'
 const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/storage/approval-products'

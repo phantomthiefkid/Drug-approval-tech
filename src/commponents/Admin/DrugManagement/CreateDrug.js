@@ -107,7 +107,7 @@ const CreateDrug = () => {
         toast.success('Thêm mới thành công!', { autoClose: 200 });
         setTimeout(() => {
           navigate(`/druglist`);
-        }, 1000);
+        }, 500);
       } else {
         toast.error('Thêm mới thất bại!', { autoClose: 200 })
       }
