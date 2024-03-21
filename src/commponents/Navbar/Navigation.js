@@ -22,7 +22,6 @@ const Navigation = () => {
   const roleName = getUserDataFromToken()
   const email = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
   const profileView = useSelector((state) => state.viewProfile.data);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,7 +34,7 @@ const Navigation = () => {
     }
     fetchData();
   }, [dispatch, email]);
-
+  console.log("=====> check: ", profileView)
   const handleScroll = () => {
     if (window.scrollY > 50) {
       setNavbarBackground('bg-indigo-500 bg-opacity-50 h-16');
@@ -132,11 +131,11 @@ const Navigation = () => {
             {token ? (
               <div className='flex items-center'>
                 <div className='items-center text-wrap hover:text-yellow-300'>
-                  {data.fullName}
+                  {profileView?.fullname}
                 </div>
                 <div>
                   <div onClick={toggleDropdownProfile} className='relative'>
-                    <img className='rounded-full h-14 ml-2' src={data.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'} alt={data.fullName} />
+                    <img className='rounded-full h-14 ml-2' src={profileView?.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'} alt={profileView?.fullname} />
                     {isOpenProfile && (
                       <div className="absolute w-32 top-14 left-100 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-2 w-full">
