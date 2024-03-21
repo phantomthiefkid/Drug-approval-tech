@@ -11,7 +11,7 @@ const ProfileDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
-  
+
   const [expandedProducts, setExpandedProducts] = useState({});
   const [radioChecked, setRadioChecked] = useState();
   const roleName = getUserDataFromToken()
@@ -143,9 +143,9 @@ const ProfileDetail = () => {
                   <div>
                     <div>
                       <div className='inline-block mr-5'>
-                        {profileApi.profileInformation.status === 'DRAFT' ? (
-                          <p className='status bg-sky-400 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
-                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || 'PENDING TO PROCEED' || 'PENDING TO SYSTEM' ? (
+                        {profileApi.profileInformation.status === 'DRAFT' || 'CLOSED' ? (
+                          <p className='status bg-sky-600 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
+                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || profileApi.profileInformation.status === 'PENDING TO PROCEED' || profileApi.profileInformation.status === 'PENDING TO SYSTEM' ? (
                           <p className='status bg-red-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : profileApi.profileInformation.status === 'APPROVE' ? (
                           <p className='status bg-green-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>

@@ -70,13 +70,7 @@ const product_err_initial = {
   }
 }
 
-const drugIngredient_initial = {
-  drugId: 0,
-  strength: '',
-  strengthNumber: '',
-  strengthUnit: '',
-  clinicallyRelevant: ''
-}
+
 
 const CreateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories)
@@ -88,9 +82,15 @@ const CreateProduct = () => {
   const [apiData, setApiData] = useState([]);
   const [drugList, setDrugList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDrug, setSelectedDrug] = useState(null); // Initially no selection
+  const [selectedDrug, setSelectedDrug] = useState(null);
 
-
+  const drugIngredient_initial = {
+    drugId: 0,
+    strength: '',
+    strengthNumber: '',
+    strengthUnit: '',
+    clinicallyRelevant: ''
+  }
   const { id } = useParams();
   const responseId = useSelector((state) => state.productData.product.id)
   const Navigate = useNavigate();
@@ -138,18 +138,52 @@ const CreateProduct = () => {
   ]);
   const [drugIngredientsError, setDrugIngredientsError] = useState([])
 
-  const handleChangeIngredient = (index, event) => {
-    const { name, value } = event.target;
-    const updatedIngredients = [...drugIngredients];
+  // const handleChangeIngredient = (index, event) => {
+  //   const { name, value } = event.target;
+  //   const updatedIngredients = [...drugIngredients];
 
-    if (event.target.tagName === 'SELECT') {
-      updatedIngredients[index]['drugId'] = parseInt(value);
-    } else {
-      updatedIngredients[index][name] = value;
+  //   if (event.target.tagName === 'SELECT') {
+  //     updatedIngredients[index]['drugId'] = parseInt(value);
+  //   } else {
+  //     updatedIngredients[index][name] = value;
+  //   }
+  //   setDrugIngredients(updatedIngredients);
+  // };
+
+  //   updatedIngredients[selectedItemIndex]['drugId'] = id;
+  //   updatedIngredients[selectedItemIndex]['name'] = name;
+
+  //   setDrugIngredients(updatedIngredients);
+  // };
+
+  // const handleChangeIngredient = (index, event, id, name) => {
+  //   setSelectedDrug({ id, name });
+  // };
+
+  // const handleChangeIngredient = (index, event, id, name) => {
+  //   setSelectedDrug({ id, name });
+  //   setDrugIngredients([{ ...drugIngredient_initial, drugId: id }]);
+  // };
+
+  const handleChangeIngredient = (index, event, id, name) => {
+    // Kiểm tra xem selectedDrug đã tồn tại chưa, nếu chưa thì mới cập nhật
+    if (!selectedDrug) {
+      setSelectedDrug({ id, name });
     }
+
+    const updatedIngredients = [...drugIngredients];
+    if (!updatedIngredients[index].drugId) {
+      updatedIngredients[index].drugId = id;
+    }
+    updatedIngredients[index][event.target.name] = event.target.value;
 
     setDrugIngredients(updatedIngredients);
   };
+
+
+
+
+
 
 
 
@@ -562,7 +596,7 @@ const CreateProduct = () => {
 
   }
 
-
+  console.log("-->", drugIngredients)
   console.log(productCreate);
   return (
     <>
@@ -681,12 +715,22 @@ const CreateProduct = () => {
                             {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
                           </select> */}
 
+
+                          {/* {drugsAPI && drugsAPI.map((drug) => (
+                                    <div
+                                      key={drug.id}
+                                      onClick={(event) => handleChangeIngredient(index, event)}
+                                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                      <div value='drug.id'>{drug.name}</div>
+                                    </div>
+                                  ))} */}
                           <div className="relative">
                             <div
                               onClick={handleToggleDropdown}
                               className="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm cursor-pointer"
                             >
-                              {'Chọn hoạt chất'}
+                              {selectedDrug ? selectedDrug.name : 'Chọn hoạt chất'}
                             </div>
                             {isOpen && (
                               <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-md shadow-md">
@@ -699,23 +743,22 @@ const CreateProduct = () => {
                                   value={searchTerm} onChange={handleSearchChange}
                                 />
                                 <div className="max-h-60 overflow-y-auto">
+
+
+
                                   {drugsAPI && drugsAPI.map((drug) => (
                                     <div
                                       key={drug.id}
-                                      onChange={(event) => handleChangeIngredient(index, event)}
+                                      onClick={(event) => handleChangeIngredient(index, event, drug.id, drug.name)}
                                       className="p-2 hover:bg-gray-100 cursor-pointer"
                                     >
-                                      <div value='drug.id'>{drug.name}</div>
+                                      {drug.name}
                                     </div>
                                   ))}
-
-
                                 </div>
                               </div>
                             )}
                           </div>
-
-
                         </form>
                       </div>
                     </div>
