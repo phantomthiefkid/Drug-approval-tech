@@ -276,18 +276,18 @@ const StepTwo = ({ productTitle }) => {
         const updatedDataSend = {
             ...dataSend,
             email: selectedEmail,
-            content: `Secretary ${emailSecrectary} has successfully created the profile product. Please login to review`
+            content: `${emailSecrectary} has successfully created the profile product. Please login to review`
         };
         if (validateData(dataUpdate)) {
 
             try {
                 await dispatch(createProfileProductStepTwo(dataUpdate));
-                toast.success('Lưu thành công!', { autoClose: 200 });
+                toast.success('Tạo hồ sơ thành công!', { autoClose: 200 });
                 await dispatch(sendMailAdmin(updatedDataSend));
 
                 setTimeout(() => {
                     navigate(`/profilelist`);
-                }, 1000);
+                }, 500);
             } catch (error) {
                 console.log('Có lỗi xảy ra khi gửi email:', error);
             }
@@ -338,7 +338,7 @@ const StepTwo = ({ productTitle }) => {
                 isValid = false;
 
             } else {
-                errors[index].prescriptionName = ''; // Gán giá trị rỗng khi không có ký tự đặc biệt
+                errors[index].prescriptionName = '';
 
             }
 
@@ -350,7 +350,7 @@ const StepTwo = ({ productTitle }) => {
                 isValid = false;
 
             } else {
-                errors[index].name = ''; // Gán giá trị rỗng khi không có ký tự đặc biệt
+                errors[index].name = '';
 
             }
 
@@ -524,10 +524,8 @@ const StepTwo = ({ productTitle }) => {
         if (!isValid) {
             setErrorValidation([...errors])
         }
-
         return isValid;
     };
-
 
     return (
         <>
@@ -773,8 +771,8 @@ const StepTwo = ({ productTitle }) => {
                                 <div className='col-span-12'>
                                     <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
                                     {authorities.map((authority, indexAut) => (
-                                        <div key={index} className="mb-4 flex border border-gray-300 p-5">
-                                            <div className="mb-2 w-1/2">
+                                        <div key={index} className="mb-4 w-full flex border border-gray-300 p-5">
+                                            <div className="mb-2 w-full">
 
                                                 <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
                                                 <input
@@ -786,7 +784,7 @@ const StepTwo = ({ productTitle }) => {
                                                     className="md:w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                                                 />
                                             </div>
-                                            <div className="mb-3 w-1/4">
+                                            <div className="mb-3 w-full">
 
                                                 <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
                                                 <select onChange={(e) => handleOnChangeAuthorities(index, indexAut, 'countryId', e.target.value)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
@@ -795,14 +793,16 @@ const StepTwo = ({ productTitle }) => {
                                                 </select>
                                             </div>
 
-                                            <div className='w-1/4 mt-6'><button
-                                                type="button"
-                                                onClick={() => handleDeleteAuthority(index)}
-                                                className="mt-1 ml-8 bg-red-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center"
-                                            >
-                                                <XCircle className="mr-1" size={20} />
-                                                Xóa
-                                            </button></div>
+                                            <div className='w-1/4 mt-6'>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteAuthority(index)}
+                                                    className="mt-1 ml-8 bg-red-500 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                                                >
+                                                    <XCircle className="mr-1" size={20} />
+                                                    Xóa
+                                                </button>
+                                            </div>
 
                                         </div>
                                     ))}
