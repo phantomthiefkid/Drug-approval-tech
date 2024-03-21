@@ -115,6 +115,8 @@ const ProfileProductList = () => {
                             <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : profile.status === 'APPROVE' ? (
                             <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>
+                          ): profile.status === 'PENDING TO PROCEED' ? (
+                            <p className="status bg-yellow-400 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : (
                             <p className="status">{profile.status}</p>
                           )}

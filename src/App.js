@@ -24,6 +24,7 @@ import ProfileDetail from './commponents/Admin/ProfileProduct/ProfileDetail';
 import PasswordChange from './commponents/Account/PasswordChange';
 import UploadTest from './commponents/uploadTest';
 import UpdateProfileProduct from './commponents/Admin/ProfileProduct/UpdateProfileProduct';
+import CreatePendingToProceed from './commponents/Admin/ProfileProduct/CreatePendingToProceed';
 function App() {
   return (
     <BrowserRouter>
@@ -51,6 +52,7 @@ function App() {
         <Route path='/passwordchange/:email' element={<PasswordChange></PasswordChange>}></Route>
         <Route path='/upload' element={<UploadTest></UploadTest>}></Route>
         <Route path='/updateprofileproduct/:id' element={<UpdateProfileProduct></UpdateProfileProduct>}></Route>
+        <Route path='/creatependingtoproceed/:id' element={<CreatePendingToProceed></CreatePendingToProceed>}></Route>
       </Routes>
       <Footer></Footer>
     </BrowserRouter>

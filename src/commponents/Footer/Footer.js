@@ -7,7 +7,7 @@ const Footer = () => {
     <div className='h-72 text-center w-full footer'>
       <div className='grid grid-cols-3'>
         <div className='justify-center mx-auto'>
-          <Link to={`/`}><div><img className='w-24 ml-10 mt-10' src='./logo.png' /><span className='text-blue-950 text-xl font-bold'>DRUG APPROVAL</span><br></br><span className='font-medium text-gray-700'>Technology</span></div></Link>
+          <Link to={`/`}><div><img className='w-24 ml-10 mt-10' src='https://s3.ap-northeast-1.amazonaws.com/nguyentan/1711041066763-Remove-bg.ai_1711041054996.png' /><span className='text-blue-950 text-xl font-bold'>DRUG APPROVAL</span><br></br><span className='font-medium text-gray-700'>Technology</span></div></Link>
 
         </div>
         <div>

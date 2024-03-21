@@ -82,6 +82,8 @@ const CreateKeepStepTwo = ({ id }) => {
     const categoriesAPI = useSelector((state) => state.productData.categories)
     const countriesAPI = useSelector((state) => state.productData.countries)
     const drugsAPI = useSelector((drug) => drug.drugData.data.content)
+    const [drug, setDrug] = useState(false)
+    const [auth, setAuth] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {
@@ -577,11 +579,12 @@ console.log("Check Id: ", id.id)
             if (product.indexIngredient?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về hoạt chất không được trống!!!', { autoClose: 1000 })
+                setDrug(true)
             }
-
             if (product.authorities?.length === 0) {
                 isValid = false
                 toast.error('Thông tin về cơ quan có thẩm quyền không được trống!!!', { autoClose: 1000 })
+                setAuth(true);
             }
 
 
@@ -681,7 +684,7 @@ console.log("Check Id: ", id.id)
                                     </div>
                                 </div>
                                 <div className='gap-4 p-4'>
-                                    {drugIngredients && drugIngredients.map((drug, indexInge) => (<div key={index} className="mb-6 border border-gray-300 p-5 w-full">
+                                    {drugIngredients && drugIngredients.map((drug, indexInge) => (<div key={index} className={`mb-6 border ${drug ? "border border-red-600" : 'border-gray-300'} p-5 w-full`}>
                                         <div className='flex gap-6'>
                                             <h3 className="text-sm mb-2 font-bold">Thành phần hoạt chất {index + 1}</h3>
                                             <div className="relative px-6" id="customSelect">
@@ -838,7 +841,7 @@ console.log("Check Id: ", id.id)
                                 <div className='col-span-12'>
                                     <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
                                     {authorities.map((authority, indexAut) => (
-                                        <div key={index} className="mb-4 flex border border-gray-300 p-5">
+                                        <div key={index} className={`mb-4 flex ${auth ? "border border-red-600" : 'border border-gray-300'} p-5`}>
                                             <div className="mb-2 w-1/2">
 
                                                 <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
