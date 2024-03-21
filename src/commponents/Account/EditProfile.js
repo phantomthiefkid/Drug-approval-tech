@@ -116,6 +116,7 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("====> Check: ", profileUpdate)
     try {
       const resultUpdate = await dispatch(updateProfile({ ...profileUpdate, avatar: profileUpdate.avatar }));
       if (updateProfile.fulfilled.match(resultUpdate)) {

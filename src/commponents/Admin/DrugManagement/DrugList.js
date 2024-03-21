@@ -208,7 +208,7 @@ const DrugList = () => {
                           <option value="">Chọn</option>
                           <option value="name">Tên</option>
                           <option value="type">Loại</option>
-                          <option value="state">Tình trạng</option>
+                          <option value="state">Trạng thái</option>
                         </select>
                       </div>
 
