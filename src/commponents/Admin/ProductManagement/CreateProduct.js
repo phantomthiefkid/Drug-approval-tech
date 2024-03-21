@@ -70,6 +70,14 @@ const product_err_initial = {
   }
 }
 
+const drugIngredient_initial = {
+  drugId: 0,
+  strength: '',
+  strengthNumber: '',
+  strengthUnit: '',
+  clinicallyRelevant: ''
+}
+
 const CreateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories)
   const countriesAPI = useSelector((state) => state.productData.countries)
@@ -77,50 +85,12 @@ const CreateProduct = () => {
   const [productCreate, setProductCreate] = useState(product_initial)
   const [productError, setProductError] = useState(product_err_initial)
   const [selectedFile, setSelectedFile] = useState(null);
-  const [apiData, setApiData] = useState([]);
-  const [drugList, setDrugList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDrug, setSelectedDrug] = useState(null);
-  const [ingredientIndexes, setIngredientIndexes] = useState([0]);
-
-  const drugIngredient_initial = {
-    drugId: 0,
-    strength: '',
-    strengthNumber: '',
-    strengthUnit: '',
-    clinicallyRelevant: ''
-  }
+  const [productCreated, setProductCreated] = useState(false);
   const { id } = useParams();
   const responseId = useSelector((state) => state.productData.product.id)
   const Navigate = useNavigate();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const handleToggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchDrugs({
-      pageSize: 20,
-      search: searchTerm
-
-    })).then((response) => {
-      if (response.payload.content.length === 0) {
-
-      } else {
-        setApiData(response.payload.content);
-        console.log("Hello: ", response.payload.content)
-      }
-    })
-      .catch((error) => {
-        console.error('Error fetching users:', error);
-      });
-  }, [dispatch, searchTerm]);
-
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
   useEffect(() => {
     dispatch(fetchCategories())
     dispatch(fetchCountries())
@@ -131,15 +101,6 @@ const CreateProduct = () => {
     drugIngredient_initial
   ]);
   const [drugIngredientsError, setDrugIngredientsError] = useState([])
-
-  const handleChangeIngredient = (index, event, id, name) => {
-    const updatedIngredients = [...drugIngredients];
-    updatedIngredients[index].drugId = id;
-    updatedIngredients[index][event.target.name] = event.target.value;
-    setDrugIngredients(updatedIngredients);
-    setSelectedDrug({ id, name });
-  };
-
 
   const handleAddIngredient = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
@@ -155,7 +116,18 @@ const CreateProduct = () => {
     }
   }, [responseId, selectedFile]);
 
+  const handleChangeIngredient = (index, event) => {
+    const { name, value } = event.target;
+    const updatedIngredients = [...drugIngredients];
 
+    if (event.target.tagName === 'SELECT') {
+      updatedIngredients[index]['drugId'] = parseInt(value);
+    } else {
+      updatedIngredients[index][name] = value;
+    }
+
+    setDrugIngredients(updatedIngredients);
+  };
 
   const handleDeleteIngredient = (index) => {
     const updatedIngredients = [...drugIngredients];
@@ -478,7 +450,7 @@ const CreateProduct = () => {
       // });
       try {
         const resultAction = await dispatch(createProducts(productCreate));
-
+        
         if (createProducts.fulfilled.match(resultAction)) {
           Swal.fire({
             title: 'Success!',
@@ -551,7 +523,6 @@ const CreateProduct = () => {
 
   }
 
-  console.log("-->", drugIngredients)
   console.log(productCreate);
   return (
     <>
@@ -663,41 +634,15 @@ const CreateProduct = () => {
                     <div className='flex gap-6'>
                       <h3 className="text-sm mb-2 font-bold">Thành phần hoạt chất {index + 1}</h3>
                       <div className="relative px-6" id="customSelect">
+
                         <form class="max-w-sm mx-auto">
                           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                          <div className="relative">
-                            <div
-                              onClick={() => handleToggleDropdown(index)}
-                              className="block w-40 mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm cursor-pointer"
-                            >
-                              {selectedDrug ? selectedDrug.name : 'Chọn hoạt chất'}
-                            </div>
-                            {isOpen && (
-                              <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-b-md shadow-md">
-                                <input
-                                  type="search"
-                                  name='search'
-                                  className="w-full p-2 border-b border-gray-300"
-                                  placeholder="Search..."
-                                  id="default-search"
-                                  value={searchTerm} onChange={handleSearchChange}
-                                />
-                                <div className="max-h-60 overflow-y-auto">
-
-                                  {drugsAPI && drugsAPI.map((drug) => (
-                                    <div
-                                      key={drug.id}
-                                      onClick={(event) => handleChangeIngredient(index, event, drug.id, drug.name)}
-                                      className="p-2 hover:bg-gray-100 cursor-pointer"
-                                    >
-                                      {drug.name}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
+                          <select onChange={(event) => handleChangeIngredient(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
+                            <option selected>Chọn hoạt chất</option>
+                            {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
+                          </select>
                         </form>
+
                       </div>
                     </div>
 

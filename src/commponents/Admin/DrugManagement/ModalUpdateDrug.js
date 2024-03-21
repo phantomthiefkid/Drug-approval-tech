@@ -104,6 +104,7 @@ const ModalUpdateDrug = ({ isOpen, toggleModal, drug, onUpdateSuccess }) => {
 
   const handleUpdate = async (event) => {
     event.preventDefault();
+    console.log(drugUpdate)
     try {
       if (!handleValidation(drugUpdate)) {
         await dispatch(updateDrugs(drugUpdate))

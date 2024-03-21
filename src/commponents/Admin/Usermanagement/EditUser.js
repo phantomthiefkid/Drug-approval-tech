@@ -142,7 +142,7 @@ const EditUser = () => {
                   type="radio"
                   value={1}
                   name="gender"
-                  checked={inforUser?.gender === 1} // Kiểm tra nếu giới tính là male
+                  checked={inforUser && inforUser?.gender === 1} // Kiểm tra nếu giới tính là male
                   onChange={handleOnChange}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
@@ -154,7 +154,7 @@ const EditUser = () => {
                   type="radio"
                   value={0}
                   name="gender"
-                  checked={inforUser?.gender === 0} // Kiểm tra nếu giới tính là female
+                  checked={inforUser && inforUser?.gender === 0} // Kiểm tra nếu giới tính là female
                   onChange={handleOnChange}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                 />
