@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PencilSquare, ArrowUp, ArrowDown, Command } from 'react-bootstrap-icons'
 import Swal from 'sweetalert2';
-
+import { getUserDataFromToken } from '../../../redux/auth/loginSlice';
 import { fetchProfileProductsDetail, processProfile, submissionStatus } from '../../../redux/profileProduct/profileProductSlice'
 
 const ProfileDetail = () => {
@@ -11,10 +11,10 @@ const ProfileDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
-  console.log("Check: ", profileApi)
+  
   const [expandedProducts, setExpandedProducts] = useState({});
   const [radioChecked, setRadioChecked] = useState();
-
+  const roleName = getUserDataFromToken()
   useEffect(() => {
     window.scrollTo(0, 0)
     dispatch(fetchProfileProductsDetail({ id }))
@@ -127,7 +127,7 @@ const ProfileDetail = () => {
                 {profileApi && profileApi.profileInformation && (
                   <h2 className=' mb-4 text-3xl text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 hover:to-yellow-500 font-bold'>{profileApi.profileInformation.title}</h2>
                 )}
-                {profileApi && profileApi.profileInformation && profileApi.profileInformation.status === 'PENDING TO APPROVE' ? (
+                {roleName === 'ADMIN' && profileApi && profileApi.profileInformation && profileApi.profileInformation.status === 'PENDING TO APPROVE' ? (
                   <button onClick={handleProcess} className='flex items-center bg-rose-600 border border-gray-200 text-lg p-2 rounded-full text-white ml-28'>
                     <Command className="mr-2" />
                     PROCESS PROFILE

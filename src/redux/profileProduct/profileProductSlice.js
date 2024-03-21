@@ -5,7 +5,7 @@ const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/
 const URL_ADMIN_CREATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/admin/profile-products/step-two"
 
 const URL_PROFILE_PRODUCT_LIST = `https://fams-management.tech/admin/profile-products`
-const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products-details`
+const URL_PROFILE_PRODUCT_DETAIL = `https://fams-management.tech/admin/profile-products/`
 
 const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_ONE = "https://fams-management.tech/admin/profile-products/step-one"
 const URL_ADMIN_UPDATE_PROFILE_PRODUCT_STEP_TWO = "https://fams-management.tech/admin/profile-products/step-two"
@@ -134,10 +134,11 @@ export const fetchProfileProductsDetail = createAsyncThunk('fetchProfileProducts
         'Authorization': `Bearer ${token}`
       },
       params: {
-        id
+       id
       }
     };
-    const response = await axios.get(URL_PROFILE_PRODUCT_DETAIL, config);
+    const response = await axios.get(URL_PROFILE_PRODUCT_DETAIL + id, config);
+    console.log("===>? ",response.data.content)
     return response.data;
   } catch (error) {
     throw error;

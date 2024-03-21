@@ -593,7 +593,7 @@ const UpdateStepTwo = () => {
                   <h2 className="text-2xl w-full font-bold mb-4">Cơ quan có thẩm quyền</h2>
                   {item.product.authorities && item.product.authorities.map((authority, indexAut) => (
                     <div key={index} className="mb-4 flex border border-gray-300 p-5">
-                      <div className="mb-2 w-1/2">
+                      <div className="mb-2 w-3/4">
 
                         <label className="block mb-2 text-sm font-medium text-gray-900">Tên chứng nhận</label>
                         <input

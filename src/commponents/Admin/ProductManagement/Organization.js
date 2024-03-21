@@ -27,8 +27,6 @@ const Organization = () => {
                     <span className='ml-2 font-sans'>Các tổ chức quản lí dược</span>
                 </h1>
             </div>
-
-
             <div className='w-5/6 mx-auto mt-20 flex gap-12 bg-opacity-40'>
                 {organizations.map((organization, index) => (
                     <Link key={index} to={`/productlist/${organization.name}`} className='w-1/3 h-52 relative rounded-xl transition-transform duration-300 transform hover:scale-110 hover:shadow-2xl' style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${organization.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -44,6 +42,18 @@ const Organization = () => {
                     </Link>
                 ))}
             </div>
+            <div className='text-center mt-8 p-16'>
+                <p className='text-gray-600 text-lg leading-relaxed mx-auto font-normal'>
+                    <span className="font-bold text-blue-700">DrugApproval</span> là một cơ sở dữ liệu trực tuyến được sử dụng rộng rãi trong lĩnh vực dược phẩm và sinh học phân tử. Nó cung cấp thông tin chi tiết về các loại thuốc, từ thông tin về thành phần hóa học đến cơ chế hoạt động, tác dụng phụ, tương tác thuốc và ứng dụng lâm sàng. DrugApproval cũng cung cấp thông tin về các biến thể di truyền của các gen liên quan đến phản ứng dược lý, cũng như thông tin về các dược phẩm và sản phẩm chứa thuốc. Nó là một công cụ quan trọng cho các nhà nghiên cứu, nhà sản xuất thuốc, bác sĩ và những người làm trong lĩnh vực dược phẩm để hiểu rõ hơn về các thuốc và ứng dụng của chúng trong y học và nghiên cứu.
+                </p>
+
+            </div>
+            <div className="grid grid-cols-3 gap-10 mt-8 w-full mx-auto">
+                <img src="https://d3i6fh83elv35t.cloudfront.net/static/2018/06/GettyImages-758299279-1024x683.jpg" alt="Medical Image 1" className=" object-cover object-center w-3/4 h-3/4 mx-auto" />
+                <img src="https://i0.wp.com/www.apifirst.in/wp-content/uploads/2021/03/pharma-products-in-india-500x500-1.jpg?fit=460%2C351&ssl=1" alt="Medical Image 2" className=" object-cover object-center w-3/4 h-3/4 mx-auto" />
+                <img src="https://nkgabc.com/wp-content/uploads/2020/07/SERVICES-FOR-NEW-DRUG-APPROVAL-DrugBlog-1024x768.jpg" alt="Medical Image 3" className=" object-cover object-center w-3/4 h-3/4 mx-auto" />
+            </div>
+
         </div>
     );
 };
