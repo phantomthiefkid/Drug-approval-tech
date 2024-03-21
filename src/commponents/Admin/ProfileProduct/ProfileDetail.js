@@ -11,7 +11,7 @@ const ProfileDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const profileApi = useSelector((profile) => profile.profileProduct.detail)
-  
+
   const [expandedProducts, setExpandedProducts] = useState({});
   const [radioChecked, setRadioChecked] = useState();
   const roleName = getUserDataFromToken()
@@ -125,7 +125,7 @@ const ProfileDetail = () => {
 
         </div>
         <div className='w-5/6 h-auto border border-gray-200 shadow-xl mx-auto'>
-          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6'>
+          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mb-6'>
             <div className='w-5/6 flex justify-center border-gray-200'>
               {profileApi && profileApi.profileInformation && (
                 <img className='max-w-md rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={profileApi.profileInformation.imageURL || 'https://uicreative.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2020/01/23073244/company-profile-finance-product-services-1024x683.jpg'} alt='Profile Image' />
@@ -152,9 +152,9 @@ const ProfileDetail = () => {
                   <div>
                     <div>
                       <div className='inline-block mr-5'>
-                        {profileApi.profileInformation.status === 'DRAFT' ? (
-                          <p className='status bg-sky-400 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
-                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || 'PENDING TO PROCEED' || 'PENDING TO SYSTEM' ? (
+                        {profileApi.profileInformation.status === 'DRAFT' || 'CLOSED' ? (
+                          <p className='status bg-sky-600 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
+                        ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || profileApi.profileInformation.status === 'PENDING TO PROCEED' || profileApi.profileInformation.status === 'PENDING TO SYSTEM' ? (
                           <p className='status bg-red-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : profileApi.profileInformation.status === 'APPROVE' ? (
                           <p className='status bg-green-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
