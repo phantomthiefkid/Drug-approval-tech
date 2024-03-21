@@ -24,10 +24,10 @@ export default function ModalLogin({ visible, onClose }) {
         return;
       }
       const response = await loginApi(email, password);
-      const token = response.data.accessToken;
-      
-      console.log(token)
-      localStorage.setItem('token', token);
+      const token = response.data;
+      localStorage.setItem('token', JSON.stringify(token));
+
+      localStorage.setItem('token', token.accessToken);
       const storedToken = localStorage.getItem('token');
       onClose();
       navigate('/');

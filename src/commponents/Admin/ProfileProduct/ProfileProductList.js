@@ -12,7 +12,7 @@ const ProfileProductList = () => {
   const [apiData, setApiData] = useState([]);
   const [profileList, setProfileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const visiblePageRange = 2;
+  const pageRange = 5
 
   const token = localStorage.getItem('token')
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const ProfileProductList = () => {
     if (!token) {
       navigate('/')
     }
-  }, [token])
+  }, [token, navigate])
 
   return (
     <div className='mt-14 mb-20'>
@@ -136,7 +136,7 @@ const ProfileProductList = () => {
         </Link>
       ))}
 
-      <div className='mb-6 flex justify-center'>
+      {/* <div className='mb-6 flex justify-center'>
         <nav aria-label="">
           <ul class="flex items-center -space-x-px h-10 text-base">
             <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
@@ -157,7 +157,30 @@ const ProfileProductList = () => {
             </li>
           </ul>
         </nav>
+      </div> */}
+
+      <div className='mb-6 flex justify-center'>
+        <nav aria-label="">
+          <ul className="flex items-center -space-x-px h-10 text-base">
+            <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
+              <button onClick={handleDecreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                Previous
+              </button>
+            </li>
+            {totalPagesAPI && [...Array(totalPagesAPI).keys()].slice(currentPage, currentPage + pageRange).map((page) => (
+              <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
+                <button onClick={() => handlePageChange(page)} className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}>{page + 1}</button>
+              </li>
+            ))}
+            <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
+              <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
+
 
     </div>
   )

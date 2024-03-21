@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_LIST_PRODUCT_DETAIL = 'https://fams-management.tech/public/approval-product-detail';
+const URL_LIST_PRODUCT_DETAIL = 'https://fams-management.tech/public/approval-products-detail';
 
 export const fetchProductDetailGuest = createAsyncThunk('fetchProductDetailGuest', async ({id}) => {
     try {
@@ -11,6 +11,7 @@ export const fetchProductDetailGuest = createAsyncThunk('fetchProductDetailGuest
             }
         }
         const response = await axios.get(URL_LIST_PRODUCT_DETAIL, config);
+        console.log("===> " ,response.data)
         return response.data;
     } catch (error) {
         throw error;
