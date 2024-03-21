@@ -203,7 +203,7 @@ const CreateProduct = () => {
           [manufactorName]: value,
         },
       });
-    } else if (name === 'categoryId') {
+    } else if (name === 'categoryId' || name === 'administrationId') {
       // Update categoryId
       setProductCreate({
         ...productCreate,
@@ -233,6 +233,7 @@ const CreateProduct = () => {
       // Update other fields
       setProductCreate({ ...productCreate, [name]: value });
     }
+    console.log("====> ", productCreate)
   };
 
   const handleCheck = async () => {
@@ -449,7 +450,7 @@ const CreateProduct = () => {
       // });
       try {
         const resultAction = await dispatch(createProducts(productCreate));
-
+        
         if (createProducts.fulfilled.match(resultAction)) {
           Swal.fire({
             title: 'Success!',
@@ -562,9 +563,9 @@ const CreateProduct = () => {
                       <label for="base-input" class="block mb-2 text-sm  font-medium text-gray-900">Chọn cơ sở dược</label>
                       <select name='administrationId' onChange={handleOnChange} className='block w-full mt-1 border border-gray-300 rounded-lg shadow-sm p-2.5 bg-gray-50' required>
                         <option value=''>Chọn cơ sở</option>
-                        <option value='1'>FDA</option>
-                        <option value='2'>ANSM</option>
-                        <option value='3'>DAV</option>
+                        <option value={1}>FDA</option>
+                        <option value={2}>ANSM</option>
+                        <option value={3}>DAV</option>
                       </select>
 
                     </div>
