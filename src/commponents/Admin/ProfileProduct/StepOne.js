@@ -14,17 +14,23 @@ const StepOne = ({ onNext }) => {
     const [image, setImage] = useState(null);
     const handleSubmitStepOnePending = async () => {
         const stepOne = { title: title, status: 'PENDING TO PROCEED', imgURL: '' };
-        if (title) {
-            const response = await dispatch(createProfileProductStepOne(stepOne));
-            if (response) {
-                toast.success('Hoàn thành bước một', { autoClose: 200 })
-                console.log("Check step 1: ", response.payload)
-                setTimeout(() => {
-                    const id = response.payload.id;
-                    onNext(id);
-                }, 1000);
+        if (title && image) {
+            const url = await convertFileUpload(image)
+            if (url) {
+                stepOne.imgURL = url
+                const response = await dispatch(createProfileProductStepOne(stepOne));
+                if (response) {
+                    toast.success('Hoàn thành bước một', { autoClose: 200 })
+                    console.log("Check step 1: ", response.payload)
+                    setTimeout(() => {
+                        const id = response.payload.id;
+                        onNext(id);
+                    }, 1000);
+                }
             }
+
         } else {
+            toast.error('Vui lòng điền đủ thông tin', { autoClose: 500 })
             setError(true)
         }
 
@@ -49,11 +55,11 @@ const StepOne = ({ onNext }) => {
             if (image) {
                 const url = await convertFileUpload(image)
                 console.log("Url: ", url)
-    
+
                 if (url) {
                     stepOne.imageURL = url
                     const response = await dispatch(createProfileProductStepOne(stepOne))
-    
+
                     if (response) {
                         toast.success('Lưu thành công!', { autoClose: 200 });
                         setTimeout(() => {
@@ -65,7 +71,7 @@ const StepOne = ({ onNext }) => {
                 }
             } else {
                 const response = await dispatch(createProfileProductStepOne(stepOne))
-    
+
                 if (response) {
                     toast.success('Lưu thành công!', { autoClose: 200 });
                     setTimeout(() => {
@@ -79,7 +85,7 @@ const StepOne = ({ onNext }) => {
             setError(true)
         }
     };
-    
+
 
     const handleOnChange = (e) => {
         setTitle(e.target.value);

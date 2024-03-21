@@ -14,11 +14,13 @@ const ProductListGuest = () => {
     const [sortField, setSortField] = useState('');
     const [isOpenFilter, setIsOpenFilter] = useState(false);
     const [sortOrder, setSortOrder] = useState('');
+    const [apiData, setApiData] = useState([]);
     const [search, setSearch] = useState('');
     const [totalPages, setTotalPages] = useState(0);
     const [flag, setFlag] = useState(false)
     const totalPagesAPI = useSelector((page) => page.product.totalPages)
-
+    const handleSortFieldChange = (e) => setSortField(e.target.value);
+    const handleSortOrderChange = (e) => setSortOrder(e.target.value);
     
     useEffect(() => {
         if (Array.isArray(productListApi)) {
@@ -27,24 +29,53 @@ const ProductListGuest = () => {
         }
     }, [productList]);
     
-    useEffect(() => {
-        dispatch(fetchProductsFollowOrganization({ pageSize: 8, sortOrder: 'asc', pageNo: currentPage, search: search, flag, id })).then(() => {
-            setTotalPages(totalPagesAPI);
-        });
-    }, [dispatch, currentPage, totalPagesAPI, search, id]);
-    const handleSortFieldChange = (e) => setSortField(e.target.value);
-    const handleSortOrderChange = (e) => setSortOrder(e.target.value);
-    const fetchNewProducts = () => {
-        dispatch(fetchProductsFollowOrganization({ sortField: sortField, sortOrder: sortOrder, pageSize: 8, pageNo: 0, id }))
-    }
 
-    const handleOnClickFilter = () => {
-        setFlag(!flag)
-        fetchNewProducts();
+    useEffect(() => {
+        dispatch(fetchProductsFollowOrganization({ pageSize: 8, sortOrder: 'asc', pageNo: currentPage, search: search, id })).then((response) => {
+            if (response.payload.content.length === 0) {
+                setCurrentPage(0)
+            } else {
+                setApiData(response.payload.content)
+            }
+        });
+    }, [dispatch, sortField, setSortOrder, search, id]);
+
+    useEffect(() => {
+        setProductListApi([...apiData]);
+    }, [apiData]);
+
+  
+    useEffect(() => {
+        dispatch(fetchProductsFollowOrganization({
+            pageSize: 8,
+            pageNo: currentPage,
+            sortField,
+            sortOrder,
+            id,
+            search: search
+        })).then((response) => {
+            if (response.payload.content.length === 0) {
+                // Nếu không có dữ liệu, set lại currentPage về 0
+                setCurrentPage(0);
+            } else {
+                setApiData(response.payload.content);
+            }
+        })
+            .catch((error) => {
+                // Xử lý lỗi nếu có
+                console.error('Error fetching users:', error);
+            });
+    }, [dispatch, currentPage, sortField, sortOrder, search, id]);
+
+    const resetFilters = () => {
+        setSortField('')
         setIsOpenFilter(false);
-        setCurrentPage(0)
-        
-    }
+        setCurrentPage(0);
+        setSortOrder('asc')
+        setSearch('')
+        dispatch(fetchProductsFollowOrganization({ pageSize: 8, pageNo: 0, id }));
+      };
+
 
     const handleIncreasePage = () => {
         if (currentPage < totalPages - 1) {
@@ -130,7 +161,7 @@ const ProductListGuest = () => {
                                         </div>
                                         <hr className="my-2" />
                                         <div className='flex justify-center'>
-                                            <button className='bg-green-500 text-white rounded-md px-4 py-2 mx-2' onClick={handleOnClickFilter}>Apply</button>
+                                            <button className='bg-green-500 text-white rounded-md px-4 py-2 mx-2' onClick={resetFilters}>Reset</button>
                                             <button className='bg-red-500 text-white rounded-md px-4 py-2 mx-2' onClick={() => setIsOpenFilter(false)}>Cancel</button>
                                         </div>
                                     </div>
@@ -173,7 +204,7 @@ const ProductListGuest = () => {
                                     Previous
                                 </button>
                             </li>
-                            {totalPages ? [...Array(totalPages).keys()].map((page) => (
+                            {totalPagesAPI ? [...Array(totalPagesAPI).keys()].map((page) => (
                                 <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
                                     <button
                                         onClick={() => handlePageChange(page)}
@@ -183,7 +214,7 @@ const ProductListGuest = () => {
                                     </button>
                                 </li>
                             )) : <div></div>}
-                            <li className={`page-item ${currentPage === totalPages - 1 ? "disabled" : ""}`}>
+                            <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
                                 <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
                                     Next
                                 </button>

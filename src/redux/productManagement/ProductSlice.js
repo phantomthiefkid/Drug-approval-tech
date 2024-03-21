@@ -1,17 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const URL_LIST_PRODUCTS = 'https://fams-management.tech/admin/approval-products'
 const URL_PRODUCT_DETAIL = 'https://fams-management.tech/admin/approval-products-detail'
-
-const URL_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/public/approval-products/FDA'
-const URL_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/public/approval-products/ANSM'
-const URL_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/public/approval-products/DAV'
-
-const URL_ADMIN_PRODUCT_APPROVAL_FDA = 'https://fams-management.tech/admin/approval-products/FDA'
-const URL_ADMIN_PRODUCT_APPROVAL_ANSM = 'https://fams-management.tech/admin/approval-products/ANSM'
-const URL_ADMIN_PRODUCT_APPROVAL_DAV = 'https://fams-management.tech/admin/approval-products/DAV'
-
+const URL_PRODUCT_APPROVAL = 'https://fams-management.tech/public/approval-products'
+const URL_ADMIN_PRODUCT_APPROVAL = 'https://fams-management.tech/admin/approval-products'
 const URL_UPLOAD_FILE_APPROVAL_PRODUCT = 'https://fams-management.tech/api/storage/approval-products'
 
 export const uploadFileProduct = createAsyncThunk('upload', async ({ file, ApprovalProductID }) => {
@@ -37,6 +29,7 @@ export const uploadFileProduct = createAsyncThunk('upload', async ({ file, Appro
 
 export const fetchProducts = createAsyncThunk('fetchProducts', async ({ pageSize, sortField, sortOrder, pageNo, search, id }) => {
     try {
+        console.log(pageSize, sortField, sortOrder, pageNo, search, id)
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Missing token');
@@ -52,21 +45,12 @@ export const fetchProducts = createAsyncThunk('fetchProducts', async ({ pageSize
                 sortField,
                 sortOrder,
                 pageNo,
-                search
+                search,
+                administration: id === "FDA" ? 1 : id === "ANSM" ? 2 : 3
             }
         }
-        if (id === "FDA") {
-            const response = await axios.get(URL_ADMIN_PRODUCT_APPROVAL_FDA, config)
-            return response.data
-        }
-        if (id === "ANSM") {
-            const response = await axios.get(URL_ADMIN_PRODUCT_APPROVAL_ANSM, config)
-            return response.data
-        }
-        if (id === "DAV") {
-            const response = await axios.get(URL_ADMIN_PRODUCT_APPROVAL_DAV, config)
-            return response.data
-        }
+        const response = await axios.get(URL_ADMIN_PRODUCT_APPROVAL, config)
+        return response.data
     } catch (error) {
         throw error;
     }
@@ -74,28 +58,19 @@ export const fetchProducts = createAsyncThunk('fetchProducts', async ({ pageSize
 
 export const fetchProductsFollowOrganization = createAsyncThunk('fetchProductsFollowOrganization', async ({ pageSize, sortField, sortOrder, pageNo, search, id }) => {
     try {
-        console.log("Check: ", pageSize, sortField, sortOrder, pageNo, id)
+        console.log(pageSize, sortField, sortOrder, pageNo, search, id)
         const config = {
             params: {
                 pageSize,
                 sortField,
                 sortOrder,
                 pageNo,
-                search
+                search,
+                administration: id === "FDA" ? 1 : id === "ANSM" ? 2 : 3
             }
         }
-        if (id === "FDA") {
-            const response = await axios.get(URL_PRODUCT_APPROVAL_FDA, config)
-            return response.data
-        }
-        if (id === "ANSM") {
-            const response = await axios.get(URL_PRODUCT_APPROVAL_ANSM, config)
-            return response.data
-        }
-        if (id === "DAV") {
-            const response = await axios.get(URL_PRODUCT_APPROVAL_DAV, config)
-            return response.data
-        }
+        const response = await axios.get(URL_PRODUCT_APPROVAL, config)
+        return response.data
     } catch (error) {
         throw (error)
     }
