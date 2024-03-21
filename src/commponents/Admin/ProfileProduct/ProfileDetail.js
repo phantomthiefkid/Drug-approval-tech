@@ -116,7 +116,7 @@ const ProfileDetail = () => {
 
         </div>
         <div className='w-5/6 h-auto border border-gray-200 shadow-xl mx-auto'>
-          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6'>
+          <div className='grid grid-cols-1 gap-2 md:grid-cols-2 mt-6 mb-6'>
             <div className='w-5/6 flex justify-center border-gray-200'>
               {profileApi && profileApi.profileInformation && (
                 <img className='max-w-md rounded-md border border-gray-300 hover:scale-110 shadow-lg hover:shadow-2xl transition duration-300' src={profileApi.profileInformation.imageURL || 'https://uicreative.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2020/01/23073244/company-profile-finance-product-services-1024x683.jpg'} alt='Profile Image' />
