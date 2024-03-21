@@ -87,7 +87,7 @@ const Navigation = () => {
             </div></Link>
             </div>
             <div className='text-lg flex items-center'>
-              {roleName === 'ADMIN' ? <Link to={'/organization'}><Capsule size={20}></Capsule>
+              {roleName === 'ADMIN' || roleName === 'SECRETARY' ? <Link to={'/organization'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link> : <Link to={'/organizationGuest'}><Capsule size={20}></Capsule>
                 <p className='ml-2 hover:text-yellow-300'>Thuốc</p></Link>}
             </div>
