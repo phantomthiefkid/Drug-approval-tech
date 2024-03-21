@@ -88,11 +88,8 @@ export const fetchProductDetail = createAsyncThunk('fetchProductDetail', async (
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            params: {
-                id
-            }
         }
-        const response = await axios.get(URL_PRODUCT_DETAIL, config);
+        const response = await axios.get(URL_PRODUCT_DETAIL+id, config);
         return response.data;
     } catch (error) {
         throw error;

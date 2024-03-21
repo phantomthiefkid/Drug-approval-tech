@@ -13,6 +13,7 @@ const UpdateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories);
   const drugsAPI = useSelector((drug) => drug.drugData.data.content)
   const { id } = useParams();
+  
   const productApi = useSelector((product) => product.product.detail)
   const responseId = useSelector((state) => state.productData.product.id)
   const [selectedFile, setSelectedFile] = useState(null);
@@ -23,7 +24,6 @@ const UpdateProduct = () => {
     route: '',
     drugIngredients: [],
     category: -1,
-    image: '',
     manufactor: {
       name: '',
       company: '',
@@ -48,7 +48,7 @@ const UpdateProduct = () => {
       value: ''
     }
   })
-
+  console.log("====> ", productApi)
   const Navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -59,21 +59,15 @@ const UpdateProduct = () => {
   }, [dispatch])
 
 
-  useEffect(() => {
-    if (selectedFile) {
+   useEffect(() => {
+    if (responseId && selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      dispatch(uploadFileProduct({ file: formData, ApprovalProductID: id })).then((response) => {
-        setProductUpdate(prevState => ({
-          ...prevState,
-          image: URL.createObjectURL(selectedFile)
-        }));
-        console.log("Upload image thành công!");
-      }).catch((error) => {
-        console.error("Lỗi khi upload hình ảnh:", error);
+      dispatch(uploadFileProduct({ file: formData, ApprovalProductID: responseId })).then(() => {
+        console.log("Thanh cong!")
       });
     }
-  }, [id, selectedFile, dispatch]);
+  }, [responseId, selectedFile]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -278,8 +272,9 @@ const UpdateProduct = () => {
     });
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+
+    console.log("Update: ", updateProducts)
     dispatch(updateProducts(productUpdate))
       .then(() => {
         Swal.fire({
@@ -322,7 +317,7 @@ const UpdateProduct = () => {
               <div className='col-span-5 py-8'>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="large_size">Upload image</label>
                 {productUpdate.image && (
-                  <img className='border-2 rounded-xl mt-4' src={productUpdate.image} alt='drug' />
+                  <img className='border-2 rounded-xl mt-4' src={productUpdate.image || URL.createObjectURL(selectedFile) || "https://www.universityofcalifornia.edu/sites/default/files/styles/article_default_banner/public/generic-drugs-istock.jpg?h=91106740&itok=N62lK3sY"} alt='drug' />
                 )}
                 <input onChange={handleFileChange} className="block w-full text-lg text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none mt-10" id="large_size" type="file"></input>
               </div>

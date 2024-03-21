@@ -287,7 +287,7 @@ const StepTwo = ({ productTitle }) => {
 
                 setTimeout(() => {
                     navigate(`/profilelist`);
-                }, 500);
+                }, 200);
             } catch (error) {
                 console.log('Có lỗi xảy ra khi gửi email:', error);
             }
