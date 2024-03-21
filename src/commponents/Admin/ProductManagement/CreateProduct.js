@@ -70,8 +70,6 @@ const product_err_initial = {
   }
 }
 
-
-
 const CreateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories)
   const countriesAPI = useSelector((state) => state.productData.countries)
@@ -83,6 +81,7 @@ const CreateProduct = () => {
   const [drugList, setDrugList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDrug, setSelectedDrug] = useState(null);
+  const [ingredientIndexes, setIngredientIndexes] = useState([0]);
 
   const drugIngredient_initial = {
     drugId: 0,
@@ -120,12 +119,7 @@ const CreateProduct = () => {
       });
   }, [dispatch, searchTerm]);
 
-  // useEffect(() => {
-  //   setDrugList([...apiData]);
-  // }, [apiData]);
-
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
 
   useEffect(() => {
     dispatch(fetchCategories())
@@ -138,53 +132,13 @@ const CreateProduct = () => {
   ]);
   const [drugIngredientsError, setDrugIngredientsError] = useState([])
 
-  // const handleChangeIngredient = (index, event) => {
-  //   const { name, value } = event.target;
-  //   const updatedIngredients = [...drugIngredients];
-
-  //   if (event.target.tagName === 'SELECT') {
-  //     updatedIngredients[index]['drugId'] = parseInt(value);
-  //   } else {
-  //     updatedIngredients[index][name] = value;
-  //   }
-  //   setDrugIngredients(updatedIngredients);
-  // };
-
-  //   updatedIngredients[selectedItemIndex]['drugId'] = id;
-  //   updatedIngredients[selectedItemIndex]['name'] = name;
-
-  //   setDrugIngredients(updatedIngredients);
-  // };
-
-  // const handleChangeIngredient = (index, event, id, name) => {
-  //   setSelectedDrug({ id, name });
-  // };
-
-  // const handleChangeIngredient = (index, event, id, name) => {
-  //   setSelectedDrug({ id, name });
-  //   setDrugIngredients([{ ...drugIngredient_initial, drugId: id }]);
-  // };
-
   const handleChangeIngredient = (index, event, id, name) => {
-    // Kiểm tra xem selectedDrug đã tồn tại chưa, nếu chưa thì mới cập nhật
-    if (!selectedDrug) {
-      setSelectedDrug({ id, name });
-    }
-
     const updatedIngredients = [...drugIngredients];
-    if (!updatedIngredients[index].drugId) {
-      updatedIngredients[index].drugId = id;
-    }
+    updatedIngredients[index].drugId = id;
     updatedIngredients[index][event.target.name] = event.target.value;
-
     setDrugIngredients(updatedIngredients);
+    setSelectedDrug({ id, name });
   };
-
-
-
-
-
-
 
 
   const handleAddIngredient = () => {
@@ -524,7 +478,7 @@ const CreateProduct = () => {
       // });
       try {
         const resultAction = await dispatch(createProducts(productCreate));
-        
+
         if (createProducts.fulfilled.match(resultAction)) {
           Swal.fire({
             title: 'Success!',
@@ -711,25 +665,10 @@ const CreateProduct = () => {
                       <div className="relative px-6" id="customSelect">
                         <form class="max-w-sm mx-auto">
                           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                          {/* <select onChange={(event) => handleChangeIngredient(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
-                            <option selected>Chọn hoạt chất</option>
-                            {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
-                          </select> */}
-
-
-                          {/* {drugsAPI && drugsAPI.map((drug) => (
-                                    <div
-                                      key={drug.id}
-                                      onClick={(event) => handleChangeIngredient(index, event)}
-                                      className="p-2 hover:bg-gray-100 cursor-pointer"
-                                    >
-                                      <div value='drug.id'>{drug.name}</div>
-                                    </div>
-                                  ))} */}
                           <div className="relative">
                             <div
-                              onClick={handleToggleDropdown}
-                              className="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm cursor-pointer"
+                              onClick={() => handleToggleDropdown(index)}
+                              className="block w-40 mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm cursor-pointer"
                             >
                               {selectedDrug ? selectedDrug.name : 'Chọn hoạt chất'}
                             </div>
@@ -744,8 +683,6 @@ const CreateProduct = () => {
                                   value={searchTerm} onChange={handleSearchChange}
                                 />
                                 <div className="max-h-60 overflow-y-auto">
-
-
 
                                   {drugsAPI && drugsAPI.map((drug) => (
                                     <div
