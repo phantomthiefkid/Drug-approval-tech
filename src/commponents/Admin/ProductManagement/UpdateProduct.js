@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons'
+import {PlusCircle, XCircle } from 'react-bootstrap-icons'
 
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { fetchCategories, fetchCountries, updateProducts } from '../../../redux/approvalProduct/productSlice';
@@ -353,7 +353,7 @@ const UpdateProduct = () => {
       });
   }
 
-  console.log('updateproduct', productUpdate)
+  // console.log('updateproduct', productUpdate)
 
   return (
     <>
