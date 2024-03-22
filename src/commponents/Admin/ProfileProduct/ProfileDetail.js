@@ -152,11 +152,11 @@ const ProfileDetail = () => {
                   <div>
                     <div>
                       <div className='inline-block mr-5'>
-                        {profileApi.profileInformation.status === 'DRAFT' || 'CLOSED' ? (
+                        {profileApi.profileInformation.status === 'DRAFT' ? (
                           <p className='status bg-sky-600 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : profileApi.profileInformation.status === 'PENDING TO APPROVE' || profileApi.profileInformation.status === 'PENDING TO PROCEED' || profileApi.profileInformation.status === 'PENDING TO SYSTEM' ? (
                           <p className='status bg-red-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
-                        ) : profileApi.profileInformation.status === 'APPROVE' ? (
+                        ) : profileApi.profileInformation.status === 'APPROVE' || 'CLOSED' ? (
                           <p className='status bg-green-500 text-white p-2 rounded text-2xl'> {profileApi.profileInformation.status}  </p>
                         ) : (
                           <p className=''>{profileApi.profileInformation.status}  </p>
@@ -184,7 +184,7 @@ const ProfileDetail = () => {
                           <span className='inline-block ml-44'>
                             {detail.status === 'DRAFT' ? (
                               <p className='status bg-sky-400 text-white p-2 rounded text-xl'>{detail.status}  </p>
-                            ) : detail.status === 'REJECTED BY SYSTEM' || detail.status === 'REJECTED' ? (
+                            ) : detail.status === 'REJECTED BY SYSTEM' || detail.status === 'REJECTED' || detail.status === 'PENDING TO APPROVE' || detail.status === 'PENDING TO PROCEED' ? (
                               <p className='status bg-red-500 text-white p-2 rounded text-xl'>{detail.status}  </p>
                             ) : detail.status === 'APPROVED BY SYSTEM' || detail.status === 'APPROVED' ? (
                               <p className='status bg-green-500 text-white p-2 rounded text-xl'>{detail.status}  </p>

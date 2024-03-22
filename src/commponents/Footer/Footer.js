@@ -12,29 +12,29 @@ const Footer = () => {
         </div>
         <div>
           <div className='py-6'>
-            <h3 className='text-xl'><b>Products</b></h3>
+            <h3 className='text-xl'><b>Quản lí hồ sơ thuốc</b></h3>
             <ul>
-              <li>Clinical API</li>
-              <li>Clinical Drug Datasets</li>
-              <li>Academic Drug Datasets</li>
+              <li>Tạo hồ sơ thuốc</li>
+              <li>Duyệt thuốc mới</li>
+              <li>Chỉnh sửa hồ sơ thuốc</li>
             </ul>
           </div>
           <div>
-            <h3 className='text-xl'><b>Products</b></h3>
+            <h3 className='text-xl'><b>Cơ sở quản lý dược</b></h3>
             <ul>
-              <li>Clinical API</li>
-              <li>Clinical Drug Datasets</li>
-              <li>Academic Drug Datasets</li>
+              <li>FDA</li>
+              <li>ANSM</li>
+              <li>DAV</li>
             </ul>
           </div>
         </div>
         <div>
           <div className='py-6'>
-            <h3 className='text-xl'><b>Products</b></h3>
+            <h3 className='text-xl'><b>Quản lí người dùng</b></h3>
             <ul>
-              <li>Clinical API</li>
-              <li>Clinical Drug Datasets</li>
-              <li>Academic Drug Datasets</li>
+              <li>Tạo mới accounts </li>
+              <li>Vô hiệu hóa accounts</li>
+              <li>Chỉnh sửa accounts</li>
             </ul>
           </div>
         </div>

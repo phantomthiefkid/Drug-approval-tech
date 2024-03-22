@@ -264,47 +264,49 @@ const UserList = () => {
         </div>
 
         <div className='mb-6'>
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-5/6 shadow-2xl mb-12 table-auto mx-auto text-sm text-left rtl:text-right text-gray-500 ">
-              <thead class="text-xs text-white uppercase bg-blue-600">
-                <tr>
-                  <th scope="col" class="px-6 py-3">
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg px-5">
+            <table class="w-full divide-gray-200 overflow-x-auto mx-auto">
+              <thead class="bg-blue-300 ">
+                <tr className=''>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     STT
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Họ và tên
                   </th>
-                  <th scope="col" class="px-6 py-3 w-32">
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Ngày sinh
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Email
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Tên đăng nhập
                   </th>
-                  <th scope="col" class="px-6 py-3 w-36">
-                    <button className='flex'>Giới tính</button>
-
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Giới tính
                   </th>
-                  <th scope="col" class="px-6 py-3  w-36">
-                    <button className='flex'>Vai trò</button>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Vai trò
                   </th>
-                  <th scope="col" class="px-6 py-3  w-36">
-                    <button className='flex'>Trạng thái</button>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Trạng thái
                   </th>
-                  <th scope="col" class="px-6 py-3">
-                    {/* <span class="sr-only"></span> */}
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="bg-white divide-y divide-gray-200">
                 {Array.isArray(userList) && userList.map((user) => (<tr class="bg-white border-b hover:bg-gray-100">
                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                     {count++}
                   </th>
                   <td class="px-6 py-4">
-                    {user.fullname}
+                    <div className='display flex items-center'>
+                      <img className='rounded-full flex-shrink-0 h-12 w-12 mr-5' src={user.avatar || 'https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere.png'} alt="Avatar" />
+                      {user.fullname}
+                    </div>
                   </td>
                   <td class="px-6 py-4">
                     {user.dayOfBirth}
@@ -321,14 +323,21 @@ const UserList = () => {
                   <td class="px-6 py-4">
                     {user.roleName}
                   </td>
-                  <td class="px-6 py-4">
+                  {/* <td class="px-5 inline-flex text-md leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                     {user.isActive}
+                  </td> */}
+                  <td className="px-5 inline-flex text-md leading-5 font-semibold rounded-full p-5">
+                    {user.isActive === 'Active' ? (
+                      <span className="bg-green-100 text-green-800">Active</span>
+                    ) : (
+                      <span className="bg-red-100 text-red-800">Deactive</span>
+                    )}
                   </td>
                   <td class="px-6 py-4 text-right">
                     {/* <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> */}
                     <button type="button"
                       onClick={() => toggleDropdown(user)}
-                      className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-md focus:outline-none  ">
+                      className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium border border-gray-500  rounded-md focus:outline-none  ">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
                         <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
                       </svg>
@@ -363,7 +372,8 @@ const UserList = () => {
                 </tr>))}
               </tbody>
             </table>
-            <div className='mb-6 flex justify-center'>
+
+            <div className='mb-6 flex justify-center mt-10'>
               <nav aria-label="">
                 <ul class="flex items-center -space-x-px h-10 text-base">
                   <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
@@ -388,7 +398,7 @@ const UserList = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 

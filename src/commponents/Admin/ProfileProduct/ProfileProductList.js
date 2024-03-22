@@ -109,13 +109,13 @@ const ProfileProductList = () => {
                       </div>
                       <div className='mx-8 mt-8 flex justify-between w-full'>
                         <div className='inline-block'>
-                          {profile.status === 'DRAFT' || profile.status === 'CLOSED' ? (
+                          {profile.status === 'DRAFT' ? (
                             <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : profile.status === 'PENDING TO APPROVE' || profile.status === 'PENDING' || profile.status === 'PENDING TO PROCEED' ? (
                             <p className="status bg-red-500 text-white p-2 rounded text-xl">{profile.status}</p>
-                          ) : profile.status === 'APPROVE' ? (
+                          ) : profile.status === 'APPROVE' || profile.status === 'CLOSED' ? (
                             <p className="status bg-green-500 text-white p-2 rounded text-xl">{profile.status}</p>
-                          ): profile.status === 'PENDING TO PROCEED' ? (
+                          ) : profile.status === 'PENDING TO PROCEED' ? (
                             <p className="status bg-yellow-400 text-white p-2 rounded text-xl">{profile.status}</p>
                           ) : (
                             <p className="status">{profile.status}</p>
