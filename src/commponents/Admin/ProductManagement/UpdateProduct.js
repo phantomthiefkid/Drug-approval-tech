@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Boxes, PlusCircle, XCircle } from 'react-bootstrap-icons'
+import {PlusCircle, XCircle } from 'react-bootstrap-icons'
 
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { fetchCategories, fetchCountries, updateProducts } from '../../../redux/approvalProduct/productSlice';
@@ -81,39 +81,17 @@ const UpdateProduct = () => {
 
   }, [dispatch, id]);
 
-  // useEffect(() => {
-  //   if (productApi && productApi.authorities) {
-  //     const updatedProduct = { ...productApi };
-  //     updatedProduct.authorities = updatedProduct.authorities.map(authority => {
-  //       const { countryName, ...rest } = authority;
-  //       return rest;
-  //     });
-  //     if (updatedProduct.productAdministrationDTO) {
-  //       updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
-  //       delete updatedProduct.productAdministrationDTO;
-  //     }
-  //     const categoryId = updatedProduct.category.id;
-  //     const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
-  //     delete updatedProductWithCategoryId.category;
-
-  //     setProductUpdate(updatedProductWithCategoryId);
-  //   } else {
-  //     setProductUpdate(productApi);
-  //   }
-  // }, [productApi]);
   useEffect(() => {
     if (productApi && productApi.authorities) {
       const updatedProduct = { ...productApi };
       updatedProduct.authorities = updatedProduct.authorities.map(authority => {
         const { countryName, ...rest } = authority;
-        return { certificateName: rest.certificateName, countryId: rest.countryId };
-      }).filter(authority => authority.hasOwnProperty('certificateName') && authority.hasOwnProperty('countryId'));
-
+        return rest;
+      });
       if (updatedProduct.productAdministrationDTO) {
         updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
         delete updatedProduct.productAdministrationDTO;
       }
-
       const categoryId = updatedProduct.category.id;
       const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
       delete updatedProductWithCategoryId.category;
@@ -123,6 +101,28 @@ const UpdateProduct = () => {
       setProductUpdate(productApi);
     }
   }, [productApi]);
+  // useEffect(() => {
+  //   if (productApi && productApi.authorities) {
+  //     const updatedProduct = { ...productApi };
+  //     updatedProduct.authorities = updatedProduct.authorities.map(authority => {
+  //       const { countryName, ...rest } = authority;
+  //       return { certificateName: rest.certificateName, countryId: rest.countryId };
+  //     }).filter(authority => authority.hasOwnProperty('certificateName') && authority.hasOwnProperty('countryId'));
+
+  //     if (updatedProduct.productAdministrationDTO) {
+  //       updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
+  //       delete updatedProduct.productAdministrationDTO;
+  //     }
+
+  //     const categoryId = updatedProduct.category.id;
+  //     const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
+  //     delete updatedProductWithCategoryId.category;
+
+  //     setProductUpdate(updatedProductWithCategoryId);
+  //   } else {
+  //     setProductUpdate(productApi);
+  //   }
+  // }, [productApi]);
 
 
   const [drugIngredients, setDrugIngredients] = useState([
@@ -133,20 +133,20 @@ const UpdateProduct = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
 
-  // useEffect(() => {
-  //   setDrugIngredients(productUpdate.drugIngredients || []);
-  // }, [productUpdate]);
-  // useEffect(() => {
-  //   setDrugIngredients(productUpdate.drugIngredients || []);
-  // }, [productUpdate.drugIngredients]);
-
   useEffect(() => {
-    if (productUpdate && productUpdate.drugIngredients) {
-      setDrugIngredients([...productUpdate.drugIngredients]);
-    } else {
-      setDrugIngredients([]);
-    }
+    setDrugIngredients(productUpdate.drugIngredients || []);
   }, [productUpdate]);
+  useEffect(() => {
+    setDrugIngredients(productUpdate.drugIngredients || []);
+  }, [productUpdate.drugIngredients]);
+
+  // useEffect(() => {
+  //   if (productUpdate && productUpdate.drugIngredients) {
+  //     setDrugIngredients([...productUpdate.drugIngredients]);
+  //   } else {
+  //     setDrugIngredients([]);
+  //   }
+  // }, [productUpdate]);
 
   const handleChangeIngredient = (index, event) => {
     const { name, value } = event.target;
@@ -172,10 +172,10 @@ const UpdateProduct = () => {
   // };
 
   const handleDeleteIngredient = (index) => {
-    const updatedIngredients = [...productUpdate.drugIngredients]; 
-    updatedIngredients.splice(index, 1); 
-    const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients }; 
-    setProductUpdate(updatedProduct); 
+    const updatedIngredients = [...productUpdate.drugIngredients];
+    updatedIngredients.splice(index, 1);
+    const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients };
+    setProductUpdate(updatedProduct);
   };
 
   //------------------------------------
@@ -207,11 +207,18 @@ const UpdateProduct = () => {
     });
   };
 
+  // const handleDeleteAuthority = (index) => {
+  //   const updatedAuthorities = [...authorities];
+  //   updatedAuthorities.splice(index, 1);
+  //   setAuthorities(updatedAuthorities);
+  // };
   const handleDeleteAuthority = (index) => {
-    const updatedAuthorities = [...authorities];
+    const updatedAuthorities = [...productUpdate.authorities];
     updatedAuthorities.splice(index, 1);
-    setAuthorities(updatedAuthorities);
+    const updatedProduct = { ...productUpdate, authorities: updatedAuthorities };
+    setProductUpdate(updatedProduct);
   };
+
   //-------------------
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -346,7 +353,7 @@ const UpdateProduct = () => {
       });
   }
 
-  console.log('updateproduct', productUpdate)
+  // console.log('updateproduct', productUpdate)
 
   return (
     <>
