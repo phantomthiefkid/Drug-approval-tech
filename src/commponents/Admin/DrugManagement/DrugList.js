@@ -37,6 +37,7 @@ const DrugList = () => {
   };
 
   const itemsPerPage = 8
+  const pageRange = 5
 
   console.log("drugPage", totalPagesAPI)
 
@@ -337,22 +338,17 @@ const DrugList = () => {
             </table>
             <div className='mb-6 flex justify-center'>
               <nav aria-label="">
-                <ul className="flex items-center -space-x-2 h-10 text-base">
+                <ul className="flex items-center -space-x-px h-10 text-base">
                   <li className={`page-item ${currentPage === 0 ? "disabled" : ""}`}>
                     <button onClick={handleDecreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
                       Previous
                     </button>
                   </li>
-                  {totalPagesAPI ? [...Array(totalPagesAPI).keys()].map((page) => (
+                  {totalPagesAPI && [...Array(totalPagesAPI).keys()].slice(currentPage, currentPage + pageRange).map((page) => (
                     <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
-                      <button
-                        onClick={() => handlePageChange(page)}
-                        className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}
-                      >
-                        {page + 1}
-                      </button>
+                      <button onClick={() => handlePageChange(page)} className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-gray-300 '} border border-gray-300 rounded-xl mx-3`}>{page + 1}</button>
                     </li>
-                  )) : <div></div>}
+                  ))}
                   <li className={`page-item ${currentPage === totalPagesAPI - 1 ? "disabled" : ""}`}>
                     <button onClick={handleIncreasePage} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white hover:text-gray-700">
                       Next
@@ -361,6 +357,7 @@ const DrugList = () => {
                 </ul>
               </nav>
             </div>
+
           </div>
         </div>
         <ModalUpdateDrug isOpen={showModal} toggleModal={toggleModal} drug={selectedDrug} onUpdateSuccess={handleUpdateSuccess} />
