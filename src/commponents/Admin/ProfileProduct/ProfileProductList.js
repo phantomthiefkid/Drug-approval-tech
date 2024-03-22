@@ -102,12 +102,12 @@ const ProfileProductList = () => {
                 </div>
                 <div className='ml-20'>
                   <div className='flex'>
-                    <div class='flex-grow flex-col'>
+                    <div class=''>
                       <div class='mx-8 flex items-center'>
                         <span class='font-bold text-2xl'>Tên hồ sơ:</span>
                         <h2 class='ml-3 text-3xl text-transparent bg-clip-text bg-gradient-to-r bg-purple-900 font-bold'>{profile.title}</h2>
                       </div>
-                      <div className='mx-8 mt-8 flex justify-between w-full'>
+                      <div className='mx-8 mt-8 flex'>
                         <div className='inline-block'>
                           {profile.status === 'DRAFT' ? (
                             <p className="status bg-sky-600 text-white p-2 rounded text-xl">{profile.status}</p>
@@ -121,7 +121,7 @@ const ProfileProductList = () => {
                             <p className="status">{profile.status}</p>
                           )}
                         </div>
-                        <div className='inline-block ml-auto border border-gray-100 p-2 rounded-md bg-sky-400 text-white'>
+                        <div className='absolute top-0 right-0 border border-gray-100 p-2 rounded-md bg-sky-400 text-white mt-24 mr-48'>
                           <span className='font-bold text-xl justify-end mr-3'>CreatedOn:</span>
                           <span>{profile.createdOn}</span>
                         </div>
