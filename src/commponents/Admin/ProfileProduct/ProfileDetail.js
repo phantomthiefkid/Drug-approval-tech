@@ -90,7 +90,7 @@ const ProfileDetail = () => {
     });
   };
 
-  console.log(radioChecked)
+  // console.log(radioChecked)
 
   return (
     <>
