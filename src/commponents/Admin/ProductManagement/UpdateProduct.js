@@ -172,10 +172,10 @@ const UpdateProduct = () => {
   // };
 
   const handleDeleteIngredient = (index) => {
-    const updatedIngredients = [...productUpdate.drugIngredients]; 
-    updatedIngredients.splice(index, 1); 
-    const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients }; 
-    setProductUpdate(updatedProduct); 
+    const updatedIngredients = [...productUpdate.drugIngredients];
+    updatedIngredients.splice(index, 1);
+    const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients };
+    setProductUpdate(updatedProduct);
   };
 
   //------------------------------------
@@ -207,11 +207,18 @@ const UpdateProduct = () => {
     });
   };
 
+  // const handleDeleteAuthority = (index) => {
+  //   const updatedAuthorities = [...authorities];
+  //   updatedAuthorities.splice(index, 1);
+  //   setAuthorities(updatedAuthorities);
+  // };
   const handleDeleteAuthority = (index) => {
-    const updatedAuthorities = [...authorities];
+    const updatedAuthorities = [...productUpdate.authorities];
     updatedAuthorities.splice(index, 1);
-    setAuthorities(updatedAuthorities);
+    const updatedProduct = { ...productUpdate, authorities: updatedAuthorities };
+    setProductUpdate(updatedProduct);
   };
+
   //-------------------
   const handleOnChange = (e) => {
     const { name, value } = e.target;
