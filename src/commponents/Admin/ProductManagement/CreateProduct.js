@@ -90,8 +90,8 @@ const CreateProduct = () => {
   const { id } = useParams();
   const responseId = useSelector((state) => state.productData.product.id)
   const Navigate = useNavigate();
-  const drugsWithNameAndId = drugsAPI.map(drug => ({ value: drug.id, label: drug.name }));
-  
+  // const drugsWithNameAndId = drugsAPI.map(drug => ({ value: drug.id, label: drug.name }));
+  const drugsWithNameAndId = drugsAPI && drugsAPI.map(drug => ({ value: drug.id, label: drug.name }));
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCategories())
@@ -236,7 +236,7 @@ const CreateProduct = () => {
       // Update other fields
       setProductCreate({ ...productCreate, [name]: value });
     }
-    
+
   };
 
   const handleCheck = async () => {
@@ -533,7 +533,7 @@ const CreateProduct = () => {
     setDrugIngredients(updatedIngredients);
     console.log(drugIngredients)
   };
-  
+
   return (
     <>
       <div className='mt-20 mb-16'>
@@ -647,7 +647,7 @@ const CreateProduct = () => {
 
                         <form class="max-w-sm mx-auto">
                           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                          <Select options={drugsWithNameAndId}  onChange={(selectedOption) => handleChangeDrugId(index, selectedOption)} isSearchable={true} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required />
+                          <Select options={drugsWithNameAndId} onChange={(selectedOption) => handleChangeDrugId(index, selectedOption)} isSearchable={true} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required />
                         </form>
 
                       </div>
