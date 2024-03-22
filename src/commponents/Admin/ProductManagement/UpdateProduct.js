@@ -514,7 +514,7 @@ const UpdateProduct = () => {
                     <div className="mb-3 w-1/4">
 
                       <label class="block mb-2 text-sm font-medium text-gray-900">Quốc gia</label>
-                      <select value={authorities[index].countryId} onChange={(event) => handleChangeAuthority(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
+                      <select value={authority?.countryId} onChange={(event) => handleChangeAuthority(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm">
                         {countriesAPI && countriesAPI.map((country) => (<option value={country.id}>{country.name}</option>))}
                       </select>
                     </div>
