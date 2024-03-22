@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { createProducts, fetchCategories, fetchCountries } from '../../../redux/approvalProduct/productSlice';
 import { fetchDrugs } from '../../../redux/drugManagement/drugSlice'
 import { uploadFileProduct } from '../../../redux/productManagement/ProductSlice';
+import Select from 'react-select'
 const product_initial = {
   labeller: '',
   name: '',
@@ -89,7 +90,8 @@ const CreateProduct = () => {
   const { id } = useParams();
   const responseId = useSelector((state) => state.productData.product.id)
   const Navigate = useNavigate();
-
+  const drugsWithNameAndId = drugsAPI.map(drug => ({ value: drug.id, label: drug.name }));
+  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCategories())
@@ -127,6 +129,7 @@ const CreateProduct = () => {
     }
 
     setDrugIngredients(updatedIngredients);
+    console.log(drugIngredients)
   };
 
   const handleDeleteIngredient = (index) => {
@@ -233,7 +236,7 @@ const CreateProduct = () => {
       // Update other fields
       setProductCreate({ ...productCreate, [name]: value });
     }
-    console.log("====> ", productCreate)
+    
   };
 
   const handleCheck = async () => {
@@ -450,7 +453,7 @@ const CreateProduct = () => {
       // });
       try {
         const resultAction = await dispatch(createProducts(productCreate));
-        
+
         if (createProducts.fulfilled.match(resultAction)) {
           Swal.fire({
             title: 'Success!',
@@ -523,7 +526,14 @@ const CreateProduct = () => {
 
   }
 
-  console.log(productCreate);
+  const handleChangeDrugId = (index, selectedOption) => {
+    const updatedIngredients = [...drugIngredients];
+    updatedIngredients[index]['drugId'] = selectedOption.value;
+    // Cập nhật state
+    setDrugIngredients(updatedIngredients);
+    console.log(drugIngredients)
+  };
+  
   return (
     <>
       <div className='mt-20 mb-16'>
@@ -637,10 +647,7 @@ const CreateProduct = () => {
 
                         <form class="max-w-sm mx-auto">
                           <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hoạt chất: </label>
-                          <select onChange={(event) => handleChangeIngredient(index, event)} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required>
-                            <option selected>Chọn hoạt chất</option>
-                            {drugsAPI && drugsAPI.map((drug) => (<option value={drug.id}>{drug.name}</option>))}
-                          </select>
+                          <Select options={drugsWithNameAndId}  onChange={(selectedOption) => handleChangeDrugId(index, selectedOption)} isSearchable={true} class="block w-full mt-1 border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-sm" required />
                         </form>
 
                       </div>
