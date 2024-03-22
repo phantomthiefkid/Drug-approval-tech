@@ -13,7 +13,7 @@ const UpdateProduct = () => {
   const categoriesAPI = useSelector((state) => state.productData.categories);
   const drugsAPI = useSelector((drug) => drug.drugData.data.content)
   const { id } = useParams();
-  
+
   const productApi = useSelector((product) => product.product.detail)
   const responseId = useSelector((state) => state.productData.product.id)
   const [selectedFile, setSelectedFile] = useState(null);
@@ -59,7 +59,7 @@ const UpdateProduct = () => {
   }, [dispatch])
 
 
-   useEffect(() => {
+  useEffect(() => {
     if (responseId && selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
@@ -81,17 +81,39 @@ const UpdateProduct = () => {
 
   }, [dispatch, id]);
 
+  // useEffect(() => {
+  //   if (productApi && productApi.authorities) {
+  //     const updatedProduct = { ...productApi };
+  //     updatedProduct.authorities = updatedProduct.authorities.map(authority => {
+  //       const { countryName, ...rest } = authority;
+  //       return rest;
+  //     });
+  //     if (updatedProduct.productAdministrationDTO) {
+  //       updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
+  //       delete updatedProduct.productAdministrationDTO;
+  //     }
+  //     const categoryId = updatedProduct.category.id;
+  //     const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
+  //     delete updatedProductWithCategoryId.category;
+
+  //     setProductUpdate(updatedProductWithCategoryId);
+  //   } else {
+  //     setProductUpdate(productApi);
+  //   }
+  // }, [productApi]);
   useEffect(() => {
     if (productApi && productApi.authorities) {
       const updatedProduct = { ...productApi };
       updatedProduct.authorities = updatedProduct.authorities.map(authority => {
         const { countryName, ...rest } = authority;
-        return rest;
-      });
+        return { certificateName: rest.certificateName, countryId: rest.countryId };
+      }).filter(authority => authority.hasOwnProperty('certificateName') && authority.hasOwnProperty('countryId'));
+
       if (updatedProduct.productAdministrationDTO) {
         updatedProduct.administrationId = updatedProduct.productAdministrationDTO.id;
         delete updatedProduct.productAdministrationDTO;
       }
+
       const categoryId = updatedProduct.category.id;
       const updatedProductWithCategoryId = { ...updatedProduct, categoryId };
       delete updatedProductWithCategoryId.category;
@@ -102,6 +124,7 @@ const UpdateProduct = () => {
     }
   }, [productApi]);
 
+
   const [drugIngredients, setDrugIngredients] = useState([
     { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }
   ]);
@@ -110,8 +133,19 @@ const UpdateProduct = () => {
     setDrugIngredients([...drugIngredients, { drugId: 0, strength: '', strengthNumber: '', strengthUnit: '', clinicallyRelevant: '' }]);
   };
 
+  // useEffect(() => {
+  //   setDrugIngredients(productUpdate.drugIngredients || []);
+  // }, [productUpdate]);
+  // useEffect(() => {
+  //   setDrugIngredients(productUpdate.drugIngredients || []);
+  // }, [productUpdate.drugIngredients]);
+
   useEffect(() => {
-    setDrugIngredients(productUpdate.drugIngredients || []);
+    if (productUpdate && productUpdate.drugIngredients) {
+      setDrugIngredients([...productUpdate.drugIngredients]);
+    } else {
+      setDrugIngredients([]);
+    }
   }, [productUpdate]);
 
   const handleChangeIngredient = (index, event) => {
@@ -131,10 +165,17 @@ const UpdateProduct = () => {
     });
   };
 
+  // const handleDeleteIngredient = (index) => {
+  //   const updatedIngredients = [...drugIngredients];
+  //   updatedIngredients.splice(index, 1)
+  //   setDrugIngredients(updatedIngredients);
+  // };
+
   const handleDeleteIngredient = (index) => {
-    const updatedIngredients = [...drugIngredients];
-    updatedIngredients.splice(index, 1)
-    setDrugIngredients(updatedIngredients);
+    const updatedIngredients = [...productUpdate.drugIngredients]; 
+    updatedIngredients.splice(index, 1); 
+    const updatedProduct = { ...productUpdate, drugIngredients: updatedIngredients }; 
+    setProductUpdate(updatedProduct); 
   };
 
   //------------------------------------

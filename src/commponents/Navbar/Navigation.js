@@ -34,7 +34,6 @@ const Navigation = () => {
     }
     fetchData();
   }, [dispatch, email]);
-  console.log("=====> check: ", profileView)
   const handleScroll = () => {
     if (window.scrollY > 50) {
       setNavbarBackground('bg-indigo-500 bg-opacity-50 h-16');
